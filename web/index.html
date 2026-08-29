@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FPL AI Manager</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1>FPL AI Manager</h1>
+      <div id="season" class="muted"></div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="overview" class="cards-grid"></section>
+
+    <section class="panel">
+      <h2>当前阵容</h2>
+      <div id="formation-line" class="muted"></div>
+      <div id="team-xi" class="player-grid"></div>
+      <div class="bench-title">替补</div>
+      <div id="team-bench" class="player-grid"></div>
+    </section>
+
+    <section class="panel">
+      <h2>历史记录</h2>
+      <div id="history-table"></div>
+    </section>
+  </main>
+
+  <footer class="container muted">
+    <span id="last-update"></span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+name: update
+
+on:
+  schedule:
+    # 每天 3 次 (UTC)，覆盖 FPL 的结算与决策窗口；避开整点
+    - cron: "23 3,15,21 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 运行大脑（拉取数据，生成 state/history）
+        run: python -m brain
+
+      - name: 自动提交数据更新
+        run: |
+          git config user.name "FPL AI Bot"
+          git config user.email "fpl-ai-bot@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo "无数据变化，跳过提交"
+          else
+            git commit -m "chore(data): 更新 FPL 快照"
+            git push
+          fi

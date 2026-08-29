@@ -1,0 +1,4 @@
+{
+  "buildCommand": "mkdir -p web/data && cp data/*.json web/data/",
+  "outputDirectory": "web"
+}

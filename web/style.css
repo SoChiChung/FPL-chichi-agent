@@ -1,0 +1,219 @@
+:root {
+  --bg: #0f1220;
+  --panel: #1a1f33;
+  --panel-2: #222842;
+  --border: #2e3554;
+  --text: #e8ecf8;
+  --muted: #8b93b3;
+  --accent: #00ff87;
+  --accent-dim: #00c96a;
+  --captain: #ffd166;
+  --vice: #7c8cff;
+  --danger: #ff6b6b;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.site-header {
+  background: linear-gradient(90deg, #1a0f2e, #2b1652);
+  border-bottom: 1px solid var(--border);
+  padding: 18px 0 14px;
+  margin-bottom: 20px;
+}
+
+.site-header h1 {
+  font-size: 1.4rem;
+  letter-spacing: 0.5px;
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.card-label {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
+
+.card-value {
+  font-size: 1.35rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.card.captain .card-value {
+  color: var(--captain);
+}
+
+.card.vice .card-value {
+  color: var(--vice);
+}
+
+.card.deadline .card-value {
+  font-size: 1.05rem;
+}
+
+.card.gameweek .card-value {
+  color: var(--accent);
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 20px;
+}
+
+.panel h2 {
+  font-size: 1.05rem;
+  margin-bottom: 6px;
+}
+
+.player-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.player-card {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  position: relative;
+}
+
+.player-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+}
+
+.player-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-sub {
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin: 2px 0 8px;
+}
+
+.player-meta {
+  display: flex;
+  gap: 10px;
+  color: var(--text);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.badge {
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 1px 7px;
+}
+
+.badge-c {
+  background: var(--captain);
+  color: #1a1a1a;
+}
+
+.badge-v {
+  background: var(--vice);
+  color: #fff;
+}
+
+.bench-title {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  border-top: 1px dashed var(--border);
+  padding-top: 14px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+
+th {
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+tr:hover td {
+  background: rgba(124, 140, 255, 0.06);
+}
+
+footer {
+  padding: 18px 16px 30px;
+  text-align: center;
+}
+
+.empty-card {
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
+.empty-card .card-value {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
