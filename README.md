@@ -1,8 +1,14 @@
 # FPL AI Manager
 
-由 AI 管理的 Fantasy Premier League（FPL）账号。当前为 **Phase 0 骨架**：自动拉取数据、生成状态与历史 JSON、GitHub Actions 定时更新、Vercel 静态展示。
+由 AI 管理的 Fantasy Premier League（FPL）账号。当前为 **Phase 0 骨架**：自动拉取数据、生成状态与历史 JSON、GitHub Actions 定时更新、Vercel 静态展示。决策层采用 **Market Consensus Strategy**（跟随市场共识）。
 
-完整系统设计见 [DESIGN.md](DESIGN.md)。
+设计文档统一在 [docs/](docs/)：
+
+- [架构设计](docs/architecture.md)
+- [决策层设计（Market Consensus）](docs/decision-engine.md)
+- [路线图](docs/roadmap.md)
+- [FPL API 资料](docs/api-notes.md)
+- [未来功能与自动执行设计](docs/future-features.md)
 
 ## 架构
 
@@ -18,14 +24,16 @@ GitHub Actions (定时) ──► brain/ (Python, 仅标准库) ──► data/*
 
 ```
 ├── .github/workflows/update.yml   # 定时运行 + 自动提交
+├── docs/                          # 设计文档统一目录
 ├── brain/                         # Python 引擎（零依赖）
 │   ├── __main__.py                # 入口
 │   ├── api.py                     # FPL API 客户端
-│   ├── config.py                  # 全局配置（TEAM_ID 在这里）
+│   ├── config.py                  # 代码级常量（TEAM_ID 在这里）
 │   ├── data_store.py              # JSON 原子读写 + 校验
 │   ├── context.py                 # GW 上下文构建
-│   └── strategy.py                # Phase 1+ 策略空接口（TODO）
-├── config/settings.json           # 人工可编辑配置（Phase 1 起生效）
+│   └── strategy.py                # 决策接口骨架（Market Consensus，仅接口与 TODO）
+├── config/
+│   └── strategy.json              # 策略参数唯一配置（权重/阈值/阵型池）
 ├── data/
 │   ├── state.json                 # 当前状态（GW/积分/排名/阵容）
 │   └── history.json               # 每轮历史（积分/排名）
@@ -83,10 +91,10 @@ https://fantasy.premierleague.com/entry/123456/event/1
 
 | 阶段 | 状态 | 内容 |
 |------|------|------|
-| Phase 0 | ✅ 当前 | 数据获取、state/history 生成、Actions、Vercel 展示 |
-| Phase 1 | 预留 | AI 决策：阵容/队长/阵型/转会建议 + Ownership 策略（`brain/strategy.py` 接口已占位） |
-| Phase 2 | 预留 | 前端增强（趋势图表）、通知、离线回测 |
-| Phase 3 | 预留 | 自动登录与自动执行（含安全门与审计） |
+| Phase 0 | ✅ 当前 | 数据获取、state/history 生成、Actions、Vercel 展示、决策骨架 |
+| Phase 1 | 设计待确认 | Market Consensus 决策：阵容/阵型/队长（CaptainSelector）/转会（Market Gap）/决策日志（metrics） |
+| Phase 2 | 预留 | xP 接入、前端增强、通知、离线回测、Chip 策略 |
+| Phase 3 | 预留 | 自动登录与自动执行（FreeTransferProvider 主来源、安全门与审计） |
 
 ## 常见问题
 

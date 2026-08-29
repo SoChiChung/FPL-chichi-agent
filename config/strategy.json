@@ -1,0 +1,21 @@
+{
+  "strategy": "market_consensus",
+
+  "allow_hits": false,
+  "injury_threshold": 75,
+  "market_gap_threshold": 15,
+  "max_free_transfers": 5,
+
+  "budget": 100.0,
+  "squad_size": 15,
+  "max_players_per_team": 3,
+  "position_quota": { "GKP": 2, "DEF": 5, "MID": 5, "FWD": 3 },
+
+  "formations": ["343", "352", "442", "433", "451", "541", "532"],
+
+  "weights": {
+    "gw1_10":    { "tsb": 0.8, "trend": 0.2 },
+    "gw11_20":   { "tsb": 0.6, "trend": 0.4 },
+    "gw21_plus": { "tsb": 0.3, "trend": 0.7 }
+  }
+}

@@ -1,9 +1,8 @@
-"""全局配置：所有可配置项统一放在这里。
+"""代码级常量：切换账号只需修改 TEAM_ID。
 
-切换账号只需修改 TEAM_ID。Phase 1 起的策略参数也追加在此模块，
-并通过 SETTINGS 合并 config/settings.json 中的可编辑项。
+策略参数（权重/阈值/阵型列表等）统一在 config/strategy.json，
+由 Phase 1 的 strategy_config.py 加载，禁止在此或任何代码中硬编码。
 """
-import json
 import os
 
 # ---- 账号 ----
@@ -21,14 +20,7 @@ HISTORY_FILE = os.path.join(DATA_DIR, "history.json")
 
 # ---- FPL API ----
 API_BASE = "https://fantasy.premierleague.com/api"
-USER_AGENT = "FPL-AI-Manager/0.1 (Phase 0 skeleton)"
+USER_AGENT = "FPL-AI-Manager/0.2 (Market Consensus skeleton)"
 REQUEST_TIMEOUT = 30
 RETRY_TIMES = 2
 RETRY_DELAY = 3
-
-# ---- 人工可编辑配置 (config/settings.json, 可缺省) ----
-SETTINGS_FILE = os.path.join("config", "settings.json")
-SETTINGS = {}
-if os.path.isfile(SETTINGS_FILE):
-    with open(SETTINGS_FILE, encoding="utf-8") as f:
-        SETTINGS = json.load(f)
