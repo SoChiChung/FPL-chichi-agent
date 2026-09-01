@@ -7,7 +7,7 @@ import os
 
 # ---- 账号 ----
 # TODO: 填入你的 FPL 队伍 ID (entry id)。获取方式见 README「如何找到 TEAM_ID」。
-TEAM_ID = 0
+TEAM_ID = 10049242
 SEASON = "2026-27"
 
 # ---- 运行 ----
@@ -17,6 +17,8 @@ DEBUG = True
 DATA_DIR = "data"
 STATE_FILE = os.path.join(DATA_DIR, "state.json")
 HISTORY_FILE = os.path.join(DATA_DIR, "history.json")
+STRATEGY_FILE = os.path.join("config", "strategy.json")
+FPL_JOE_FILE = os.path.join("config", "fpl_joe.json")
 
 # ---- FPL API ----
 API_BASE = "https://fantasy.premierleague.com/api"

@@ -32,14 +32,14 @@ def save_json(path: str, data) -> None:
 
 
 def validate_state(state: dict) -> None:
-    required = {"season", "current_gw", "points", "rank", "team"}
+    required = {"manager_id", "season", "current_gw", "points", "rank", "team"}
     missing = required - set(state)
     if missing:
         raise ValueError(f"state.json 缺少字段: {sorted(missing)}")
 
 
 def validate_history(history: dict) -> None:
-    required = {"season", "history"}
+    required = {"manager_id", "season", "history"}
     missing = required - set(history)
     if missing:
         raise ValueError(f"history.json 缺少字段: {sorted(missing)}")

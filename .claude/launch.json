@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "fpl-web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["start"],
+      "port": 8000
+    }
+  ]
+}

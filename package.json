@@ -1,0 +1,14 @@
+{
+  "name": "fpl-ai-manager",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI 运营的 FPL 账号：数据引擎 + 静态前端（零依赖）",
+  "scripts": {
+    "brain": "python -m brain",
+    "build": "node scripts/sync.js",
+    "start": "node scripts/start.js"
+  },
+  "dependencies": {
+    "axios": "^1.20.0"
+  }
+}

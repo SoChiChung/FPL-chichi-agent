@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "competition": "premier-league",
+  "projections_url": "https://www.fpljoe.com/api/odds/projections",
+  "status_url": "https://www.fpljoe.com/api/odds/status",
+  "timeout_seconds": 30,
+  "retry_times": 2,
+  "user_agent": "FPL-AI-Manager/0.4 (external source)",
+  "freshness_ttl_hours": 6,
+  "freshness_max_age_hours": 48,
+  "gameweeks_ahead": 5,
+  "output_dir": "external/fpljoe"
+}

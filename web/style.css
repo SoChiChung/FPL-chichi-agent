@@ -208,6 +208,100 @@ footer {
   text-align: center;
 }
 
+.disclaimer {
+  color: var(--accent-dim);
+  margin-bottom: 8px;
+}
+
+#load-status {
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+#load-status.load-error {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.advice-meta {
+  margin-bottom: 6px;
+}
+
+.transfer-list {
+  margin-top: 10px;
+}
+
+.transfer-card {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.transfer-label {
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin-bottom: 2px;
+}
+
+.transfer-name {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.transfer-sub {
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin: 2px 0 6px;
+}
+
+.transfer-score {
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.transfer-arrow {
+  font-size: 1.5rem;
+  color: var(--accent);
+  text-align: center;
+}
+
+.transfer-meta {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px dashed var(--border);
+  padding-top: 8px;
+}
+
+.badge-gap {
+  background: var(--accent);
+  color: #1a1a1a;
+  flex-shrink: 0;
+}
+
+.transfer-reason {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.no-transfer {
+  margin-top: 8px;
+}
+
+.advice-note {
+  margin-bottom: 4px;
+}
+
 .empty-card {
   grid-column: 1 / -1;
   text-align: center;
