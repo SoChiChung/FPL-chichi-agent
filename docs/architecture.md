@@ -32,7 +32,7 @@
 ┌───────┴─────────┐         │   │                             │
 │  GitHub Actions │         │   │  brain/    Python 决策引擎   │
 │  update.yml     │─────────┘   │                             │
-│  (定时 Cron)     │──push───┐   └──────────────┬──────────────┘
+│  (每10分钟自触发+闸门)  │──push───┐   └──────────────┬──────────────┘
 └─────────────────┘         │                  │ Git push
                             │                  ▼
                             │         ┌─────────────────────┐
@@ -43,7 +43,7 @@
 ```
 
 - **唯一数据源**：仓库里的 JSON 文件。AI 每次运行结果都以 commit 形式沉淀，Git 天然提供版本回滚。
-- **调度**：GitHub Actions Cron 定时唤醒"大脑"（brain）。
+- **调度**：GitHub Actions 每 10 分钟自触发一次，先跑 Python 闸门 `brain/scheduler.py`（只读 `data/state.json`，不请求 FPL），按距下个 deadline 的距离分档决定是否真正唤醒"大脑"（brain）。档位：>24h → 每天北京 09:00；24h 内 → 每小时；1h 内 → 每 10 分钟；休赛期/无 deadline → 每 24h 探测，不空转。
 - **展示**：Vercel 托管纯静态前端，直接 fetch 仓库内的 JSON 渲染，无 API 服务器。
 
 ### 1.2 一轮（GW）的生命周期
@@ -64,7 +64,7 @@
 |------|------|------|
 | 决策引擎 | Python 3.12+，**仅标准库** | 零依赖、秒级启动；未来需要优化器可平滑加 PuLP |
 | 数据存储 | 仓库内 JSON 文件 + Git | 免费、可回滚、Vercel 可直接读取 |
-| 调度 | GitHub Actions Cron | 无需服务器；免费额度充足 |
+| 调度 | GitHub Actions 定时 + Python 闸门（`scheduler.py`） | 公开仓库免费无限分钟；闸门空跑只读本地 JSON，不刷 FPL |
 | 前端 | 纯静态 HTML + 原生 JS | 需求只是展示，无框架最简单 |
 | 托管 | Vercel（Git 集成自动部署） | 免费、全球 CDN、push 即上线 |
 | 认证（Phase 3） | 可替换 Auth 适配器 + GitHub Secrets | FPL 登录流程曾多次变更，适配器模式保证可维护 |
@@ -78,7 +78,7 @@
 ```
 FPL AI Manager/
 ├── .github/workflows/
-│   ├── update.yml          # 定时决策流水线（当前）
+│   ├── update.yml          # 自触发 + 闸门 + 决策流水线（当前）
 │   └── execute.yml         # 自动执行流水线（Phase 3 再启用）
 ├── docs/                   # 所有设计文档统一目录
 │   ├── architecture.md     # 本文档
@@ -88,6 +88,7 @@ FPL AI Manager/
 │   └── future-features.md  # 未来功能与自动执行设计
 ├── brain/                  # Python 引擎（零依赖）
 │   ├── __main__.py         # 入口：python -m brain
+│   ├── scheduler.py        # 自动更新闸门（只读 state.json，python -m brain.scheduler）
 │   ├── api.py              # FPL API 客户端
 │   ├── config.py           # 代码级常量（TEAM_ID/SEASON/路径），唯一入口
 │   ├── data_store.py       # JSON 原子读写 + 校验
@@ -231,17 +232,24 @@ Phase 0 约定：bootstrap/fixtures 原始数据只在内存处理，**不落盘
 ```yaml
 on:
   schedule:
-    - cron: "23 3,15,21 * * *"   # 每日 3 次 (UTC)，避开整点
-  workflow_dispatch:
-  push:
-    paths: ["config/**"]          # 改策略配置 → 自动重决策
+    - cron: "*/10 * * * *"   # 每 10 分钟自触发一次；是否真跑由闸门判定
+  workflow_dispatch:         # 手动触发 = 闸门强制 due，更新一次
 concurrency:
-  group: update                   # 防止并发运行互相覆盖
+  group: update              # 防止并发运行互相覆盖
 ```
 
-流水线：checkout → `python -m brain` → 校验 JSON → 有变化才 commit + push（`GITHUB_TOKEN` 同仓库权限足够，以 bot 身份提交）。
+流水线：checkout → `python -m brain.scheduler`（闸门：只读本地 `data/state.json`，不请求 FPL；永远以 0 退出，skip 是正常状态）→ 闸门输出 `due=yes` 才 `python -m brain` → 有变化才 commit + push（`GITHUB_TOKEN` 同仓库权限足够，以 bot 身份提交）。
 
-**防循环**：brain 的 push 只写 `data/**`，而 `on.push` 只监听 `config/**`，不会互相触发。
+**档位规则**（scheduler.py 内置，全部锚定 `last_update`，Actions 触发抖动不会累积漂移）：
+
+| 距下个 deadline | 节奏 |
+|---|---|
+| > 24h | 每天北京时间 09:00 更新一次 |
+| 1h ~ 24h | 每小时更新一次 |
+| ≤ 1h | 每 10 分钟更新一次 |
+| deadline 已过 / 无未来 deadline | 季末/休赛期收敛：每 24h 探测一次；引擎失败限流 30 分钟重试，不空转刷 FPL |
+
+**防循环**：brain 的 push 只写 `data/**`，本工作流无 `on.push` 触发，不会自激。
 
 ### 6.2 `execute.yml`（Phase 3 启用）
 
@@ -249,7 +257,7 @@ concurrency:
 
 ### 6.3 免费额度
 
-每次运行 ~2 分钟 × 3 次/天 ≈ 4.8 小时/年，远低于 2000 分钟/月免费额度，零成本。
+仓库需为 **GitHub 公开**：公开仓库的 Actions（含定时任务）免费且无限分钟。闸门空跑每次 ~30 秒 × 144 次/天；引擎只在该更新时运行（约 1-2 分钟/次）。私有仓库有 2000 分钟/月配额，本自触发机制不适用。
 
 ---
 

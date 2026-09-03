@@ -13,7 +13,7 @@
 ## 架构
 
 ```
-GitHub Actions (定时) ──► brain/ (Python, 仅标准库) ──► data/*.json ──► Git push ──► Vercel 前端
+GitHub Actions (每 10 分钟自触发 + Python 闸门) ──► brain/ (Python, 仅标准库) ──► data/*.json ──► Git push ──► Vercel 前端
         ▲                                                                              │
         └──────────────────────── 读取 data/*.json（同源） ◄──────────────────────────┘
 ```
@@ -23,10 +23,11 @@ GitHub Actions (定时) ──► brain/ (Python, 仅标准库) ──► data/*
 ## 目录结构
 
 ```
-├── .github/workflows/update.yml   # 定时运行 + 自动提交
+├── .github/workflows/update.yml   # 每 10 分钟自触发 → 闸门判断 → 引擎 + 自动提交
 ├── docs/                          # 设计文档统一目录
 ├── brain/                         # Python 引擎（零依赖）
 │   ├── __main__.py                # 入口（决策管线编排）
+│   ├── scheduler.py               # 自动更新闸门（只读 state.json，决定该不该跑引擎）
 │   ├── api.py                     # FPL API 客户端
 │   ├── config.py                  # 代码级常量（TEAM_ID 在这里）
 │   ├── data_store.py              # JSON 原子读写 + 校验
@@ -81,12 +82,14 @@ https://fantasy.premierleague.com/entry/123456/event/1
 
 `/entry/` 与 `/event/` 之间的数字（如 `123456`）就是 TEAM_ID。未来切换账号只需修改 `brain/config.py` 中的这一个值。
 
-## GitHub Actions
+## GitHub Actions（自动更新）
 
-推送仓库到 GitHub 后：
+自动更新由 GitHub Actions 驱动，**不需要 Vercel 参与调度**。仓库需为 **GitHub 公开**（公开仓库的 Actions 定时任务免费且无限分钟；私有仓库有月度分钟配额限制）：
 
-- 每天 03:23 / 15:23 / 21:23 UTC 自动运行，更新 `data/` 并自动提交；
-- 也可在 Actions 页面手动触发（Workflow dispatch）。
+- `update.yml` 每 10 分钟自触发一次，先运行只读 `data/state.json` 的 Python 闸门 `brain/scheduler.py`（不请求 FPL API）；
+- 闸门判定"该更新"才运行 `python -m brain` 并 push 数据，Vercel 随 push 自动重部署静态站；
+- 判定规则：距下个 deadline 超过 24 小时 → **每天北京时间 09:00 更新一次**；24 小时内 → 每小时一次；1 小时内 → 每 10 分钟一次；休赛期/无未来 deadline → 每 24 小时探测一次，不空转刷接口；
+- 也可在 Actions 页面手动触发（Workflow dispatch，强制更新一次）。
 
 > 注意：Actions 首次运行前请确认 `TEAM_ID` 已配置；未配置时运行会失败且不产生提交，这是预期行为。
 
@@ -95,6 +98,8 @@ https://fantasy.premierleague.com/entry/123456/event/1
 1. Vercel 控制台 → Import 本仓库（无需登录鉴权，公开仓库即可）。
 2. Framework 选择 **Other**，其余保持默认（`vercel.json` 已配置构建命令）。
 3. 部署完成后，`data/*.json` 会在构建时自动复制到静态目录，前端直接读取。
+
+自动更新无需在 Vercel 配置任何环境变量：Actions 每次 push `data/` 后，Vercel 会按 Git 集成自动重新部署。
 
 ## 阶段规划
 
