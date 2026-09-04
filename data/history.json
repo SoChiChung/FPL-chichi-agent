@@ -190,12 +190,12 @@
             "name": "Calvert-Lewin"
           },
           {
-            "id": 391,
-            "name": "Gvardiol"
-          },
-          {
             "id": 259,
             "name": "Diop"
+          },
+          {
+            "id": 391,
+            "name": "Gvardiol"
           },
           {
             "id": 109,
@@ -216,16 +216,16 @@
               "name": "Calvert-Lewin",
               "pos": "FWD",
               "price": 6.0,
-              "market_score": 25.17
+              "market_score": 25.34
             },
             "in": {
               "id": 411,
               "name": "Haaland",
               "pos": "FWD",
               "price": 15.5,
-              "market_score": 67.54
+              "market_score": 66.47
             },
-            "market_gap": 42.37,
+            "market_gap": 41.13,
             "reason": "同位置 Market Score 差距超过阈值"
           }
         ],
@@ -337,12 +337,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 653.64（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 639.6（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "João Pedro",
-          "detail": "爆发视角 Captain Score 85.62（首发 11 人中最高；本轮 Lineup Score 80.73）"
+          "detail": "爆发视角 Captain Score 84.07（首发 11 人中最高；本轮 Lineup Score 78.11）"
         },
         {
           "topic": "transfer_status",
@@ -356,7 +356,7 @@
         {
           "topic": "transfer_in",
           "player": "Haaland",
-          "detail": "同位置 Market Score 最高者（67.54），满足预算与同队约束"
+          "detail": "同位置 Market Score 最高者（66.47），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -364,11 +364,11 @@
         }
       ],
       "metrics": {
-        "team_market_score": 532.15,
-        "captain_market_score": 70.03,
-        "formation_market_score": 434.07,
-        "team_lineup_score": 653.64,
-        "captain_score": 85.62
+        "team_market_score": 534.0,
+        "captain_market_score": 70.29,
+        "formation_market_score": 433.95,
+        "team_lineup_score": 639.6,
+        "captain_score": 84.07
       }
     }
   ]
