@@ -11,12 +11,17 @@ concurrency:
   group: update
   cancel-in-progress: false
 
+permissions:
+  contents: write
+
 jobs:
   update:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: 闸门（只读 data/state.json，不请求 FPL）
         id: gate
@@ -36,5 +41,5 @@ jobs:
             echo "无数据变化，跳过提交"
           else
             git commit -m "chore(data): 更新 FPL 快照"
-            git push
+            git push origin HEAD:main
           fi
