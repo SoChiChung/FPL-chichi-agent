@@ -16,15 +16,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: 闸门（只读 data/state.json，不请求 FPL）
         id: gate
-        run: python -m brain.scheduler
+        run: python3 -m brain.scheduler
 
       - name: 运行大脑（拉取数据，生成 state/history）
         if: steps.gate.outputs.due == 'yes'
-        run: python -m brain
+        run: python3 -m brain
 
       - name: 自动提交数据更新
         if: steps.gate.outputs.due == 'yes'
