@@ -5,24 +5,54 @@
     "source": "fpljoe",
     "competition": "premier-league",
     "season": "2026-27",
-    "retrieved_at": "2026-08-31T12:04:41Z",
-    "source_updated_at": "2026-08-31T12:01:37Z",
+    "retrieved_at": "2026-09-03T15:56:58Z",
+    "source_updated_at": "2026-09-03T15:50:49Z",
     "requested_gameweek_start": 3,
     "requested_gameweek_end": 7,
     "actual_gameweek_min": 1,
-    "actual_gameweek_max": 4,
-    "missing_gameweeks": [
-      5,
-      6,
-      7
-    ],
+    "actual_gameweek_max": 38,
+    "missing_gameweeks": [],
     "freshness": "fresh",
     "data_sources": {
       "odds_market": [
         1,
         2,
         3,
-        4
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38
       ],
       "elevenify": [
         1,
@@ -77,10 +107,10 @@
       "fpl_home_team_name": "Ipswich",
       "fpl_away_team_id": 14,
       "fpl_away_team_name": "Liverpool",
-      "home_clean_sheet_probability": 0.1188508913076751,
-      "away_clean_sheet_probability": 0.33740133841233716,
-      "home_clean_sheet_elevenify": 0.12,
-      "away_clean_sheet_elevenify": 0.36
+      "home_clean_sheet_probability": 0.10303147470752991,
+      "away_clean_sheet_probability": 0.32840130668273115,
+      "home_clean_sheet_elevenify": 0.11,
+      "away_clean_sheet_elevenify": 0.34
     },
     {
       "gameweek": 3,
@@ -91,8 +121,8 @@
       "fpl_home_team_name": "Newcastle",
       "fpl_away_team_id": 3,
       "fpl_away_team_name": "Bournemouth",
-      "home_clean_sheet_probability": 0.2421061168140761,
-      "away_clean_sheet_probability": 0.18695443333523204,
+      "home_clean_sheet_probability": 0.24781582362974688,
+      "away_clean_sheet_probability": 0.17531495667580546,
       "home_clean_sheet_elevenify": 0.23,
       "away_clean_sheet_elevenify": 0.18
     },
@@ -105,10 +135,10 @@
       "fpl_home_team_name": "Brentford",
       "fpl_away_team_id": 20,
       "fpl_away_team_name": "Sunderland",
-      "home_clean_sheet_probability": 0.4197663483128914,
-      "away_clean_sheet_probability": 0.15429350403293707,
+      "home_clean_sheet_probability": 0.3949772093087074,
+      "away_clean_sheet_probability": 0.15814982296316493,
       "home_clean_sheet_elevenify": 0.37,
-      "away_clean_sheet_elevenify": 0.17
+      "away_clean_sheet_elevenify": 0.18
     },
     {
       "gameweek": 3,
@@ -119,9 +149,9 @@
       "fpl_home_team_name": "Brighton",
       "fpl_away_team_id": 13,
       "fpl_away_team_name": "Leeds",
-      "home_clean_sheet_probability": 0.33804406302111145,
-      "away_clean_sheet_probability": 0.18175027566136284,
-      "home_clean_sheet_elevenify": 0.34,
+      "home_clean_sheet_probability": 0.3267952748798778,
+      "away_clean_sheet_probability": 0.19661364434338494,
+      "home_clean_sheet_elevenify": 0.33,
       "away_clean_sheet_elevenify": 0.18
     },
     {
@@ -133,9 +163,9 @@
       "fpl_home_team_name": "Fulham",
       "fpl_away_team_id": 8,
       "fpl_away_team_name": "Crystal Palace",
-      "home_clean_sheet_probability": 0.28387150086115387,
-      "away_clean_sheet_probability": 0.22595228201912,
-      "home_clean_sheet_elevenify": 0.26,
+      "home_clean_sheet_probability": 0.2840482185296389,
+      "away_clean_sheet_probability": 0.2300776120854026,
+      "home_clean_sheet_elevenify": 0.27,
       "away_clean_sheet_elevenify": 0.23
     },
     {
@@ -147,8 +177,8 @@
       "fpl_home_team_name": "Man City",
       "fpl_away_team_id": 7,
       "fpl_away_team_name": "Coventry City",
-      "home_clean_sheet_probability": 0.4563956672376894,
-      "away_clean_sheet_probability": 0.055159059637355616,
+      "home_clean_sheet_probability": 0.48536920541092926,
+      "away_clean_sheet_probability": 0.05171029893510487,
       "home_clean_sheet_elevenify": 0.46,
       "away_clean_sheet_elevenify": 0.06
     },
@@ -161,8 +191,8 @@
       "fpl_home_team_name": "Nott'm Forest",
       "fpl_away_team_id": 19,
       "fpl_away_team_name": "Spurs",
-      "home_clean_sheet_probability": 0.28624374775927536,
-      "away_clean_sheet_probability": 0.26482514331896884,
+      "home_clean_sheet_probability": 0.2775410163083859,
+      "away_clean_sheet_probability": 0.2500405092813153,
       "home_clean_sheet_elevenify": 0.28,
       "away_clean_sheet_elevenify": 0.26
     },
@@ -175,9 +205,9 @@
       "fpl_home_team_name": "Hull City",
       "fpl_away_team_id": 2,
       "fpl_away_team_name": "Aston Villa",
-      "home_clean_sheet_probability": 0.1831090289117846,
-      "away_clean_sheet_probability": 0.3406220674664159,
-      "home_clean_sheet_elevenify": 0.15,
+      "home_clean_sheet_probability": 0.18900225471756477,
+      "away_clean_sheet_probability": 0.34720524318376117,
+      "home_clean_sheet_elevenify": 0.16,
       "away_clean_sheet_elevenify": 0.37
     },
     {
@@ -189,10 +219,10 @@
       "fpl_home_team_name": "Everton",
       "fpl_away_team_id": 16,
       "fpl_away_team_name": "Man Utd",
-      "home_clean_sheet_probability": 0.2039444743509551,
-      "away_clean_sheet_probability": 0.26420218332980333,
+      "home_clean_sheet_probability": 0.1940932721424523,
+      "away_clean_sheet_probability": 0.27077977904869815,
       "home_clean_sheet_elevenify": 0.2,
-      "away_clean_sheet_elevenify": 0.29
+      "away_clean_sheet_elevenify": 0.28
     },
     {
       "gameweek": 3,
@@ -203,8 +233,8 @@
       "fpl_home_team_name": "Arsenal",
       "fpl_away_team_id": 6,
       "fpl_away_team_name": "Chelsea",
-      "home_clean_sheet_probability": 0.36901491006200315,
-      "away_clean_sheet_probability": 0.1640946046028659,
+      "home_clean_sheet_probability": 0.36093225380699284,
+      "away_clean_sheet_probability": 0.15665483405996877,
       "home_clean_sheet_elevenify": 0.41,
       "away_clean_sheet_elevenify": 0.15
     },
@@ -219,8 +249,8 @@
       "fpl_away_team_name": "Nott'm Forest",
       "home_clean_sheet_probability": 0.33175064629056045,
       "away_clean_sheet_probability": 0.19516473747942334,
-      "home_clean_sheet_elevenify": 0.3,
-      "away_clean_sheet_elevenify": 0.21
+      "home_clean_sheet_elevenify": 0.29,
+      "away_clean_sheet_elevenify": 0.22
     },
     {
       "gameweek": 4,
@@ -231,8 +261,8 @@
       "fpl_home_team_name": "Bournemouth",
       "fpl_away_team_id": 4,
       "fpl_away_team_name": "Brentford",
-      "home_clean_sheet_probability": 0.2363645729028803,
-      "away_clean_sheet_probability": 0.22631025730453033,
+      "home_clean_sheet_probability": 0.23229017234908556,
+      "away_clean_sheet_probability": 0.23027976935218297,
       "home_clean_sheet_elevenify": 0.23,
       "away_clean_sheet_elevenify": 0.2
     },
@@ -245,8 +275,8 @@
       "fpl_home_team_name": "Chelsea",
       "fpl_away_team_id": 11,
       "fpl_away_team_name": "Hull City",
-      "home_clean_sheet_probability": 0.46498835825279583,
-      "away_clean_sheet_probability": 0.06976619629199528,
+      "home_clean_sheet_probability": 0.4679858721495602,
+      "away_clean_sheet_probability": 0.06856812760481933,
       "home_clean_sheet_elevenify": 0.45,
       "away_clean_sheet_elevenify": 0.07
     },
@@ -261,8 +291,8 @@
       "fpl_away_team_name": "Ipswich",
       "home_clean_sheet_probability": 0.3635223781932885,
       "away_clean_sheet_probability": 0.19778897286501362,
-      "home_clean_sheet_elevenify": 0.35,
-      "away_clean_sheet_elevenify": 0.17
+      "home_clean_sheet_elevenify": 0.34,
+      "away_clean_sheet_elevenify": 0.16
     },
     {
       "gameweek": 4,
@@ -273,9 +303,9 @@
       "fpl_home_team_name": "Liverpool",
       "fpl_away_team_id": 10,
       "fpl_away_team_name": "Fulham",
-      "home_clean_sheet_probability": 0.3389868509919398,
-      "away_clean_sheet_probability": 0.09941322834037278,
-      "home_clean_sheet_elevenify": 0.35,
+      "home_clean_sheet_probability": 0.35907336889136404,
+      "away_clean_sheet_probability": 0.09848476788748613,
+      "home_clean_sheet_elevenify": 0.34,
       "away_clean_sheet_elevenify": 0.12
     },
     {
@@ -301,10 +331,10 @@
       "fpl_home_team_name": "Sunderland",
       "fpl_away_team_id": 1,
       "fpl_away_team_name": "Arsenal",
-      "home_clean_sheet_probability": 0.1566182377528717,
-      "away_clean_sheet_probability": 0.4686563818852766,
+      "home_clean_sheet_probability": 0.15407298547931414,
+      "away_clean_sheet_probability": 0.4763984835768864,
       "home_clean_sheet_elevenify": 0.17,
-      "away_clean_sheet_elevenify": 0.52
+      "away_clean_sheet_elevenify": 0.53
     },
     {
       "gameweek": 4,
@@ -315,10 +345,10 @@
       "fpl_home_team_name": "Coventry City",
       "fpl_away_team_id": 5,
       "fpl_away_team_name": "Brighton",
-      "home_clean_sheet_probability": 0.16901592291956044,
-      "away_clean_sheet_probability": 0.3529912689900153,
+      "home_clean_sheet_probability": 0.17240137713575243,
+      "away_clean_sheet_probability": 0.3460595622963953,
       "home_clean_sheet_elevenify": 0.15,
-      "away_clean_sheet_elevenify": 0.35
+      "away_clean_sheet_elevenify": 0.34
     },
     {
       "gameweek": 4,
@@ -329,9 +359,9 @@
       "fpl_home_team_name": "Man Utd",
       "fpl_away_team_id": 15,
       "fpl_away_team_name": "Man City",
-      "home_clean_sheet_probability": 0.1751479125043121,
-      "away_clean_sheet_probability": 0.2423678201703288,
-      "home_clean_sheet_elevenify": 0.18,
+      "home_clean_sheet_probability": 0.17065621761097527,
+      "away_clean_sheet_probability": 0.2287716266482829,
+      "home_clean_sheet_elevenify": 0.17,
       "away_clean_sheet_elevenify": 0.23
     },
     {
@@ -343,10 +373,10 @@
       "fpl_home_team_name": "Leeds",
       "fpl_away_team_id": 17,
       "fpl_away_team_name": "Newcastle",
-      "home_clean_sheet_probability": null,
-      "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.24,
-      "away_clean_sheet_elevenify": 0.23
+      "home_clean_sheet_probability": 0.2527284086275624,
+      "away_clean_sheet_probability": 0.24022939253532966,
+      "home_clean_sheet_elevenify": 0.25,
+      "away_clean_sheet_elevenify": 0.24
     },
     {
       "gameweek": 5,
@@ -359,7 +389,7 @@
       "fpl_away_team_name": "Chelsea",
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.21,
+      "home_clean_sheet_elevenify": 0.2,
       "away_clean_sheet_elevenify": 0.21
     },
     {
@@ -373,7 +403,7 @@
       "fpl_away_team_name": "Aston Villa",
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.27,
+      "home_clean_sheet_elevenify": 0.28,
       "away_clean_sheet_elevenify": 0.22
     },
     {
@@ -388,7 +418,7 @@
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
       "home_clean_sheet_elevenify": 0.21,
-      "away_clean_sheet_elevenify": 0.39
+      "away_clean_sheet_elevenify": 0.4
     },
     {
       "gameweek": 5,
@@ -401,22 +431,8 @@
       "fpl_away_team_name": "Ipswich",
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.37,
+      "home_clean_sheet_elevenify": 0.36,
       "away_clean_sheet_elevenify": 0.18
-    },
-    {
-      "gameweek": 5,
-      "home_team": "Leeds United",
-      "away_team": "Crystal Palace",
-      "kickoff_time": "2026-09-19T14:00:00.000Z",
-      "fpl_home_team_id": 13,
-      "fpl_home_team_name": "Leeds",
-      "fpl_away_team_id": 8,
-      "fpl_away_team_name": "Crystal Palace",
-      "home_clean_sheet_probability": null,
-      "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.29,
-      "away_clean_sheet_elevenify": 0.23
     },
     {
       "gameweek": 5,
@@ -448,6 +464,20 @@
     },
     {
       "gameweek": 5,
+      "home_team": "Leeds United",
+      "away_team": "Crystal Palace",
+      "kickoff_time": "2026-09-20T13:00:00.000Z",
+      "fpl_home_team_id": 13,
+      "fpl_home_team_name": "Leeds",
+      "fpl_away_team_id": 8,
+      "fpl_away_team_name": "Crystal Palace",
+      "home_clean_sheet_probability": null,
+      "away_clean_sheet_probability": null,
+      "home_clean_sheet_elevenify": 0.3,
+      "away_clean_sheet_elevenify": 0.23
+    },
+    {
+      "gameweek": 5,
       "home_team": "Manchester City",
       "away_team": "Sunderland",
       "kickoff_time": "2026-09-20T13:00:00.000Z",
@@ -457,7 +487,7 @@
       "fpl_away_team_name": "Sunderland",
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.45,
+      "home_clean_sheet_elevenify": 0.46,
       "away_clean_sheet_elevenify": 0.1
     },
     {
@@ -472,7 +502,7 @@
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
       "home_clean_sheet_elevenify": 0.17,
-      "away_clean_sheet_elevenify": 0.24
+      "away_clean_sheet_elevenify": 0.23
     },
     {
       "gameweek": 5,
@@ -485,7 +515,7 @@
       "fpl_away_team_name": "Man Utd",
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.18,
+      "home_clean_sheet_elevenify": 0.17,
       "away_clean_sheet_elevenify": 0.28
     },
     {
@@ -499,7 +529,7 @@
       "fpl_away_team_name": "Leeds",
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.52,
+      "home_clean_sheet_elevenify": 0.53,
       "away_clean_sheet_elevenify": 0.14
     },
     {
@@ -513,7 +543,7 @@
       "fpl_away_team_name": "Brentford",
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.23,
+      "home_clean_sheet_elevenify": 0.24,
       "away_clean_sheet_elevenify": 0.22
     },
     {
@@ -541,7 +571,7 @@
       "fpl_away_team_name": "Fulham",
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.23,
+      "home_clean_sheet_elevenify": 0.22,
       "away_clean_sheet_elevenify": 0.28
     },
     {
@@ -556,7 +586,7 @@
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
       "home_clean_sheet_elevenify": 0.21,
-      "away_clean_sheet_elevenify": 0.34
+      "away_clean_sheet_elevenify": 0.33
     },
     {
       "gameweek": 6,
@@ -583,7 +613,7 @@
       "fpl_away_team_name": "Nott'm Forest",
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.29,
+      "home_clean_sheet_elevenify": 0.28,
       "away_clean_sheet_elevenify": 0.24
     },
     {
@@ -598,7 +628,7 @@
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
       "home_clean_sheet_elevenify": 0.19,
-      "away_clean_sheet_elevenify": 0.38
+      "away_clean_sheet_elevenify": 0.37
     },
     {
       "gameweek": 6,
@@ -611,7 +641,7 @@
       "fpl_away_team_name": "Man City",
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.19,
+      "home_clean_sheet_elevenify": 0.18,
       "away_clean_sheet_elevenify": 0.21
     },
     {
@@ -626,7 +656,7 @@
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
       "home_clean_sheet_elevenify": 0.17,
-      "away_clean_sheet_elevenify": 0.29
+      "away_clean_sheet_elevenify": 0.3
     },
     {
       "gameweek": 7,
@@ -639,8 +669,8 @@
       "fpl_away_team_name": "Chelsea",
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.2,
-      "away_clean_sheet_elevenify": 0.28
+      "home_clean_sheet_elevenify": 0.19,
+      "away_clean_sheet_elevenify": 0.27
     },
     {
       "gameweek": 7,
@@ -654,7 +684,7 @@
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
       "home_clean_sheet_elevenify": 0.19,
-      "away_clean_sheet_elevenify": 0.23
+      "away_clean_sheet_elevenify": 0.22
     },
     {
       "gameweek": 7,
@@ -667,8 +697,8 @@
       "fpl_away_team_name": "Hull City",
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.4,
-      "away_clean_sheet_elevenify": 0.14
+      "home_clean_sheet_elevenify": 0.41,
+      "away_clean_sheet_elevenify": 0.15
     },
     {
       "gameweek": 7,
@@ -681,7 +711,7 @@
       "fpl_away_team_name": "Ipswich",
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.46,
+      "home_clean_sheet_elevenify": 0.45,
       "away_clean_sheet_elevenify": 0.06
     },
     {
@@ -695,7 +725,7 @@
       "fpl_away_team_name": "Aston Villa",
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.25,
+      "home_clean_sheet_elevenify": 0.26,
       "away_clean_sheet_elevenify": 0.19
     },
     {
@@ -723,8 +753,8 @@
       "fpl_away_team_name": "Crystal Palace",
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.33,
-      "away_clean_sheet_elevenify": 0.17
+      "home_clean_sheet_elevenify": 0.32,
+      "away_clean_sheet_elevenify": 0.16
     },
     {
       "gameweek": 7,
@@ -738,7 +768,7 @@
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
       "home_clean_sheet_elevenify": 0.2,
-      "away_clean_sheet_elevenify": 0.28
+      "away_clean_sheet_elevenify": 0.27
     },
     {
       "gameweek": 7,
@@ -751,8 +781,8 @@
       "fpl_away_team_name": "Arsenal",
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.18,
-      "away_clean_sheet_elevenify": 0.46
+      "home_clean_sheet_elevenify": 0.19,
+      "away_clean_sheet_elevenify": 0.47
     },
     {
       "gameweek": 7,
@@ -765,7 +795,7 @@
       "fpl_away_team_name": "Coventry City",
       "home_clean_sheet_probability": null,
       "away_clean_sheet_probability": null,
-      "home_clean_sheet_elevenify": 0.38,
+      "home_clean_sheet_elevenify": 0.39,
       "away_clean_sheet_elevenify": 0.15
     }
   ],
@@ -777,7 +807,7 @@
       "venue": "home",
       "fpl_team_id": 12,
       "fpl_team_name": "Ipswich",
-      "clean_sheet_probability": 0.12,
+      "clean_sheet_probability": 0.11,
       "source": "elevenify"
     },
     {
@@ -787,7 +817,7 @@
       "venue": "away",
       "fpl_team_id": 14,
       "fpl_team_name": "Liverpool",
-      "clean_sheet_probability": 0.36,
+      "clean_sheet_probability": 0.34,
       "source": "elevenify"
     },
     {
@@ -827,7 +857,7 @@
       "venue": "away",
       "fpl_team_id": 20,
       "fpl_team_name": "Sunderland",
-      "clean_sheet_probability": 0.17,
+      "clean_sheet_probability": 0.18,
       "source": "elevenify"
     },
     {
@@ -837,7 +867,7 @@
       "venue": "home",
       "fpl_team_id": 5,
       "fpl_team_name": "Brighton",
-      "clean_sheet_probability": 0.34,
+      "clean_sheet_probability": 0.33,
       "source": "elevenify"
     },
     {
@@ -857,7 +887,7 @@
       "venue": "home",
       "fpl_team_id": 10,
       "fpl_team_name": "Fulham",
-      "clean_sheet_probability": 0.26,
+      "clean_sheet_probability": 0.27,
       "source": "elevenify"
     },
     {
@@ -917,7 +947,7 @@
       "venue": "home",
       "fpl_team_id": 11,
       "fpl_team_name": "Hull City",
-      "clean_sheet_probability": 0.15,
+      "clean_sheet_probability": 0.16,
       "source": "elevenify"
     },
     {
@@ -947,7 +977,7 @@
       "venue": "away",
       "fpl_team_id": 16,
       "fpl_team_name": "Man Utd",
-      "clean_sheet_probability": 0.29,
+      "clean_sheet_probability": 0.28,
       "source": "elevenify"
     },
     {
@@ -977,7 +1007,7 @@
       "venue": "home",
       "fpl_team_id": 2,
       "fpl_team_name": "Aston Villa",
-      "clean_sheet_probability": 0.3,
+      "clean_sheet_probability": 0.29,
       "source": "elevenify"
     },
     {
@@ -987,7 +1017,7 @@
       "venue": "away",
       "fpl_team_id": 18,
       "fpl_team_name": "Nott'm Forest",
-      "clean_sheet_probability": 0.21,
+      "clean_sheet_probability": 0.22,
       "source": "elevenify"
     },
     {
@@ -1037,7 +1067,7 @@
       "venue": "home",
       "fpl_team_id": 8,
       "fpl_team_name": "Crystal Palace",
-      "clean_sheet_probability": 0.35,
+      "clean_sheet_probability": 0.34,
       "source": "elevenify"
     },
     {
@@ -1047,7 +1077,7 @@
       "venue": "away",
       "fpl_team_id": 12,
       "fpl_team_name": "Ipswich",
-      "clean_sheet_probability": 0.17,
+      "clean_sheet_probability": 0.16,
       "source": "elevenify"
     },
     {
@@ -1057,7 +1087,7 @@
       "venue": "home",
       "fpl_team_id": 14,
       "fpl_team_name": "Liverpool",
-      "clean_sheet_probability": 0.35,
+      "clean_sheet_probability": 0.34,
       "source": "elevenify"
     },
     {
@@ -1107,7 +1137,7 @@
       "venue": "away",
       "fpl_team_id": 1,
       "fpl_team_name": "Arsenal",
-      "clean_sheet_probability": 0.52,
+      "clean_sheet_probability": 0.53,
       "source": "elevenify"
     },
     {
@@ -1127,7 +1157,7 @@
       "venue": "away",
       "fpl_team_id": 5,
       "fpl_team_name": "Brighton",
-      "clean_sheet_probability": 0.35,
+      "clean_sheet_probability": 0.34,
       "source": "elevenify"
     },
     {
@@ -1137,7 +1167,7 @@
       "venue": "home",
       "fpl_team_id": 16,
       "fpl_team_name": "Man Utd",
-      "clean_sheet_probability": 0.18,
+      "clean_sheet_probability": 0.17,
       "source": "elevenify"
     },
     {
@@ -1157,7 +1187,7 @@
       "venue": "home",
       "fpl_team_id": 13,
       "fpl_team_name": "Leeds",
-      "clean_sheet_probability": 0.24,
+      "clean_sheet_probability": 0.25,
       "source": "elevenify"
     },
     {
@@ -1167,7 +1197,7 @@
       "venue": "away",
       "fpl_team_id": 17,
       "fpl_team_name": "Newcastle",
-      "clean_sheet_probability": 0.23,
+      "clean_sheet_probability": 0.24,
       "source": "elevenify"
     },
     {
@@ -1177,7 +1207,7 @@
       "venue": "home",
       "fpl_team_id": 4,
       "fpl_team_name": "Brentford",
-      "clean_sheet_probability": 0.21,
+      "clean_sheet_probability": 0.2,
       "source": "elevenify"
     },
     {
@@ -1197,7 +1227,7 @@
       "venue": "home",
       "fpl_team_id": 19,
       "fpl_team_name": "Spurs",
-      "clean_sheet_probability": 0.27,
+      "clean_sheet_probability": 0.28,
       "source": "elevenify"
     },
     {
@@ -1227,7 +1257,7 @@
       "venue": "away",
       "fpl_team_id": 1,
       "fpl_team_name": "Arsenal",
-      "clean_sheet_probability": 0.39,
+      "clean_sheet_probability": 0.4,
       "source": "elevenify"
     },
     {
@@ -1237,7 +1267,7 @@
       "venue": "home",
       "fpl_team_id": 9,
       "fpl_team_name": "Everton",
-      "clean_sheet_probability": 0.37,
+      "clean_sheet_probability": 0.36,
       "source": "elevenify"
     },
     {
@@ -1248,26 +1278,6 @@
       "fpl_team_id": 12,
       "fpl_team_name": "Ipswich",
       "clean_sheet_probability": 0.18,
-      "source": "elevenify"
-    },
-    {
-      "team": "Leeds United",
-      "gameweek": 5,
-      "opponent": "Crystal Palace",
-      "venue": "home",
-      "fpl_team_id": 13,
-      "fpl_team_name": "Leeds",
-      "clean_sheet_probability": 0.29,
-      "source": "elevenify"
-    },
-    {
-      "team": "Crystal Palace",
-      "gameweek": 5,
-      "opponent": "Leeds United",
-      "venue": "away",
-      "fpl_team_id": 8,
-      "fpl_team_name": "Crystal Palace",
-      "clean_sheet_probability": 0.23,
       "source": "elevenify"
     },
     {
@@ -1311,13 +1321,33 @@
       "source": "elevenify"
     },
     {
+      "team": "Leeds United",
+      "gameweek": 5,
+      "opponent": "Crystal Palace",
+      "venue": "home",
+      "fpl_team_id": 13,
+      "fpl_team_name": "Leeds",
+      "clean_sheet_probability": 0.3,
+      "source": "elevenify"
+    },
+    {
+      "team": "Crystal Palace",
+      "gameweek": 5,
+      "opponent": "Leeds United",
+      "venue": "away",
+      "fpl_team_id": 8,
+      "fpl_team_name": "Crystal Palace",
+      "clean_sheet_probability": 0.23,
+      "source": "elevenify"
+    },
+    {
       "team": "Manchester City",
       "gameweek": 5,
       "opponent": "Sunderland",
       "venue": "home",
       "fpl_team_id": 15,
       "fpl_team_name": "Man City",
-      "clean_sheet_probability": 0.45,
+      "clean_sheet_probability": 0.46,
       "source": "elevenify"
     },
     {
@@ -1347,7 +1377,7 @@
       "venue": "away",
       "fpl_team_id": 14,
       "fpl_team_name": "Liverpool",
-      "clean_sheet_probability": 0.24,
+      "clean_sheet_probability": 0.23,
       "source": "elevenify"
     },
     {
@@ -1357,7 +1387,7 @@
       "venue": "home",
       "fpl_team_id": 10,
       "fpl_team_name": "Fulham",
-      "clean_sheet_probability": 0.18,
+      "clean_sheet_probability": 0.17,
       "source": "elevenify"
     },
     {
@@ -1377,7 +1407,7 @@
       "venue": "home",
       "fpl_team_id": 1,
       "fpl_team_name": "Arsenal",
-      "clean_sheet_probability": 0.52,
+      "clean_sheet_probability": 0.53,
       "source": "elevenify"
     },
     {
@@ -1397,7 +1427,7 @@
       "venue": "home",
       "fpl_team_id": 2,
       "fpl_team_name": "Aston Villa",
-      "clean_sheet_probability": 0.23,
+      "clean_sheet_probability": 0.24,
       "source": "elevenify"
     },
     {
@@ -1437,7 +1467,7 @@
       "venue": "home",
       "fpl_team_id": 12,
       "fpl_team_name": "Ipswich",
-      "clean_sheet_probability": 0.23,
+      "clean_sheet_probability": 0.22,
       "source": "elevenify"
     },
     {
@@ -1467,7 +1497,7 @@
       "venue": "away",
       "fpl_team_id": 5,
       "fpl_team_name": "Brighton",
-      "clean_sheet_probability": 0.34,
+      "clean_sheet_probability": 0.33,
       "source": "elevenify"
     },
     {
@@ -1497,7 +1527,7 @@
       "venue": "home",
       "fpl_team_id": 8,
       "fpl_team_name": "Crystal Palace",
-      "clean_sheet_probability": 0.29,
+      "clean_sheet_probability": 0.28,
       "source": "elevenify"
     },
     {
@@ -1527,7 +1557,7 @@
       "venue": "away",
       "fpl_team_id": 9,
       "fpl_team_name": "Everton",
-      "clean_sheet_probability": 0.38,
+      "clean_sheet_probability": 0.37,
       "source": "elevenify"
     },
     {
@@ -1537,7 +1567,7 @@
       "venue": "home",
       "fpl_team_id": 14,
       "fpl_team_name": "Liverpool",
-      "clean_sheet_probability": 0.19,
+      "clean_sheet_probability": 0.18,
       "source": "elevenify"
     },
     {
@@ -1567,7 +1597,7 @@
       "venue": "away",
       "fpl_team_id": 17,
       "fpl_team_name": "Newcastle",
-      "clean_sheet_probability": 0.29,
+      "clean_sheet_probability": 0.3,
       "source": "elevenify"
     },
     {
@@ -1577,7 +1607,7 @@
       "venue": "home",
       "fpl_team_id": 9,
       "fpl_team_name": "Everton",
-      "clean_sheet_probability": 0.2,
+      "clean_sheet_probability": 0.19,
       "source": "elevenify"
     },
     {
@@ -1587,7 +1617,7 @@
       "venue": "away",
       "fpl_team_id": 6,
       "fpl_team_name": "Chelsea",
-      "clean_sheet_probability": 0.28,
+      "clean_sheet_probability": 0.27,
       "source": "elevenify"
     },
     {
@@ -1607,7 +1637,7 @@
       "venue": "away",
       "fpl_team_id": 14,
       "fpl_team_name": "Liverpool",
-      "clean_sheet_probability": 0.23,
+      "clean_sheet_probability": 0.22,
       "source": "elevenify"
     },
     {
@@ -1617,7 +1647,7 @@
       "venue": "home",
       "fpl_team_id": 10,
       "fpl_team_name": "Fulham",
-      "clean_sheet_probability": 0.4,
+      "clean_sheet_probability": 0.41,
       "source": "elevenify"
     },
     {
@@ -1627,7 +1657,7 @@
       "venue": "away",
       "fpl_team_id": 11,
       "fpl_team_name": "Hull City",
-      "clean_sheet_probability": 0.14,
+      "clean_sheet_probability": 0.15,
       "source": "elevenify"
     },
     {
@@ -1637,7 +1667,7 @@
       "venue": "home",
       "fpl_team_id": 15,
       "fpl_team_name": "Man City",
-      "clean_sheet_probability": 0.46,
+      "clean_sheet_probability": 0.45,
       "source": "elevenify"
     },
     {
@@ -1657,7 +1687,7 @@
       "venue": "home",
       "fpl_team_id": 17,
       "fpl_team_name": "Newcastle",
-      "clean_sheet_probability": 0.25,
+      "clean_sheet_probability": 0.26,
       "source": "elevenify"
     },
     {
@@ -1697,7 +1727,7 @@
       "venue": "home",
       "fpl_team_id": 5,
       "fpl_team_name": "Brighton",
-      "clean_sheet_probability": 0.33,
+      "clean_sheet_probability": 0.32,
       "source": "elevenify"
     },
     {
@@ -1707,7 +1737,7 @@
       "venue": "away",
       "fpl_team_id": 8,
       "fpl_team_name": "Crystal Palace",
-      "clean_sheet_probability": 0.17,
+      "clean_sheet_probability": 0.16,
       "source": "elevenify"
     },
     {
@@ -1727,7 +1757,7 @@
       "venue": "away",
       "fpl_team_id": 16,
       "fpl_team_name": "Man Utd",
-      "clean_sheet_probability": 0.28,
+      "clean_sheet_probability": 0.27,
       "source": "elevenify"
     },
     {
@@ -1737,7 +1767,7 @@
       "venue": "home",
       "fpl_team_id": 18,
       "fpl_team_name": "Nott'm Forest",
-      "clean_sheet_probability": 0.18,
+      "clean_sheet_probability": 0.19,
       "source": "elevenify"
     },
     {
@@ -1747,7 +1777,7 @@
       "venue": "away",
       "fpl_team_id": 1,
       "fpl_team_name": "Arsenal",
-      "clean_sheet_probability": 0.46,
+      "clean_sheet_probability": 0.47,
       "source": "elevenify"
     },
     {
@@ -1757,7 +1787,7 @@
       "venue": "home",
       "fpl_team_id": 19,
       "fpl_team_name": "Spurs",
-      "clean_sheet_probability": 0.38,
+      "clean_sheet_probability": 0.39,
       "source": "elevenify"
     },
     {

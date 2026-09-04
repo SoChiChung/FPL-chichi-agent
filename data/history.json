@@ -122,6 +122,229 @@
         "captain_market_score": 63.4,
         "formation_market_score": 381.57
       }
+    },
+    {
+      "gw": 3,
+      "points": null,
+      "rank": null,
+      "overall_rank": null,
+      "decision": {
+        "formation": "442",
+        "captain": {
+          "id": 391,
+          "name": "Gvardiol"
+        },
+        "vice": {
+          "id": 399,
+          "name": "Cherki"
+        },
+        "starting_xi": [
+          {
+            "id": 109,
+            "name": "Verbruggen"
+          },
+          {
+            "id": 391,
+            "name": "Gvardiol"
+          },
+          {
+            "id": 8,
+            "name": "Calafiori"
+          },
+          {
+            "id": 115,
+            "name": "De Cuyper"
+          },
+          {
+            "id": 4,
+            "name": "Gabriel"
+          },
+          {
+            "id": 399,
+            "name": "Cherki"
+          },
+          {
+            "id": 426,
+            "name": "B.Fernandes"
+          },
+          {
+            "id": 368,
+            "name": "Szoboszlai"
+          },
+          {
+            "id": 427,
+            "name": "Mbeumo"
+          },
+          {
+            "id": 165,
+            "name": "João Pedro"
+          },
+          {
+            "id": 346,
+            "name": "Calvert-Lewin"
+          }
+        ],
+        "bench": [
+          {
+            "id": 40,
+            "name": "Rogers"
+          },
+          {
+            "id": 272,
+            "name": "Kusi-Asare"
+          },
+          {
+            "id": 259,
+            "name": "Diop"
+          },
+          {
+            "id": 1,
+            "name": "Raya"
+          }
+        ],
+        "squad": [],
+        "squad_source": {
+          "type": "establish",
+          "gw": null
+        },
+        "transfer_status": "unlimited",
+        "free_transfers": null,
+        "recommended_transfers": [],
+        "strategy_snapshot": {
+          "strategy": "market_consensus",
+          "tsb_weight": 0.8,
+          "trend_weight": 0.2,
+          "injury_threshold": 75,
+          "market_gap_threshold": 15,
+          "max_free_transfers": 5,
+          "allow_hits": false,
+          "lineup_engine": {
+            "streak_min_points": {
+              "GKP": 6,
+              "DEF": 6,
+              "MID": 5,
+              "FWD": 5
+            },
+            "streak_weights": [
+              4,
+              2,
+              1
+            ],
+            "streak_map": {
+              "000": 0,
+              "001": 14.29,
+              "010": 28.57,
+              "011": 42.86,
+              "100": 57.14,
+              "101": 71.43,
+              "110": 85.71,
+              "111": 100.0
+            },
+            "form_source": "bootstrap_static",
+            "attack_weights": {
+              "projection": 0.6,
+              "form": 0.25,
+              "streak": 0.15
+            },
+            "attack_potential_weights": {
+              "projection": 0.7,
+              "form": 0.2,
+              "streak": 0.1
+            },
+            "lineup_weights": {
+              "GKP": {
+                "clean_sheet": 0.5,
+                "fixture": 0.3,
+                "market": 0.2
+              },
+              "DEF": {
+                "clean_sheet": 0.45,
+                "fixture": 0.25,
+                "attack": 0.1,
+                "market": 0.2
+              },
+              "MID": {
+                "attack": 0.4,
+                "form": 0.2,
+                "fixture": 0.2,
+                "market": 0.2
+              },
+              "FWD": {
+                "attack": 0.5,
+                "form": 0.2,
+                "fixture": 0.1,
+                "market": 0.2
+              }
+            },
+            "captain_weights": {
+              "GKP": {
+                "clean_sheet": 0.5,
+                "market": 0.5
+              },
+              "DEF": {
+                "attack_potential": 0.2,
+                "clean_sheet": 0.5,
+                "fixture": 0.3
+              },
+              "MID": {
+                "attack_potential": 0.9,
+                "market": 0.1
+              },
+              "FWD": {
+                "attack_potential": 0.95,
+                "market": 0.05
+              }
+            },
+            "position_starters_exact": {
+              "GKP": 1
+            },
+            "position_min_starters": {
+              "DEF": 3,
+              "MID": 2,
+              "FWD": 1
+            },
+            "fallback_neutral_score": 50
+          }
+        }
+      },
+      "notes": [
+        {
+          "topic": "squad_source",
+          "detail": "未找到历史 picks，已执行新账号 establish（按 Market Score 生成 15 人阵容）"
+        },
+        {
+          "topic": "score_source",
+          "detail": "FPL Joe 目标 GW3 选源：projection=odds_market clean_sheet=odds_market fixture=sort_rating"
+        },
+        {
+          "topic": "lineup",
+          "detail": "全局枚举首发：阵型 442，Total Lineup Score 616.37（替补 4 人按 Lineup Score 降序，门将恒最后）"
+        },
+        {
+          "topic": "captain",
+          "player": "Gvardiol",
+          "detail": "爆发视角 Captain Score 96.37（首发 11 人中最高；本轮 Lineup Score 82.2）"
+        },
+        {
+          "topic": "transfer_status",
+          "detail": "新账号场景：无已完结轮次转会历史，转会次数暂不受限"
+        },
+        {
+          "topic": "no_transfer",
+          "detail": "市场共识未明显转向，全员健康，不进行转会"
+        },
+        {
+          "topic": "external_source",
+          "detail": "FPL Joe 已刷新: 请求 GW3-7 实际 1-38 缺失 [] 新鲜度 fresh 写入 3 个文件"
+        }
+      ],
+      "metrics": {
+        "team_market_score": 463.39,
+        "captain_market_score": 23.61,
+        "formation_market_score": 375.08,
+        "team_lineup_score": 616.37,
+        "captain_score": 96.37
+      }
     }
   ]
 }

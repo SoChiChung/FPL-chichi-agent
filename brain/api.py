@@ -52,6 +52,27 @@ def get_bootstrap() -> dict:
     return _fetch("/bootstrap-static/")
 
 
+def get_element_summary(element_id: int) -> dict:
+    """球员详情：history[]（逐轮得分/出场分钟）。供 Phase 2 Streak（仅 15 人）。"""
+    return _fetch(f"/element-summary/{element_id}/")
+
+
+def points_by_round(summary: dict) -> dict:
+    """从 element-summary 响应提取 {round: points}（只留决策需要的字段）。
+
+    round/points 缺失或非数值的行忽略；points 可能为负数（红牌扣分），照存。
+    """
+    result = {}
+    for row in summary.get("history") or []:
+        rnd = row.get("round")
+        pts = row.get("points")
+        try:
+            result[int(rnd)] = int(pts)
+        except (TypeError, ValueError):
+            continue
+    return result
+
+
 def get_fixtures() -> list:
     """全赛季赛程。Phase 0 仅验证拉取连通性，处理完即丢弃，不落盘。"""
     return _fetch("/fixtures/")

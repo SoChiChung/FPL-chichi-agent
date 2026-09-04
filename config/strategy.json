@@ -13,6 +13,33 @@
 
   "formations": ["343", "352", "442", "433", "451", "541", "532"],
 
+  "lineup_engine": {
+    "streak_min_points": { "GKP": 6, "DEF": 6, "MID": 5, "FWD": 5 },
+    "streak_weights": [4, 2, 1],
+    "streak_map": {
+      "000": 0, "001": 14.29, "010": 28.57, "011": 42.86,
+      "100": 57.14, "101": 71.43, "110": 85.71, "111": 100.0
+    },
+    "form_source": "bootstrap_static",
+    "attack_weights":         { "projection": 0.60, "form": 0.25, "streak": 0.15 },
+    "attack_potential_weights": { "projection": 0.70, "form": 0.20, "streak": 0.10 },
+    "lineup_weights": {
+      "GKP": { "clean_sheet": 0.50, "fixture": 0.30, "market": 0.20 },
+      "DEF": { "clean_sheet": 0.45, "fixture": 0.25, "attack": 0.10, "market": 0.20 },
+      "MID": { "attack": 0.40, "form": 0.20, "fixture": 0.20, "market": 0.20 },
+      "FWD": { "attack": 0.50, "form": 0.20, "fixture": 0.10, "market": 0.20 }
+    },
+    "captain_weights": {
+      "GKP": { "clean_sheet": 0.50, "market": 0.50 },
+      "DEF": { "attack_potential": 0.20, "clean_sheet": 0.50, "fixture": 0.30 },
+      "MID": { "attack_potential": 0.90, "market": 0.10 },
+      "FWD": { "attack_potential": 0.95, "market": 0.05 }
+    },
+    "position_starters_exact": { "GKP": 1 },
+    "position_min_starters": { "DEF": 3, "MID": 2, "FWD": 1 },
+    "fallback_neutral_score": 50
+  },
+
   "weights": {
     "gw1_10":    { "tsb": 0.8, "trend": 0.2 },
     "gw11_20":   { "tsb": 0.6, "trend": 0.4 },
