@@ -1,4 +1,4 @@
-"""Phase 1 入口：拉取 FPL 数据 → Market Score 评分 → 决策（阵容/阵型/队长/转会建议）→ 写 JSON。
+"""入口：拉取 FPL 数据 → Market Score 评分 → Phase 2 决策（Lineup/Captain Engine）→ 写 JSON。
 
 用法（仓库根目录）:  python -m brain
 
@@ -8,20 +8,24 @@
   3. 完全找不到 → 执行新账号 establish：按 Market Score 生成合法 15 人阵容。
 以上来源都在 notes 中明确记录，绝不沿用旧账号 data/state.json 中的阵容。
 
+Phase 2（docs/decide.md v1.1）：
+  - 评分目标 GW = next_deadline 对应的轮次（context.resolve_target_gw），
+    FPL Joe 刷新窗口从目标 GW 起算（原为 gw+1，修正覆盖错位）；
+  - Form：官方 bootstrap 全员 form 归一（League-wide，不新增请求）；
+  - Streak：15 人 element-summary 最近 3 个 finished 轮实际分（失败降级记 0）；
+  - 首发：C(15,11) 全枚举全局最优；队长：Captain Score（爆发视角）取首发最高。
+  lineup.py / captain.py（Phase 1 规则版）已退出调用链，文件暂留作回归对照。
+
 决策只产生建议并写入 state.json / history.json，
 不执行任何 FPL 写操作（自动提交属于 Phase 3 Executor）。
 """
 import sys
 import time
 
-from brain import api, captain, config, context, data_store
-from brain import history_writer, lineup, market, squad_builder, strategy_config, transfer
+from brain import api, captain_score, config, context, data_store
+from brain import history_writer, lineup_score, market, squad_builder, strategy_config, transfer
 from brain.external import fpl_joe
 from brain.market import to_float
-
-
-def _player_score(player) -> float:
-    return to_float(player.get("market_score"))
 
 
 def _summary(player: dict) -> dict:
@@ -43,14 +47,22 @@ def _transfer_notes(suggestions: list, t_notes: list, ts: dict) -> list:
     return lines
 
 
-def _make_console_encoding_safe():
-    """Windows GBK 控制台遇到球员名（如 João、Milenković）会 UnicodeEncodeError；
-    让输出流用 replace 容错，保证永不因打印崩溃。"""
-    for stream in (sys.stdout, sys.stderr):
+def _fetch_recent_points(squad: list, events: list):
+    """拉 15 人 element-summary，返回 (recent_points, recent_rounds, failures)。
+
+    recent_points: {element_id: [P(GW-1)...P(GW-3)]}（finished 轮近者在前，缺位 None）；
+    单个球员请求失败只降级该球员（记 0），不阻塞管线。
+    """
+    finished = sorted((e["id"] for e in events if e.get("finished")), reverse=True)[:3]
+    recent, failed = {}, []
+    for p in squad:
         try:
-            stream.reconfigure(errors="replace")
-        except (AttributeError, ValueError, OSError):
-            pass
+            summary = api.get_element_summary(p["id"])
+            by_round = api.points_by_round(summary)
+            recent[p["id"]] = [by_round.get(r) for r in finished]
+        except api.FplApiError as exc:
+            failed.append((p.get("name", p.get("id")), str(exc)))
+    return recent, finished, failed
 
 
 def main():
@@ -69,16 +81,18 @@ def main():
 
     events = bootstrap["events"]
     gw = context.resolve_current_gw(events)
+    target_gw = context.resolve_target_gw(events)
 
-    # 外部预测源：FPL Joe（数据层，仅刷新三个 JSON，不参与决策；失败不阻塞管线）
+    # 外部预测源：FPL Joe（仅刷新数据；目标 GW 起算窗口，见 decide.md §2.2）
     ext_notes = []
     try:
-        ext_notes = fpl_joe.refresh(config.SEASON, gw + 1)
+        ext_notes = fpl_joe.refresh(config.SEASON, target_gw)
     except Exception as exc:  # 外部源任何异常都不应中断主流程
         ext_notes = [{"topic": "external_source", "detail": f"FPL Joe 刷新异常: {exc}"}]
         print(f"[brain] warning: FPL Joe 刷新异常（不影响主流程）: {exc}")
 
     cfg = strategy_config.load()
+    engine_cfg = strategy_config.get_lineup_engine(cfg)
     weights = strategy_config.get_weights(cfg, gw)
 
     players_map = context.build_player_map(bootstrap)
@@ -107,10 +121,35 @@ def main():
         state = context.build_state(bootstrap, entry, entry_history, {}, gw, market_scores)
         state["team"] = squad
 
-    formation, starting_xi, bench = lineup.select_lineup(squad, cfg.get("formations", []))
+    # ---- Phase 2 评分输入：官方 form 全员池 + 15 人近 3 轮实际分 ----
+    form_by_id = {int(e["id"]): e.get("form", "0") for e in bootstrap["elements"]}
+    recent_points, recent_rounds, summary_failures = _fetch_recent_points(squad, events)
+    if summary_failures:
+        names = ", ".join(str(n) for n, _ in summary_failures)
+        notes.append({"topic": "data_missing",
+                      "detail": f"element-summary 拉取失败 {len(summary_failures)} 人（{names}），"
+                                f"其 Streak 按 0 处理"})
 
-    selector = captain.MarketCaptainSelector()
-    cap, vice = selector.select(starting_xi)
+    team_abbr_by_id = {t["id"]: t["short_name"] for t in bootstrap["teams"]}
+    team_data = fpl_joe.read_target_gw(target_gw, team_abbr_by_id)
+
+    # ---- Phase 2 决策：本轮评分 → 全局最优首发 → 爆发队长 ----
+    squad, score_notes = lineup_score.score_squad(
+        squad, team_data, form_by_id, recent_points, engine_cfg)
+    formation, starting_xi, bench = lineup_score.select_starting_xi(squad, engine_cfg)
+    captain = captain_score.Phase2CaptainSelector(engine_cfg)
+    cap, vice = captain.select(starting_xi)
+    for p in squad:
+        p.setdefault("captain_score", 0.0)
+    notes.extend(score_notes)
+    notes.append({"topic": "lineup",
+                  "detail": (f"全局枚举首发：阵型 {formation}，"
+                             f"Total Lineup Score {round(sum(p['lineup_score'] for p in starting_xi), 2)}"
+                             f"（替补 4 人按 Lineup Score 降序，门将恒最后）")})
+    if cap:
+        notes.append({"topic": "captain", "player": cap.get("name", "?"),
+                      "detail": f"爆发视角 Captain Score {cap['captain_score']:.2f}"
+                                f"（首发 11 人中最高；本轮 Lineup Score {cap.get('lineup_score', '-')}）"})
 
     ts = transfer.resolve_transfer_status(
         entry_history, gw, cfg.get("max_free_transfers", 5), establish=(picks is None))
@@ -139,15 +178,28 @@ def main():
         "transfer_notes": _transfer_notes(suggestions, t_notes, ts),
     }
 
+    team_lineup_score = round(sum(to_float(p.get("lineup_score")) for p in starting_xi), 2)
     metrics = {
-        "team_market_score": round(sum(_player_score(p) for p in squad), 2),
-        "captain_market_score": round(_player_score(cap), 2) if cap else 0.0,
-        "formation_market_score": round(sum(_player_score(p) for p in starting_xi), 2),
+        "team_market_score": round(sum(to_float(p.get("market_score")) for p in squad), 2),
+        "captain_market_score": round(to_float(cap.get("market_score")), 2) if cap else 0.0,
+        "formation_market_score": round(
+            sum(to_float(p.get("market_score")) for p in starting_xi), 2),
+        "team_lineup_score": team_lineup_score,
+        "captain_score": round(to_float(cap.get("captain_score")), 2) if cap else 0.0,
     }
 
     state["manager_id"] = config.TEAM_ID
     state["market"] = {"weights": weights}
     state["decision"] = decision
+    state["lineup_scores"] = {str(p["id"]): p["lineup_score"] for p in squad}
+    state["captain_scores"] = {str(p["id"]): p["captain_score"] for p in squad}
+    state["score_meta"] = {
+        "target_gw": target_gw,
+        "recent_rounds": recent_rounds,
+        "score_source": team_data["sources"],
+        "warnings": [n["detail"] for n in notes
+                     if n.get("topic") in ("data_missing", "score_source")],
+    }
 
     data_store.validate_state(state)
     history, replaced = history_writer.init_history_for_account(
@@ -156,7 +208,7 @@ def main():
         notes.append({"topic": "warning",
                       "detail": "history.json 属于其他账号，已从空历史开始当前账号"})
     history_writer.upsert_decision(history, gw, decision, notes, metrics,
-                                   strategy_config.snapshot(cfg, weights))
+                                   strategy_config.snapshot(cfg, weights, engine_cfg))
     data_store.validate_history(history)
     data_store.save_json(config.STATE_FILE, state)
     data_store.save_json(config.HISTORY_FILE, history)
@@ -167,8 +219,9 @@ def main():
         "establish": "establish 生成",
     }[squad_source["type"]]
     print(
-        f"[brain] 完成: GW{state['current_gw']} 积分={state['points']} 排名={state['rank']} "
-        f"阵型={formation or '-'} 队长={(cap or {}).get('name') or '-'} "
+        f"[brain] 完成: GW{state['current_gw']} 目标GW{target_gw} 积分={state['points']} "
+        f"排名={state['rank']} 阵型={formation or '-'} "
+        f"队长={(cap or {}).get('name') or '-'} "
         f"阵容来源={src_label} 转会={ts['status']} "
         f"建议转会={len(suggestions)} 笔 历史 {len(history['history'])} 轮 "
         f"(耗时 {time.time() - t0:.1f}s)"
@@ -176,8 +229,19 @@ def main():
     if config.DEBUG:
         print(
             f"[brain] debug: players={len(bootstrap['elements'])} fixtures={len(fixtures)} "
-            f"team_players={len(squad)}"
+            f"team_players={len(squad)} 目标GW近3轮={recent_rounds} "
+            f"fpljoe 覆盖队数={len(team_data['teams'])}"
         )
+
+
+def _make_console_encoding_safe():
+    """Windows GBK 控制台遇到球员名（如 João、Milenković）会 UnicodeEncodeError；
+    让输出流用 replace 容错，保证永不因打印崩溃。"""
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(errors="replace")
+        except (AttributeError, ValueError, OSError):
+            pass
 
 
 if __name__ == "__main__":

@@ -27,7 +27,7 @@ import urllib.parse
 import urllib.request
 
 from brain import config as brain_config, data_store
-from brain.external.freshness import FRESH, judge_freshness
+from brain.external.freshness import EXPIRED, FRESH, UNKNOWN, judge_freshness
 
 
 class FplJoeError(Exception):
@@ -276,3 +276,111 @@ def refresh(season: str, start_gw: int, cfg: dict = None) -> list:
                    f"{m['actual_gameweek_max']} 缺失 {m['missing_gameweeks']} "
                    f"新鲜度 {m['freshness']} 写入 {len(data)} 个文件"),
     }] + [{"topic": "external_source", "detail": w} for w in m["warnings"]]
+
+
+# ---- Phase 2：目标 GW 只读加载（决策评分数据输入，docs/decide.md §2.5/2.6/3.3） ----
+
+OUTPUT_FILES = ("clean_sheets.json", "projected_goals.json", "fixture_difficulty.json")
+
+# 输出文件 -> (metrics 键, 主数据源键)
+_OUTPUT_METRIC = {
+    "projected_goals.json": "projection",
+    "clean_sheets.json": "clean_sheet",
+    "fixture_difficulty.json": "fixture",
+}
+
+_NEUTRAL_REASONS = {"expired": "文件过期", "unknown": "新鲜度未知"}
+
+
+def _value_fields(row: dict, side: str, kind: str) -> tuple:
+    """按类型取 row 的 (odds 值, elevenify/评分值) 字段对。"""
+    if kind == "projection":
+        return row.get(f"{side}_projected_goals"), row.get(f"{side}_projected_goals_elevenify")
+    if kind == "clean_sheet":
+        return row.get(f"{side}_clean_sheet_probability"), row.get(f"{side}_clean_sheet_elevenify")
+    return row.get(f"{side}_difficulty_sort_rating"), row.get(f"{side}_difficulty")
+
+
+def _coverage_source(meta: dict, gw: int):
+    """目标 GW 使用的数据源（odds_market 优先，其次 elevenify）；都没有返回 None。"""
+    sources = meta.get("data_sources") or {}
+    odds = set(sources.get("odds_market") or [])
+    if gw in odds:
+        return "odds_market"
+    return "elevenify" if gw in set(sources.get("elevenify") or []) else None
+
+
+def read_target_gw(target_gw: int, team_id_to_abbr: dict, fpljoe_dir: str = None) -> dict:
+    """读取三份 fpljoe 文件在目标 GW 的球队级原始值（评分输入，只读不落盘）。
+
+    规则：
+      - 文件整体不可用（目标 GW 不在窗口 / freshness expired|unknown / 无任何源覆盖）
+        → 该 metric 整轮中立 50（neutral=True）+ note；不输出该 metric 的值；
+      - Projection / Clean Sheet：目标 GW 在 odds_market 覆盖内整轮用 odds 值，
+        否则整轮用 elevenify 值；单行缺值可退回另一源；
+      - Fixture：目标 GW 存在 difficulty_sort_rating 则整轮用 rating，
+        否则退回 difficulty(int)。
+    返回 {gameweek, teams: {abbr: {projection, clean_sheet, fixture(可能为 None/缺失)}},
+         neutral: {metric: bool}, sources: {metric: str|None}, notes: [...]}。
+    归一化与 0/50 语义在 lineup_score 中处理，本函数不掺分数。
+    """
+    base = fpljoe_dir or os.path.join(brain_config.DATA_DIR, "external", "fpljoe")
+    notes, neutral, sources = [], {}, {}
+    teams: dict = {}
+
+    for filename, metric in _OUTPUT_METRIC.items():
+        doc = data_store.load_json(os.path.join(base, filename), None)
+        meta = (doc or {}).get("metadata") or {}
+        start, end = meta.get("requested_gameweek_start"), meta.get("requested_gameweek_end")
+        freshness = meta.get("freshness")
+        source = None if not meta else _coverage_source(meta, target_gw)
+        usable = (
+            isinstance(doc, dict)
+            and start is not None and start <= target_gw <= end
+            and freshness not in _NEUTRAL_REASONS
+            and source is not None
+        )
+        if not usable:
+            reason = _NEUTRAL_REASONS.get(freshness) or (
+                "文件缺失/损坏" if not isinstance(doc, dict) else "目标 GW 不在覆盖窗口或无数据源")
+            neutral[metric] = True
+            sources[metric] = None
+            notes.append({"topic": "data_missing",
+                          "detail": f"FPL Joe {filename} 目标 GW{target_gw} 不可用（{reason}），"
+                                    f"{metric} 取中立 50"})
+            continue
+        neutral[metric] = False
+        sources[metric] = source
+        rows = [r for r in (doc.get("fixtures") or []) if r.get("gameweek") == target_gw]
+
+        # fixture 整轮优先 rating：轮内有 rating 即用 rating，否则退回 difficulty
+        prefer_sort = metric == "fixture" and any(
+            r.get("home_difficulty_sort_rating") is not None
+            or r.get("away_difficulty_sort_rating") is not None
+            for r in rows)
+        if metric == "fixture":
+            sources[metric] = "sort_rating" if prefer_sort else "difficulty"
+
+        for row in rows:
+            for side in ("home", "away"):
+                abbr = (team_id_to_abbr or {}).get(row.get(f"fpl_{side}_team_id"))
+                if not abbr:
+                    continue
+                if metric == "fixture":
+                    sort_val, diff_val = _value_fields(row, side, "fixture")
+                    val = sort_val if prefer_sort else diff_val
+                    if val is None:
+                        val = diff_val if prefer_sort else sort_val
+                else:
+                    odds_val, el_val = _value_fields(row, side, metric)
+                    val = odds_val if source == "odds_market" else el_val
+                    if val is None:
+                        val = el_val if source == "odds_market" else odds_val
+                teams.setdefault(abbr, {})[metric] = val
+
+    detail = " ".join(f"{m}={sources[m] or '缺失'}" for m in
+                      ("projection", "clean_sheet", "fixture"))
+    notes.append({"topic": "score_source",
+                  "detail": f"FPL Joe 目标 GW{target_gw} 选源：{detail}"})
+    return {"gameweek": target_gw, "teams": teams,
+            "neutral": neutral, "sources": sources, "notes": notes}
