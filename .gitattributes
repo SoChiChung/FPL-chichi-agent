@@ -1,0 +1,4 @@
+# data/ 全是抓取缓存与运行时状态（fpljoe 快照、history.json、state.json），不值得手工合并。
+# -merge：合并时不做三方合并，冲突直接保留当前分支（HEAD）的版本留在工作区。
+# 效果：以后 data 冲突只需手工确认一次 git add data/ 就能完成合并，不用再改冲突标记。
+data/** -merge
