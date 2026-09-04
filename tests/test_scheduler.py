@@ -13,9 +13,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from brain import scheduler
 
 DAY = timedelta(days=1)
-# 2026-09-03 01:00 UTC = 北京时间 09:00（北京 = UTC+8，无 DST）
 T = datetime(2026, 9, 3, 1, 0, 0, tzinfo=timezone.utc)
-FAR = T + timedelta(days=10)  # 距 deadline > 24h
+FAR = T + timedelta(days=10)
 
 
 def iso(dt):
@@ -47,79 +46,30 @@ class TestStateFallbacks(unittest.TestCase):
         self.assertTrue(scheduler.decide(bad, T).due)
 
 
-class TestDailySlot(unittest.TestCase):
-    """距 deadline >24h：每天北京时间 09:00 一次，锚定 last_update 不漂移。"""
+class TestEvery30Min(unittest.TestCase):
+    """赛季中（有 deadline）：统一每 30 分钟，不再按 deadline 远近分档。"""
 
-    def test_first_slot_boundary(self):
-        last = T - DAY + timedelta(minutes=1)  # 昨天 09:01 跑过
-        state = mk_state(last, FAR)
-        d = scheduler.decide(state, T - timedelta(minutes=1))  # 今天 08:59
-        self.assertFalse(d.due)
-        self.assertEqual(d.reason, "daily")
-        d = scheduler.decide(state, T)  # 今天 09:00
-        self.assertTrue(d.due)
-        self.assertEqual(d.next_due, iso(T))
+    def test_not_due_within_30min(self):
+        for delta in [timedelta(minutes=0), timedelta(minutes=29)]:
+            state = mk_state(T - delta, FAR)
+            self.assertFalse(scheduler.decide(state, T).due)
 
-    def test_slot_rolls_to_next_day_after_run(self):
-        state = mk_state(T + timedelta(minutes=1), FAR)  # 今天 09:01 跑完
-        d = scheduler.decide(state, T + DAY - timedelta(minutes=1))
-        self.assertFalse(d.due)
-        d = scheduler.decide(state, T + DAY)  # 次日 09:00
-        self.assertTrue(d.due)
-        self.assertEqual(d.next_due, iso(T + DAY))
-
-    def test_last_exactly_on_slot_no_refire(self):
-        state = mk_state(T, FAR)  # last_update 恰为 09:00:00
+    def test_due_after_30min(self):
+        state = mk_state(T - timedelta(minutes=31), FAR)
         d = scheduler.decide(state, T)
-        self.assertFalse(d.due)
-        self.assertEqual(d.next_due, iso(T + DAY))
+        self.assertTrue(d.due)
+        self.assertEqual(d.reason, "every_30min")
 
-
-class TestDeadlineTiers(unittest.TestCase):
-    def test_hourly_within_24h(self):
+    def test_same_cadence_regardless_of_deadline_distance(self):
+        # deadline 前 10 分钟、前 12 小时、已过 5 分钟，节奏都应一致（统一 30min）
         now = T
-        deadline = now + timedelta(hours=12)
-        state = mk_state(now - timedelta(minutes=59), deadline)
-        self.assertFalse(scheduler.decide(state, now).due)
-        state = mk_state(now - timedelta(minutes=61), deadline)
-        d = scheduler.decide(state, now)
-        self.assertTrue(d.due)
-        self.assertEqual(d.reason, "hourly")
-
-    def test_ten_minutes_within_1h(self):
-        now = T
-        deadline = now + timedelta(minutes=30)
-        state = mk_state(now - timedelta(minutes=9), deadline)
-        self.assertFalse(scheduler.decide(state, now).due)
-        state = mk_state(now - timedelta(minutes=11), deadline)
-        d = scheduler.decide(state, now)
-        self.assertTrue(d.due)
-        self.assertEqual(d.reason, "deadline_soon")
-
-
-class TestPastDeadline(unittest.TestCase):
-    def test_recovery_when_engine_never_succeeded_after_deadline(self):
-        now = T
-        deadline = now - timedelta(minutes=5)
-        state = mk_state(now - timedelta(minutes=29), deadline)  # last < deadline
-        d = scheduler.decide(state, now)
-        self.assertFalse(d.due)
-        self.assertEqual(d.reason, "recovery")
-        state = mk_state(now - timedelta(minutes=31), deadline)
-        d = scheduler.decide(state, now)
-        self.assertTrue(d.due)
-        self.assertEqual(d.reason, "recovery")
-
-    def test_season_end_probe_when_engine_succeeded_after_deadline(self):
-        last = T - timedelta(hours=1)  # 08:00 北京跑过（DDL 之后）
-        deadline = T - timedelta(hours=2)
-        state = mk_state(last, deadline)
-        d = scheduler.decide(state, T)
-        self.assertFalse(d.due)
-        self.assertEqual(d.reason, "probe_season_end")
-        # 探测点 = max(last+24h, 下一个北京 09:00) = last+24h
-        d = scheduler.decide(state, last + timedelta(hours=24))
-        self.assertTrue(d.due)
+        for deadline in [now + timedelta(minutes=10),
+                         now + timedelta(hours=12),
+                         now - timedelta(minutes=5)]:
+            self.assertFalse(scheduler.decide(
+                mk_state(now - timedelta(minutes=29), deadline), now).due)
+            self.assertTrue(scheduler.decide(
+                mk_state(now - timedelta(minutes=31), deadline), now).due)
 
 
 class TestNoDeadline(unittest.TestCase):

@@ -1,14 +1,11 @@
-"""Actions 空跑闸门：只读 data/state.json，按距下个 deadline 的距离决定是否该跑引擎。
+"""Actions 空跑闸门：只读 data/state.json，判断距上次更新是否已到更新节奏。
 
 用法（仓库根目录）: python -m brain.scheduler
 只依赖标准库与 brain.config/data_store，不请求任何外部 API。
 
-档位规则：
-- 距 deadline > 24h            → 每天北京时间 09:00 更新一次
-- 距 deadline 1h ~ 24h         → 每 1 小时更新一次
-- 距 deadline ≤ 1h             → 每 10 分钟更新一次
-- deadline 已过/无未来 deadline → 休赛期收敛：每 24h（或下一个北京 09:00）探测一次，
-  失败恢复限流 30 分钟，不空转刷接口。
+节奏规则（统一 30 分钟）：
+- 有 next_deadline（赛季中）→ 统一每 30 分钟更新一次，不再按 deadline 远近分档
+- 无 next_deadline（休赛期）→ 每天至多探测一次（或下一个北京 09:00）
 
 返回码恒为 0：skip 是正常状态不是失败；workflow_dispatch 手动触发 = 强制 due。
 """
@@ -19,10 +16,8 @@ from datetime import datetime, timedelta, timezone
 from brain import config, data_store
 
 BEIJING_OFFSET = timedelta(hours=8)  # 北京 = UTC+8，全年无 DST
-CADENCE_10MIN = timedelta(minutes=10)
-CADENCE_HOUR = timedelta(hours=1)
-RECOVERY_AGE = timedelta(minutes=30)  # 引擎连续失败后的重试限流
-PROBE_AGE = timedelta(hours=24)  # 休赛期/季末探测频率上限
+CADENCE = timedelta(minutes=30)  # 赛季中统一更新节奏：每 30 分钟
+PROBE_AGE = timedelta(hours=24)  # 休赛期探测频率上限
 
 
 @dataclass
@@ -71,29 +66,9 @@ def decide(state, now):
         return Decision(now >= due_at, "probe", age_minutes=_minutes(age),
                         next_due=due_at.isoformat(timespec="seconds"))
 
-    ttl = deadline - now
-    if ttl <= timedelta(0):
-        if last >= deadline:
-            # 引擎在 DDL 后成功过 => 真没有未来 DDL（季末），按探测档收敛
-            due_at = max(last + PROBE_AGE, _next_beijing_0900(last))
-            return Decision(now >= due_at, "probe_season_end", age_minutes=_minutes(age),
-                            to_deadline_minutes=_minutes(ttl),
-                            next_due=due_at.isoformat(timespec="seconds"))
-        # 引擎还没在 DDL 后成功过 => 疑似失败，限流重试
-        return Decision(age >= RECOVERY_AGE, "recovery", age_minutes=_minutes(age),
-                        to_deadline_minutes=_minutes(ttl))
-
-    if ttl <= CADENCE_HOUR:
-        return Decision(age >= CADENCE_10MIN, "deadline_soon", age_minutes=_minutes(age),
-                        to_deadline_minutes=_minutes(ttl))
-    if ttl <= PROBE_AGE:
-        return Decision(age >= CADENCE_HOUR, "hourly", age_minutes=_minutes(age),
-                        to_deadline_minutes=_minutes(ttl))
-
-    due_at = _next_beijing_0900(last)
-    return Decision(now >= due_at, "daily", age_minutes=_minutes(age),
-                    to_deadline_minutes=_minutes(ttl),
-                    next_due=due_at.isoformat(timespec="seconds"))
+    # 赛季中（有 deadline）：统一每 30 分钟更新一次，不再按 deadline 远近分档
+    return Decision(age >= CADENCE, "every_30min", age_minutes=_minutes(age),
+                    to_deadline_minutes=_minutes(deadline - now))
 
 
 def main():

@@ -2,9 +2,9 @@ name: update
 
 on:
   schedule:
-    # 每 10 分钟自触发一次；是否真跑引擎由闸门 brain/scheduler.py 判定
-    # （>24h: 每天北京 09:00 / 24h 内: 每小时 / 1h 内: 每 10 分钟 / 休赛期: 24h 探测）
-    - cron: "*/10 * * * *"
+    # 每 30 分钟自触发一次；是否真跑引擎由闸门 brain/scheduler.py 判定
+    # （赛季中统一每 30 分钟更新，休赛期每天探测一次）
+    - cron: "*/30 * * * *"
   workflow_dispatch: # 手动触发 = 闸门强制 due，更新一次
 
 concurrency:
