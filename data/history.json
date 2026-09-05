@@ -164,12 +164,12 @@
             "name": "Szoboszlai"
           },
           {
-            "id": 426,
-            "name": "B.Fernandes"
-          },
-          {
             "id": 399,
             "name": "Cherki"
+          },
+          {
+            "id": 426,
+            "name": "B.Fernandes"
           },
           {
             "id": 565,
@@ -216,16 +216,16 @@
               "name": "Calvert-Lewin",
               "pos": "FWD",
               "price": 6.0,
-              "market_score": 24.78
+              "market_score": 24.68
             },
             "in": {
               "id": 411,
               "name": "Haaland",
               "pos": "FWD",
               "price": 15.5,
-              "market_score": 65.03
+              "market_score": 64.61
             },
-            "market_gap": 40.25,
+            "market_gap": 39.93,
             "reason": "同位置 Market Score 差距超过阈值"
           }
         ],
@@ -337,12 +337,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 633.74（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 633.6（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "João Pedro",
-          "detail": "爆发视角 Captain Score 84.01（首发 11 人中最高；本轮 Lineup Score 77.87）"
+          "detail": "爆发视角 Captain Score 84.01（首发 11 人中最高；本轮 Lineup Score 77.85）"
         },
         {
           "topic": "transfer_status",
@@ -356,7 +356,7 @@
         {
           "topic": "transfer_in",
           "player": "Haaland",
-          "detail": "同位置 Market Score 最高者（65.03），满足预算与同队约束"
+          "detail": "同位置 Market Score 最高者（64.61），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -364,10 +364,10 @@
         }
       ],
       "metrics": {
-        "team_market_score": 514.79,
-        "captain_market_score": 69.1,
-        "formation_market_score": 418.83,
-        "team_lineup_score": 633.74,
+        "team_market_score": 508.76,
+        "captain_market_score": 69.01,
+        "formation_market_score": 414.07,
+        "team_lineup_score": 633.6,
         "captain_score": 84.01
       }
     }
