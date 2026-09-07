@@ -216,7 +216,7 @@
               "name": "Calvert-Lewin",
               "pos": "FWD",
               "price": 6.0,
-              "market_score": 23.53
+              "market_score": 23.49
             },
             "in": {
               "id": 411,
@@ -225,7 +225,7 @@
               "price": 15.5,
               "market_score": 64.91
             },
-            "market_gap": 41.38,
+            "market_gap": 41.42,
             "reason": "同位置 Market Score 差距超过阈值"
           }
         ],
@@ -337,12 +337,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 640.51（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 638.24（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "João Pedro",
-          "detail": "爆发视角 Captain Score 84.56（首发 11 人中最高；本轮 Lineup Score 78.73）"
+          "detail": "爆发视角 Captain Score 84.55（首发 11 人中最高；本轮 Lineup Score 78.72）"
         },
         {
           "topic": "transfer_status",
@@ -364,11 +364,11 @@
         }
       ],
       "metrics": {
-        "team_market_score": 493.61,
-        "captain_market_score": 68.51,
-        "formation_market_score": 396.87,
-        "team_lineup_score": 640.51,
-        "captain_score": 84.56
+        "team_market_score": 493.19,
+        "captain_market_score": 68.45,
+        "formation_market_score": 396.53,
+        "team_lineup_score": 638.24,
+        "captain_score": 84.55
       }
     }
   ]
