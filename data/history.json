@@ -370,6 +370,254 @@
         "team_lineup_score": 640.29,
         "captain_score": 84.56
       }
+    },
+    {
+      "gw": 4,
+      "points": null,
+      "rank": null,
+      "overall_rank": null,
+      "decision": {
+        "formation": "352",
+        "captain": {
+          "id": 165,
+          "name": "João Pedro"
+        },
+        "vice": {
+          "id": 40,
+          "name": "Rogers"
+        },
+        "starting_xi": [
+          {
+            "id": 1,
+            "name": "Raya"
+          },
+          {
+            "id": 8,
+            "name": "Calafiori"
+          },
+          {
+            "id": 4,
+            "name": "Gabriel"
+          },
+          {
+            "id": 115,
+            "name": "De Cuyper"
+          },
+          {
+            "id": 40,
+            "name": "Rogers"
+          },
+          {
+            "id": 368,
+            "name": "Szoboszlai"
+          },
+          {
+            "id": 426,
+            "name": "B.Fernandes"
+          },
+          {
+            "id": 399,
+            "name": "Cherki"
+          },
+          {
+            "id": 565,
+            "name": "M.Sangaré"
+          },
+          {
+            "id": 165,
+            "name": "João Pedro"
+          },
+          {
+            "id": 346,
+            "name": "Calvert-Lewin"
+          }
+        ],
+        "bench": [
+          {
+            "id": 464,
+            "name": "Wissa"
+          },
+          {
+            "id": 259,
+            "name": "Diop"
+          },
+          {
+            "id": 391,
+            "name": "Gvardiol"
+          },
+          {
+            "id": 109,
+            "name": "Verbruggen"
+          }
+        ],
+        "squad": [],
+        "squad_source": {
+          "type": "auto_pick",
+          "gw": 3
+        },
+        "transfer_status": "limited",
+        "free_transfers": 2,
+        "recommended_transfers": [
+          {
+            "out": {
+              "id": 346,
+              "name": "Calvert-Lewin",
+              "pos": "FWD",
+              "price": 6.0,
+              "market_score": 23.31
+            },
+            "in": {
+              "id": 411,
+              "name": "Haaland",
+              "pos": "FWD",
+              "price": 15.5,
+              "market_score": 65.26
+            },
+            "market_gap": 41.95,
+            "reason": "同位置 Market Score 差距超过阈值"
+          }
+        ],
+        "strategy_snapshot": {
+          "strategy": "market_consensus",
+          "tsb_weight": 0.8,
+          "trend_weight": 0.2,
+          "injury_threshold": 75,
+          "market_gap_threshold": 15,
+          "max_free_transfers": 5,
+          "allow_hits": false,
+          "lineup_engine": {
+            "streak_min_points": {
+              "GKP": 6,
+              "DEF": 6,
+              "MID": 5,
+              "FWD": 5
+            },
+            "streak_weights": [
+              4,
+              2,
+              1
+            ],
+            "streak_map": {
+              "000": 0,
+              "001": 14.29,
+              "010": 28.57,
+              "011": 42.86,
+              "100": 57.14,
+              "101": 71.43,
+              "110": 85.71,
+              "111": 100.0
+            },
+            "form_source": "bootstrap_static",
+            "attack_weights": {
+              "projection": 0.6,
+              "form": 0.25,
+              "streak": 0.15
+            },
+            "attack_potential_weights": {
+              "projection": 0.7,
+              "form": 0.2,
+              "streak": 0.1
+            },
+            "lineup_weights": {
+              "GKP": {
+                "clean_sheet": 0.5,
+                "fixture": 0.3,
+                "market": 0.2
+              },
+              "DEF": {
+                "clean_sheet": 0.45,
+                "fixture": 0.25,
+                "attack": 0.1,
+                "market": 0.2
+              },
+              "MID": {
+                "attack": 0.4,
+                "form": 0.2,
+                "fixture": 0.2,
+                "market": 0.2
+              },
+              "FWD": {
+                "attack": 0.5,
+                "form": 0.2,
+                "fixture": 0.1,
+                "market": 0.2
+              }
+            },
+            "captain_weights": {
+              "GKP": {
+                "clean_sheet": 0.5,
+                "market": 0.5
+              },
+              "DEF": {
+                "attack_potential": 0.2,
+                "clean_sheet": 0.5,
+                "fixture": 0.3
+              },
+              "MID": {
+                "attack_potential": 0.9,
+                "market": 0.1
+              },
+              "FWD": {
+                "attack_potential": 0.95,
+                "market": 0.05
+              }
+            },
+            "position_starters_exact": {
+              "GKP": 1
+            },
+            "position_min_starters": {
+              "DEF": 3,
+              "MID": 2,
+              "FWD": 1
+            },
+            "fallback_neutral_score": 50
+          }
+        }
+      },
+      "notes": [
+        {
+          "topic": "squad_source",
+          "detail": "使用 GW3 FPL auto-pick 阵容作为当前基础阵容"
+        },
+        {
+          "topic": "score_source",
+          "detail": "FPL Joe 目标 GW4 选源：projection=odds_market clean_sheet=odds_market fixture=sort_rating"
+        },
+        {
+          "topic": "lineup",
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 641.06（替补 4 人按 Lineup Score 降序，门将恒最后）"
+        },
+        {
+          "topic": "captain",
+          "player": "João Pedro",
+          "detail": "爆发视角 Captain Score 84.57（首发 11 人中最高；本轮 Lineup Score 78.77）"
+        },
+        {
+          "topic": "transfer_status",
+          "detail": "已检测到已完结轮次转会历史，按免费转会数限制建议（2 次）"
+        },
+        {
+          "topic": "transfer_out",
+          "player": "Calvert-Lewin",
+          "detail": "同位置 Market Score 差距超过阈值"
+        },
+        {
+          "topic": "transfer_in",
+          "player": "Haaland",
+          "detail": "同位置 Market Score 最高者（65.26），满足预算与同队约束"
+        },
+        {
+          "topic": "external_source",
+          "detail": "FPL Joe 已刷新: 请求 GW4-8 实际 1-38 缺失 [] 新鲜度 fresh 写入 3 个文件"
+        }
+      ],
+      "metrics": {
+        "team_market_score": 495.46,
+        "captain_market_score": 68.73,
+        "formation_market_score": 398.07,
+        "team_lineup_score": 641.06,
+        "captain_score": 84.57
+      }
     }
   ]
 }
