@@ -464,16 +464,16 @@
               "name": "Calvert-Lewin",
               "pos": "FWD",
               "price": 6.0,
-              "market_score": 23.08
+              "market_score": 23.0
             },
             "in": {
               "id": 411,
               "name": "Haaland",
               "pos": "FWD",
               "price": 15.5,
-              "market_score": 65.27
+              "market_score": 65.28
             },
-            "market_gap": 42.19,
+            "market_gap": 42.28,
             "reason": "同位置 Market Score 差距超过阈值"
           }
         ],
@@ -585,7 +585,7 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 640.98（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 641.45（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
@@ -604,7 +604,7 @@
         {
           "topic": "transfer_in",
           "player": "Haaland",
-          "detail": "同位置 Market Score 最高者（65.27），满足预算与同队约束"
+          "detail": "同位置 Market Score 最高者（65.28），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -612,10 +612,10 @@
         }
       ],
       "metrics": {
-        "team_market_score": 495.68,
+        "team_market_score": 495.64,
         "captain_market_score": 68.83,
-        "formation_market_score": 398.26,
-        "team_lineup_score": 640.98,
+        "formation_market_score": 398.18,
+        "team_lineup_score": 641.45,
         "captain_score": 84.57
       }
     }
