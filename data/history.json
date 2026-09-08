@@ -464,7 +464,7 @@
               "name": "Calvert-Lewin",
               "pos": "FWD",
               "price": 6.0,
-              "market_score": 23.09
+              "market_score": 23.08
             },
             "in": {
               "id": 411,
@@ -473,7 +473,7 @@
               "price": 15.5,
               "market_score": 65.27
             },
-            "market_gap": 42.18,
+            "market_gap": 42.19,
             "reason": "同位置 Market Score 差距超过阈值"
           }
         ],
@@ -612,9 +612,9 @@
         }
       ],
       "metrics": {
-        "team_market_score": 495.79,
+        "team_market_score": 495.68,
         "captain_market_score": 68.83,
-        "formation_market_score": 398.34,
+        "formation_market_score": 398.26,
         "team_lineup_score": 640.98,
         "captain_score": 84.57
       }
