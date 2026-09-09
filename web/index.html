@@ -1,125 +1,136 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FPL AI Manager</title>
-  <link rel="stylesheet" href="style.css">
+<html lang="zh-CN" data-page-node-id="uIgUOZ0Wgz2n4RmZqRz8Qi">
+<head data-page-node-id="N81siVhqJGIcltYjtHlL7k">
+  <meta charset="UTF-8" data-page-node-id="S627AlKGEQCVnV01L7u5W2">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="tdVhnQeVJuTsrZB4WJEQtn">
+  <title>ZCJenius · AI FPL Manager 养成日志</title>
+  <meta name="theme-color" content="#9AD8F0" data-page-node-id="3uIMfdBJNutT7R4dN1lmYy">
+  <link rel="stylesheet" href="style.css" data-page-node-id="pR9JtUNJihBf2PmUj1dWYE">
 </head>
-<body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <div>
-        <h1>FPL AI Manager</h1>
-        <div id="manager-line" class="muted"></div>
-      </div>
-      <div id="season" class="muted"></div>
+<body data-page-node-id="KodCiu6ib4V45WiwJTgNlA">
+  <!-- 天空/云朵/远丘 场景层（纯装饰，aria-hidden） -->
+  <div class="scenery" aria-hidden="true" data-page-node-id="wDLy9ozDFMb8nUOjhGx3kE">
+    <div class="sun" data-page-node-id="onfqFQd7jXAlkVF4fmtq84"></div>
+    <div class="cloud c1" data-page-node-id="t0KF2b1QhovuugSTGHoWq1"></div>
+    <div class="cloud c2" data-page-node-id="sbq47UduPiv4WLZ5dwEnBF"></div>
+    <div class="cloud c3" data-page-node-id="8UjPaAqEvHVwX6gCueLh8T"></div>
+    <div class="hills h-back" data-page-node-id="sY7HvSrWNameOSzoSKWs5c"></div>
+    <div class="hills h-front" data-page-node-id="IhpxJtuqrGrfQCXThM0nDZ"></div>
+  </div>
+
+  <header class="site-header" data-page-node-id="HFp0vt1Bph8oOiBGId07hl">
+    <div class="container header-inner" data-page-node-id="jB9tGLDik3Bs9hz6u3EDck">
+      <h1 data-page-node-id="ZFJcuFPphYHESnK7DbLCPI">ZCJenius</h1>
+      <div id="season" class="muted" data-page-node-id="0rHGAk24q2EVTTR3v24HqY"></div>
     </div>
   </header>
 
   <!-- 移动端摘要条（≤768px 显示）：与 Sidebar 同一数据源、同一渲染函数 -->
-  <div id="mobile-summary" class="mobile-summary container">
-    <div class="m-head">
-      <span class="avatar" aria-hidden="true">🧅</span>
-      <div class="m-title">
-        <div class="m-name" id="m-name"></div>
-        <div id="m-sub" class="muted"></div>
+  <div id="mobile-summary" class="mobile-summary container" data-page-node-id="MEFgFNpTxavMKXboK5z3VD">
+    <div class="m-head" data-page-node-id="XtyPkfHo0YzenBU030LMXn">
+      <span class="avatar" aria-hidden="true" data-page-node-id="5J3Csk8idteQN4FemhKHPO">🧅</span>
+      <div class="m-title" data-page-node-id="E0dVRRoR8mV4A1Rt0NFjbA">
+        <div class="m-name" id="m-name" data-page-node-id="YFUbKtwZ8szemIAHEitHqK"></div>
+        <div id="m-sub" class="muted" data-page-node-id="MKIrsDIlo9Jvdy5SKb64JX"></div>
       </div>
     </div>
-    <div id="m-stats" class="m-stats"></div>
+    <div id="m-stats" class="m-stats" data-page-node-id="S1NJuOFAyRcMjNm3h9N33D"></div>
   </div>
 
-  <div class="container dashboard">
-    <div class="layout-grid">
+  <div class="container dashboard" data-page-node-id="hamaxGErtqEGAGWbQCKBnU">
+    <div class="layout-grid" data-page-node-id="UW86KlW1nd31WqBUogGjRo">
 
-      <!-- Sidebar（25%）：桌面常驻，≤768px 隐藏 -->
-      <aside class="sidebar">
-        <section class="panel">
-          <h2>AI Manager Profile</h2>
-          <div class="profile-head">
-            <span class="avatar avatar-lg" aria-hidden="true">🧅</span>
-            <div class="profile-title">
-              <div class="profile-name" id="profile-name"></div>
-              <div id="profile-season" class="muted"></div>
+      <!-- 左栏 Sidebar（身份层）：桌面常驻，≤768px 隐藏 -->
+      <aside class="sidebar" data-page-node-id="hVGUdZLwRyqtNAO9drm9lj">
+        <section class="panel" data-page-node-id="7igNkoYFtngIFtDDG0E3XG">
+          <h2 data-page-node-id="u7wO14BJiy3aDjmuk7oaUt">AI Manager Profile</h2>
+          <div class="profile-head" data-page-node-id="95s9eizOtlYNPMTcnfTSaR">
+            <span class="avatar avatar-lg" aria-hidden="true" data-page-node-id="zNiF2HGq8tvhThFVAuOr3D">🧅</span>
+            <div class="profile-title" data-page-node-id="ESd2dasYQDepY7Y3CNaMWf">
+              <div class="profile-name" id="profile-name" data-page-node-id="nmCAkB0MTwr7VwBeMZrQn2"></div>
+              <div id="profile-season" class="muted" data-page-node-id="AyQhM0FbboKbZWfkCBFLQt"></div>
             </div>
           </div>
-          <dl class="profile-list">
-            <div class="pl-row"><dt>Manager Style</dt><dd id="p-style"></dd></div>
-            <div class="pl-row"><dt>Risk Level</dt><dd id="p-risk"></dd></div>
-            <div class="pl-row"><dt>阵型偏好</dt><dd id="p-formation"></dd></div>
+          <dl class="profile-list" data-page-node-id="QF06k5E0THh8SS7SCryT6Q">
+            <div class="pl-row" data-page-node-id="EScuJsJ7r9WtZw0SljmqfR"><dt data-page-node-id="xn9stETGnQbJOQwUpO9iQQ">Manager Style</dt><dd id="p-style" data-page-node-id="4V7P0r5OoaFuoJqANMwSJZ"></dd></div>
+            <div class="pl-row" data-page-node-id="xdMCznQbpjzAk69XNYPMio"><dt data-page-node-id="votk9oY7agKVrywnD6YRYU">Risk Level</dt><dd id="p-risk" data-page-node-id="gM0gqZvdL3EtjU8s1mLucV"></dd></div>
+            <div class="pl-row" data-page-node-id="kEiHEEXNGG4SIxBcqmREtu"><dt data-page-node-id="4aIbYOFKHdAsJmt70rl6vu">阵型偏好</dt><dd id="p-formation" data-page-node-id="xOPUS0AQmLTshkOwQynaGF"></dd></div>
           </dl>
         </section>
 
-        <section class="panel">
-          <h2>当前战绩</h2>
-          <div id="records" class="records"></div>
+        <section class="panel" data-page-node-id="UyfwsqwHgzPQPDDPkE4TCX">
+          <h2 data-page-node-id="r4pPF3jIAsZVo4UIGSjB1c">当前战绩</h2>
+          <div id="records" class="records" data-page-node-id="z8jAvyNFgtHZAqGvEjw5oD"></div>
         </section>
 
-        <section class="panel">
-          <h2>最近一次思考</h2>
-          <div id="recent-thought" class="recent-thought"></div>
+        <section class="panel" data-page-node-id="1ILt18DJekXTmxQ40M38Te">
+          <h2 data-page-node-id="a730dvlu4QXns5ITQgdxrW">最近一次思考</h2>
+          <div id="recent-thought" class="recent-thought" data-page-node-id="LjhdAaQz5KB0DWhV6fXd5u"></div>
         </section>
 
-        <!-- External Links：桌面挂载点（移动端收进页脚） -->
-        <div id="external-links-desktop" class="ext-mount panel"></div>
+        <!-- External Links（关于我）：桌面挂载点（移动端展示在主区末尾的 #external-links-mobile） -->
+        <div id="external-links-desktop" class="ext-mount panel" data-page-node-id="eENa5jGdhxZeqTXxM1AZp0"></div>
       </aside>
 
-      <!-- Main（75%）：① → ⑥ -->
-      <main class="main">
-        <p id="load-status" class="muted">正在读取最新 FPL 数据……</p>
+      <!-- Main（核心区，竖向叙事流）：
+           ① 本周动态 → 本轮成绩 → 趋势曲线 → 本轮阵容 → 历史记录 → AI 思考日志
+           趋势曲线在「本轮阵容」上方；历史记录在「AI 思考日志」上方（主人 09-09 晚拍板） -->
+      <main class="main" data-page-node-id="TWqEbPoiSfdPrE7OzsZ5mz">
+        <p id="load-status" class="muted" data-page-node-id="inbvbRII64d76HUXWDFlBR">正在读取最新 FPL 数据……</p>
 
-        <!-- ① 本轮成绩摘要卡 -->
-        <section id="summary-cards" class="cards-grid" aria-label="本轮成绩"></section>
-
-        <!-- ② AI 本周动态 -->
-        <section class="panel" id="sec-thisweek">
-          <h2>AI 本周动态</h2>
-          <div id="this-week"></div>
+        <!-- ① AI 本周动态（design-ia-ux.md §3.2：内容区最顶部） -->
+        <section class="panel" id="sec-thisweek" data-page-node-id="h4DOrbaM928Mckzxqbfyk2">
+          <h2 data-page-node-id="4PqDcYx7GUxZCntLHz4CuO">AI 本周动态</h2>
+          <div id="this-week" data-page-node-id="VpRGh9HKckxRfdnW7yt37F"></div>
         </section>
 
-        <!-- ③ 本轮阵容（支持 当前 / 转会后 双视图） -->
-        <section class="panel">
-          <h2>本轮阵容</h2>
-          <div class="squad-bar">
-            <div id="formation-line" class="muted"></div>
-            <div id="squad-toggle" class="seg" hidden>
-              <button type="button" class="seg-btn active" data-v="cur">当前阵容</button>
-              <button type="button" class="seg-btn" data-v="sug">转会后阵容</button>
+        <!-- 本轮成绩摘要卡 -->
+        <section id="summary-cards" class="cards-grid" aria-label="本轮成绩" data-page-node-id="3rOlBrtxJEsizy1ixWMuJy"></section>
+
+        <!-- 趋势曲线（自右栏上移至本轮阵容之上） -->
+        <section class="panel" id="sec-trends" data-page-node-id="Da0iTOiFfQZwoD1D8mIpLA">
+          <h2 data-page-node-id="FjPj6GdVWdAHwhCsqKI8vv">趋势曲线</h2>
+          <div id="trend-tabs" class="trend-tabs" role="tablist" aria-label="趋势维度切换" data-page-node-id="Z0RJNdlFhguCBTwq0ZgPDh"></div>
+          <div id="trend-box" data-page-node-id="8uAHIICb1bvGyPzBaoIjXN"></div>
+        </section>
+
+        <!-- 本轮阵容（支持 当前 / 转会后 双视图） -->
+        <section class="panel" id="sec-squad" data-page-node-id="t5jjnBmV9naH2jcWPts5zh">
+          <h2 data-page-node-id="zdrgS67DFfSNjV47KNb4zo">本轮阵容</h2>
+          <div class="squad-bar" data-page-node-id="YHH1YunbqncVPin44HDOWc">
+            <div id="formation-line" class="muted" data-page-node-id="IQdivKUK6uvN1TiukkOSZc"></div>
+            <div id="squad-toggle" class="seg" hidden data-page-node-id="tvnMd5RzEtKsWaSFHfxhUo">
+              <button type="button" class="seg-btn active" data-v="cur" data-page-node-id="NFSBX6U9bhGk51sTCHPhsd">当前阵容</button>
+              <button type="button" class="seg-btn" data-v="sug" data-page-node-id="nSNFSczIejmgGrJDauHKdk">转会后阵容</button>
             </div>
           </div>
-          <div id="squad-note" class="muted squad-note"></div>
-          <div id="team-xi" class="pitch"></div>
-          <div class="bench-title">替补席（第 1 顺位恒为门将，其余按决策优先级）</div>
-          <div id="team-bench" class="player-grid"></div>
+          <div id="squad-note" class="muted squad-note" data-page-node-id="d3s8lwmTWGKzvkAnZlClA2"></div>
+          <div id="team-xi" class="pitch" data-page-node-id="3xneZdQWeVqD4Eu8hGJ72B"></div>
+          <div class="bench-title" data-page-node-id="fzCNDimCDCT5HMkPeVIoto">替补席（第 1 顺位恒为门将，其余按决策优先级）</div>
+          <div id="team-bench" class="player-grid" data-page-node-id="dbtuy62hOL708KYFrWvqdU"></div>
         </section>
 
-        <!-- ④ AI 思考日志（本轮） -->
-        <section class="panel" id="sec-thoughts">
-          <h2>AI 思考日志</h2>
-          <div id="thoughts-gw" class="muted"></div>
-          <div id="thoughts-current"></div>
+        <!-- 历史记录（自右栏上移至 AI 思考日志之上） -->
+        <section class="panel" id="sec-history" data-page-node-id="ZITAo8JvslzJNwd6n7rlOR">
+          <h2 data-page-node-id="9gOAJd3rWfDyUQUvcSpb2d">历史记录</h2>
+          <div id="history-accordion" data-page-node-id="jZGjsQQRiPeym0lZcDDAau"></div>
         </section>
 
-        <!-- ⑤ 历史记录（Accordion） -->
-        <section class="panel">
-          <h2>历史记录</h2>
-          <div id="history-accordion"></div>
+        <!-- AI 思考日志（本轮） -->
+        <section class="panel" id="sec-thoughts" data-page-node-id="kZ0COfcX97UGH3sXy40PHq">
+          <h2 data-page-node-id="CXlEIz9LpdjQIu11q4qtWt">AI 思考日志</h2>
+          <div id="thoughts-gw" class="muted" data-page-node-id="vHuTZrkRoe88HoHVpLcHJF"></div>
+          <div id="thoughts-current" data-page-node-id="BW479iOsKW8AthHPxX1QB2"></div>
         </section>
 
-        <!-- ⑥ 趋势曲线（三条，Tab 切换） -->
-        <section class="panel">
-          <h2>趋势曲线</h2>
-          <div id="trend-tabs" class="trend-tabs" role="tablist" aria-label="趋势维度切换"></div>
-          <div id="trend-box"></div>
-        </section>
+        <!-- External Links（关于我）：移动端挂载点（≤768px 显示；桌面隐藏，用 Sidebar 内实例） -->
+        <div id="external-links-mobile" class="ext-mount ext-mobile panel" data-page-node-id="uOW5MCqRAm6VPY8rakyRpD"></div>
       </main>
     </div>
   </div>
 
-  <footer class="container">
-    <!-- External Links：移动端挂载点 -->
-    <div id="external-links-footer" class="ext-mount"></div>
-    <div id="last-update" class="muted"></div>
+  <footer class="container" data-page-node-id="hjAcDOSg3GVrogfZTERRfT">
+    <div id="last-update" class="muted" data-page-node-id="FCt0UfWXjICzPccNY6Jkbm"></div>
   </footer>
 
   <script src="config.js"></script>

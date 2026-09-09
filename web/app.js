@@ -56,6 +56,55 @@ function fmtTime(iso) {
   return d.toLocaleString("zh-CN", { timeZone: "Asia/Shanghai", hour12: false });
 }
 
+/** 北京时间 M月D日 HH:MM（DDL 时间点展示；基于 UTC+8 换算） */
+function fmtDateCN(iso) {
+  if (!iso) return "-";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return String(iso);
+  const p2 = (n) => String(n).padStart(2, "0");
+  const bj = new Date(d.getTime() + 8 * 3600 * 1000); // UTC → Asia/Shanghai
+  return `${bj.getUTCMonth() + 1}月${bj.getUTCDate()}日 ${p2(bj.getUTCHours())}:${p2(bj.getUTCMinutes())}`;
+}
+
+/** 距截止倒计时文案：`3 天 21:05:43`；已过 → 「已截止」 */
+function countdownText(iso) {
+  const t = iso ? new Date(iso).getTime() : NaN;
+  if (Number.isNaN(t)) return "";
+  const diff = t - Date.now();
+  if (diff <= 0) return "已截止";
+  const p2 = (n) => String(n).padStart(2, "0");
+  const s = Math.floor(diff / 1000);
+  const dd = Math.floor(s / 86400);
+  const hh = Math.floor((s % 86400) / 3600);
+  const mm = Math.floor((s % 3600) / 60);
+  const ss = s % 60;
+  const cd = `${p2(hh)}:${p2(mm)}:${p2(ss)}`;
+  return dd > 0 ? `${dd} 天 ${cd}` : cd;
+}
+
+/** ① DDL 倒计时走字：每秒刷新 #tw-countdown；过期定格「已截止」 */
+let _cdTimer = null;
+function startCountdown() {
+  if (_cdTimer) { clearInterval(_cdTimer); _cdTimer = null; }
+  const el = $("#tw-countdown");
+  if (!el) return;
+  const tick = () => {
+    if (!el.isConnected) { clearInterval(_cdTimer); _cdTimer = null; return; }
+    const txt = countdownText(el.dataset.iso);
+    const over = txt === "已截止";
+    el.textContent = txt;
+    const wrap = el.closest(".tw-cd");
+    if (wrap) {
+      wrap.classList.toggle("tw-cd-over", over);
+      const pre = wrap.querySelector(".tw-cd-pre");
+      if (pre) pre.style.display = over ? "none" : "";
+      if (over) { clearInterval(_cdTimer); _cdTimer = null; }
+    }
+  };
+  tick();
+  _cdTimer = setInterval(tick, 1000);
+}
+
 /** 数字压缩显示：1_240_000 → 1.24M；234_000 → 234k */
 function fmtAxis(v) {
   if (v == null) return "待结算";
@@ -76,6 +125,34 @@ function truncate(s, n) {
   return t.length > n ? `${t.slice(0, n - 1)}…` : t;
 }
 
+/* ---------------- 展示辅助（design-ia-ux.md §3.2 / §4.4） ---------------- */
+
+/** 阵型 "352" → "3-5-2"（展示友好） */
+function fmtFormation(f) {
+  if (f == null || f === "-") return "-";
+  const s = String(f).trim();
+  return /^\d{3,4}$/.test(s) ? s.split("").join("-") : s;
+}
+
+/** GW 三态标签：已结算 = points/rank/overall_rank 任一已回填；否则按有无决策区分 */
+function gwStateLabel(entry) {
+  if (!entry) return { label: "未开始", cls: "st-pending" };
+  const settled = entry.points != null || entry.rank != null || entry.overall_rank != null;
+  return settled ? { label: "已结算", cls: "st-settled" } : { label: "进行中", cls: "st-live" };
+}
+
+/** 最近一笔已结算数据（用于「本轮待结算」卡上的参照小字） */
+function lastSettledInfo(rows) {
+  for (let i = rows.length - 1; i >= 0; i--) {
+    const r = rows[i];
+    if (r.points != null || r.rank != null || r.overall_rank != null) {
+      return { gw: r.gw, points: r.points, rank: r.rank, overall_rank: r.overall_rank };
+    }
+  }
+  return null;
+}
+
+
 async function loadJSON(url) {
   const resp = await fetch(url);
   if (!resp.ok) throw new Error(`${url} -> HTTP ${resp.status}`);
@@ -85,6 +162,9 @@ async function loadJSON(url) {
 /* ---------------- 常量与映射 ---------------- */
 
 const STYLE_LABEL = { market_consensus: "市场共识型" };
+
+/** 站点品牌抬头（index.html <h1> 同步此名） */
+const MANAGER_NAME = "ZCJenius";
 
 function styleLabel(v) {
   return (v != null && STYLE_LABEL[v]) || v || "-";
@@ -257,20 +337,21 @@ function renderThoughtsInto(el, notes) {
 function renderProfile(state, rows) {
   const snap = latestSnapshot(rows);
   const season = state.season ? `${state.season} 赛季` : "-";
-  const mgr = state.manager_name || "FPL AI Manager";
-  const formation = favFormation(rows) || (state.decision && state.decision.formation) || state.formation || "-";
+  const formation = fmtFormation(
+    favFormation(rows) || (state.decision && state.decision.formation) || state.formation,
+  );
 
-  $("#manager-line").textContent = state.manager_name ? `经理：${state.manager_name}` : "";
   $("#season").textContent = season;
-
-  $("#profile-name").textContent = mgr;
+  $("#profile-name").textContent = MANAGER_NAME;
+  // 真实 FPL 队名（若有）作为 title 提示保留，不再占行
+  $("#profile-name").title = state.manager_name || "";
   $("#profile-season").textContent = season;
   $("#p-style").textContent = styleLabel(snap && snap.strategy);
   $("#p-risk").textContent = riskLevel(snap);
   $("#p-formation").textContent = formation;
 
   // 移动端摘要条（同数据源）
-  $("#m-name").textContent = mgr;
+  $("#m-name").textContent = MANAGER_NAME;
   $("#m-sub").textContent = season;
 }
 
@@ -333,21 +414,35 @@ function renderRecentThought(entry) {
     `<span class="recent-go muted">查看本轮完整思考 ↓</span></a>`;
 }
 
-/* ---------------- Main ① 本轮成绩摘要卡 ---------------- */
+/* ---------------- Main ② 本轮成绩摘要卡 ---------------- */
 
 function renderSummaryCards(state, rows) {
-  const gwRank = lastSettledGwRank(rows);
+  const entry = curEntry(state, rows);
+  const curPoints = entry ? entry.points : null;
+  const curRank = entry ? entry.rank : null;
+  const settled = lastSettledInfo(rows);
+  const refNote = settled
+    ? `最近已结算 GW${settled.gw}`
+    : "";
+  const refDetail = settled
+    ? `${settled.points != null ? `${settled.points} 分` : ""}${settled.rank != null ? ` · 单轮 ${fmtAxis(settled.rank)}` : ""}`.replace(/^ · /, "")
+    : "";
+
   const cards = [
-    { label: "当前 GW", value: `GW${state.current_gw ?? "-"}`, cls: "gameweek" },
-    { label: "Overall Rank", value: fmtNumber(state.rank, "rank"), cls: "" },
     {
-      label: "Gameweek Rank",
-      value: gwRank ? fmtNumber(gwRank.rank, "rank") : nullText("rank"),
+      label: "GW Points",
+      value: accText(curPoints, "points"),
       cls: "",
-      note: gwRank ? `GW${gwRank.gw}` : "",
+      note: curPoints == null && refNote ? `${refNote}：${refDetail || "—"}` : refNote,
     },
-    { label: "Total Points", value: fmtNumber(state.points, "points"), cls: "" },
-    { label: "Bank", value: fmtBank(state.bank), cls: "" },
+    {
+      label: "GW Rank",
+      value: accText(curRank, "rank"),
+      cls: "",
+      note: curRank == null && refNote ? `参照 GW${settled.gw} 单轮排名` : (curRank != null ? `GW${entry && entry.gw}` : ""),
+    },
+    { label: "Total Points", value: fmtNumber(state.points, "points"), cls: "", note: "赛季累计" },
+    { label: "Bank", value: fmtBank(state.bank), cls: "", note: "可用资金" },
   ];
   $("#summary-cards").innerHTML = cards
     .map(
@@ -372,8 +467,24 @@ function renderThisWeek(state, entry) {
         ? `可用免费转会 ${d.free_transfers} 次`
         : "";
 
-  let html = `<div class="tw-meta">
-      <span class="tw-item">阵型 <b>${esc((d.formation) || state.formation || "-")}</b></span>
+  // GW 徽章 + 三态标签（design-ia-ux.md §2.3 / §3.2）
+  const st = gwStateLabel(entry);
+  const gwLine = `<div class="tw-gwline">
+      <span class="gw-pill">GW${state.current_gw ?? "?"}</span>
+      <span class="gw-state ${st.cls}">${st.label}</span>
+    </div>`;
+
+  // DDL 截止行：时间点 + 实时倒计时（主人 09-09 反馈；见 startCountdown）
+  const dlIso = state.next_deadline;
+  const ddlHtml = dlIso
+    ? `<div class="tw-ddl">
+        <span class="tw-dl-label">🕒 GW${state.current_gw ?? "?"} 截止 ${fmtDateCN(dlIso)}（北京时间）</span>
+        <span class="tw-cd"><i class="tw-cd-pre">距截止</i><b id="tw-countdown" data-iso="${esc(dlIso)}">${countdownText(dlIso)}</b></span>
+      </div>`
+    : "";
+
+  let html = gwLine + ddlHtml + `<div class="tw-meta">
+      <span class="tw-item">阵型 <b>${esc(fmtFormation(d.formation || state.formation))}</b></span>
       <span class="tw-item">队长 <b class="txt-cap">C ${esc(capName)}</b></span>
       <span class="tw-item">副队长 <b class="txt-vice">V ${esc(viceName)}</b></span>
       ${ftText ? `<span class="tw-item muted">${esc(ftText)}</span>` : ""}
@@ -402,6 +513,11 @@ function renderThisWeek(state, entry) {
     if (pkg.budget_before != null) {
       html += `<p class="muted xfer-summary">预算校验：净花费 ${fmtMoney(pkg.transfer_cost)}（卖出回血 ${fmtMoney(pkg.total_out_price)}，买入 ${fmtMoney(pkg.total_in_price)}），转会后 Bank ${fmtBank(pkg.budget_after)}${pkg.gain != null ? `；包总增益 +${fmtNum(pkg.gain)}` : ""}</p>`;
     }
+    // CTA：跳到 ③ 阵容区并切「转会后」视图（design-ia-ux.md §4.2）
+    html += `<div class="tw-cta-row">
+        <button type="button" class="leaf-btn" data-goto-sug>查看转会后阵容 🍃</button>
+        <span class="muted tw-cta-hint">切换到「转会后」阵容视图对比</span>
+      </div>`;
   } else {
     const noTransfer = Array.isArray(entry && entry.notes)
       ? (entry.notes.find((n) => n.topic === "no_transfer") || {}).detail
@@ -420,16 +536,8 @@ const POS_LABEL = { GKP: "门将", DEF: "后卫", MID: "中场", FWD: "前锋" }
 function playerResolve(state, ctx) {
   const d = ctx.d;
   const byId = ctx.byId;
-  // 转会后视图（suggested）：阵容 = 后端快照，XI/替补与 C/V 均由快照内
-  // starting / is_captain / is_vice_captain 标志决定（转会顶替已保留槽位）
-  if (ctx.suggested) {
-    const pool = Array.from(byId.values());
-    const xi = pool.filter((p) => p.starting);
-    const bench = pool.filter((p) => !p.starting);
-    const cap = pool.find((p) => p.is_captain) || {};
-    const vice = pool.find((p) => p.is_vice_captain) || {};
-    return { xi, bench, capId: cap.id, viceId: vice.id };
-  }
+  // 当前阵容视图：XI/替补与 C/V 直接读 AI 决策（decision.starting_xi/bench/captain/vice）
+  // 注：「转会后阵容」不再走这里，由 buildSuggestedPlan 前端推导（v1.4）。
   const xiIds = (Array.isArray(d.starting_xi) ? d.starting_xi : []).map((o) => o.id);
   const benchIds = (Array.isArray(d.bench) ? d.bench : []).map((o) => o.id);
   const pick = (ids) => ids.map((id) => byId.get(id)).filter(Boolean);
@@ -450,11 +558,17 @@ function metricBar(label, value, title) {
     </div>`;
 }
 
-/** 球员卡：Form / Goal Potential / Fixture / TSB（design.md §4.3） */
-function playerCard(p, capId, viceId, benchNo) {
+/** 球员卡：Form / Goal Potential / Fixture / TSB（design.md §4.3）
+ *  flags: { sug, inIds, outIds } —— sug 视图标「新入」，cur 视图标「拟转出」
+ */
+function playerCard(p, capId, viceId, benchNo, flags) {
   const badges = [];
   if (capId != null && capId === p.id) badges.push('<span class="badge badge-c">C</span>');
   else if (viceId != null && viceId === p.id) badges.push('<span class="badge badge-v">V</span>');
+  if (flags) {
+    if (flags.sug && flags.inIds && flags.inIds.has(p.id)) badges.push('<span class="badge badge-in">新入</span>');
+    if (!flags.sug && flags.outIds && flags.outIds.has(p.id)) badges.push('<span class="badge badge-out">拟转出</span>');
+  }
   const bd = p.score_breakdown || {};
   const no = benchNo != null ? `<span class="bench-no">${benchNo}</span>` : "";
   const bars =
@@ -464,9 +578,9 @@ function playerCard(p, capId, viceId, benchNo) {
     metricBar("TSB", typeof p.selected_by === "number" ? p.selected_by : null, "持有率 TSB%");
   return `<div class="player-card">
       <div class="player-head">
-        <span class="player-name">${no}${esc(p.name)}</span>${badges.join("")}
+        <span class="player-name">${no}${esc(p.name)}</span><span class="badge-group">${badges.join("")}</span>
       </div>
-      <div class="player-sub">${esc(p.pos)} · ${esc(p.team)} · £${p.price}m</div>
+      <div class="player-sub">${esc(p.pos || "·")} · ${esc(p.team || "—")} · £${p.price ?? "?"}m</div>
       <div class="player-bars">${bars}</div>
     </div>`;
 }
@@ -483,8 +597,128 @@ function _resolveInitialView() {
 }
 _resolveInitialView();
 
+/* ---- 「转会后阵容」推导（v1.4）
+ * 目标：点「查看转会后阵容」时，不只是把新队员塞进阵容，而是——
+ *  1) 从 AI 决策同一套首发/替补序列（decision.starting_xi / decision.bench）出发，
+ *     把每笔转会 out→in 原位替换 → 得到完整 11 首发 + 4 替补（与后端
+ *     _build_suggested_squad 的「保留出场槽位」语义一致）；
+ *  2) 队长/副队长沿用 AI 决策 C/V（与 ① 本周动态同口径）；若 AI 队长恰好被转出，
+ *     则按 captain_scores 从新首发里顶替选人；
+ *  3) state.suggested_squad 降级为「入队球员卡面数据」字典（快照缺失也能渲染）。
+ * 这样「转会后视图」不再出现 C 徽章与决策队长打架的问题。
+ */
+
+function transferMaps(state) {
+  const rec = Array.isArray(state && state.decision && state.decision.recommended_transfers)
+    ? state.decision.recommended_transfers
+    : [];
+  const outIds = new Set(rec.map((t) => t.out && t.out.id).filter((v) => v != null));
+  const inIds = new Set(rec.map((t) => t.in && t.in.id).filter((v) => v != null));
+  return { rec, outIds, inIds };
+}
+
 function squadViewEnabled(state) {
-  return Array.isArray(state.suggested_squad) && state.suggested_squad.length > 0;
+  if (!state) return false;
+  const { rec } = transferMaps(state);
+  if (!rec.length) return false; // 无建议转会 → 「转会后」无意义
+  const teamOk = Array.isArray(state.team) && state.team.length > 0;
+  const snapOk = Array.isArray(state.suggested_squad) && state.suggested_squad.length > 0;
+  return teamOk || snapOk;
+}
+
+/** AI 决策 C/V 仍首发 → 沿用（与 ① 本周动态同口径）；否则按 captain_scores 在首发里顶替 */
+function resolveCaptain(state, xiIds) {
+  const d = state.decision || {};
+  const cs = (state.captain_scores && typeof state.captain_scores === "object") ? state.captain_scores : {};
+  const xi = new Set(xiIds);
+  const cand = d.captain && d.captain.id != null ? d.captain.id : null;
+  const vcand = d.vice && d.vice.id != null ? d.vice.id : null;
+  const topByScore = (exclude) => {
+    let best = null;
+    let bv = -1;
+    xiIds.forEach((id) => {
+      if (id === exclude) return;
+      const s = cs[id];
+      if (typeof s === "number" && s > bv) { bv = s; best = id; }
+    });
+    return best;
+  };
+  let capId = cand != null && xi.has(cand) ? cand : (vcand != null && xi.has(vcand) ? vcand : topByScore(null));
+  let viceId = null;
+  if (capId != null) {
+    viceId = vcand != null && vcand !== capId && xi.has(vcand) ? vcand : topByScore(capId);
+  }
+  return { capId, viceId };
+}
+
+/** 推导「转会后」完整阵容：返回 { xi, bench, capId, viceId }，球员对象池取优先序
+ *  队内卡 → 后端快照卡（含完整 breakdown）→ 转会 in 简卡。 */
+function buildSuggestedPlan(state) {
+  const d = state.decision || {};
+  const { rec, outIds } = transferMaps(state);
+  if (!rec.length) return null;
+  const team = Array.isArray(state.team) ? state.team : [];
+  const snap = Array.isArray(state.suggested_squad) ? state.suggested_squad : [];
+  const teamById = new Map(team.map((p) => [p.id, p]));
+  const snapById = new Map(snap.map((p) => [p.id, p]));
+
+  // 兜底：当前队缺失但后端快照完整 → 直接按快照标志渲染（保底可见）
+  if (!team.length && snap.length >= 15) {
+    const xi = snap.filter((p) => p.starting);
+    const bench = snap.filter((p) => !p.starting);
+    const cap = snap.find((p) => p.is_captain) || {};
+    const vc = snap.find((p) => p.is_vice_captain) || {};
+    return { xi, bench, capId: cap.id, viceId: vc.id, pool: snap };
+  }
+  if (!team.length) return null;
+
+  // 主路径：AI 同一套首发/替补 id 序列（缺 layout 时退回 team.starting 标志）
+  const xiIds = (Array.isArray(d.starting_xi) ? d.starting_xi : [])
+    .map((o) => o.id).filter((v) => v != null);
+  const benchIds = (Array.isArray(d.bench) ? d.bench : [])
+    .map((o) => o.id).filter((v) => v != null);
+  const baseXi = xiIds.length ? xiIds.slice() : team.filter((p) => p.starting).map((p) => p.id);
+  const baseBench = benchIds.length ? benchIds.slice() : team.filter((p) => !p.starting).map((p) => p.id);
+  const inBase = new Set([...baseXi, ...baseBench]);
+  team.forEach((p) => { if (!inBase.has(p.id) && !baseBench.includes(p.id)) baseBench.push(p.id); });
+
+  // 逐笔转会原位替换（out 在首发→首发同位；在替补→替补同位；不在 15 人→新队员挂替补末位）
+  rec.forEach((t) => {
+    const oid = (t.out || {}).id;
+    const iid = (t.in || {}).id;
+    if (oid == null || iid == null) return;
+    const ix = baseXi.indexOf(oid);
+    if (ix >= 0) { baseXi[ix] = iid; return; }
+    const jx = baseBench.indexOf(oid);
+    if (jx >= 0) { baseBench[jx] = iid; return; }
+    if (!inBase.has(oid) && !baseBench.includes(iid)) baseBench.push(iid);
+  });
+
+  // 球员卡组装：队内卡 → 快照卡（含完整 breakdown/TSB）→ 转会 in 简卡（至少 name/pos/price）
+  const cardById = (id) => {
+    if (teamById.has(id)) return teamById.get(id);
+    if (snapById.has(id)) return snapById.get(id);
+    const tf = rec.find((t) => t.in && t.in.id === id);
+    return tf && tf.in ? { ...tf.in } : null;
+  };
+  const seen = new Set();
+  const pool = [];
+  [...baseXi, ...baseBench].forEach((id) => {
+    if (seen.has(id)) return;
+    seen.add(id);
+    const c = cardById(id);
+    if (c) pool.push(c);
+  });
+
+  const { capId, viceId } = resolveCaptain(state, baseXi);
+  const xiSet = new Set(baseXi);
+  return {
+    xi: pool.filter((p) => xiSet.has(p.id)),
+    bench: pool.filter((p) => !xiSet.has(p.id)),
+    capId,
+    viceId,
+    pool,
+  };
 }
 
 function renderSquadToggle(state) {
@@ -497,27 +731,34 @@ function renderSquadToggle(state) {
 }
 
 function renderTeam(state) {
-  const suggested = squadView === "sug" && squadViewEnabled(state)
-    ? state.suggested_squad
-    : null;
-  const team = Array.isArray(state.team) ? state.team : [];
-  const pool = suggested || team;
-  const byId = new Map(pool.map((p) => [p.id, p]));
-  const { xi, bench, capId, viceId } = playerResolve(state, {
-    d: state.decision || {}, team: pool, byId, suggested: !!suggested,
-  });
+  const { rec, outIds, inIds } = transferMaps(state);
+  const isSug = squadView === "sug" && squadViewEnabled(state);
 
-  const formation = (state.decision && state.decision.formation) || state.formation || "-";
-  $("#formation-line").textContent = suggested
+  // 转会后视图：从 AI 决策首发/替补序列推导完整阵容 + 队长（v1.4，见 buildSuggestedPlan）
+  let xi, bench, capId, viceId;
+  if (isSug) {
+    const plan = buildSuggestedPlan(state);
+    if (plan) { xi = plan.xi; bench = plan.bench; capId = plan.capId; viceId = plan.viceId; }
+  }
+  // 当前阵容视图（或推导失败兜底）：直接读 decision 布局
+  if (!xi) {
+    const team = Array.isArray(state.team) ? state.team : [];
+    const byId = new Map(team.map((p) => [p.id, p]));
+    const r = playerResolve(state, { d: state.decision || {}, team, byId, suggested: false });
+    xi = r.xi; bench = r.bench; capId = r.capId; viceId = r.viceId;
+  }
+
+  // diff 角标数据：cur 视图高亮「拟转出」，sug 视图高亮「新入」
+  const flags = { sug: isSug, inIds, outIds };
+
+  const formation = fmtFormation((state.decision && state.decision.formation) || state.formation);
+  $("#formation-line").textContent = isSug
     ? `阵型 ${formation} · 转会后首发 ${xi.length} 人 / 替补 ${bench.length} 人`
     : `阵型 ${formation} · 首发 ${xi.length} 人 / 替补 ${bench.length} 人`;
 
   // 转会后摘要（视图注记，非转会时不显示）
   const noteEl = $("#squad-note");
   if (noteEl) {
-    const rec = suggested && Array.isArray(state.decision && state.decision.recommended_transfers)
-      ? state.decision.recommended_transfers
-      : [];
     const parts = rec
       .map((t) => `${esc((t.out || {}).name || "?")} → ${esc((t.in || {}).name || "?")}`)
       .join("；");
@@ -529,7 +770,7 @@ function renderTeam(state) {
     .map((pos) => {
       const cards = xi
         .filter((p) => p.pos === pos)
-        .map((p) => playerCard(p, capId, viceId))
+        .map((p) => playerCard(p, capId, viceId, undefined, flags))
         .join("");
       return `<div class="pitch-row">
           <div class="pitch-pos">${POS_LABEL[pos] || pos}</div>
@@ -544,7 +785,7 @@ function renderTeam(state) {
     ...bench.filter((p) => p.pos !== "GKP"),
   ];
   $("#team-bench").innerHTML = benchOrder
-    .map((p, idx) => playerCard(p, capId, viceId, idx + 1))
+    .map((p, idx) => playerCard(p, capId, viceId, idx + 1, flags))
     .join("");
 }
 
@@ -574,13 +815,31 @@ function accText(v, kind) {
   return v == null ? nullText(kind) : fmtNumber(v, kind);
 }
 
+/** 历史条目可见性（主人 09-09 反馈）：FPL 无真赛行的空洞轮（如新账号 GW2，
+ *  无结果、无决策时间、无预算）整条不展示；有结算结果，或带决策时间/预算的
+ *  「进行中」轮次保留并标注状态，不写「待结算」占位。 */
+function historyVisible(r) {
+  if (!r) return false;
+  if (r.points != null || r.rank != null || r.overall_rank != null) return true;
+  if (r.decided_at) return true;
+  if (r.budget_before != null || r.budget_after != null) return true;
+  return false;
+}
+
+/** 历史条目结算态：任一结果已回填 = 已结算；否则视为进行中/未开赛 */
+function historySettled(r) {
+  return r.points != null || r.rank != null || r.overall_rank != null;
+}
+
 function renderHistoryAccordion(state, rows) {
   const el = $("#history-accordion");
-  if (!rows.length) {
+  const vis = rows.filter(historyVisible);
+  if (!vis.length) {
     el.innerHTML = '<p class="muted">暂无历史记录（第一轮 GW 结束后自动生成）。</p>';
     return;
   }
-  const html = [...rows].reverse().map((r) => {
+  const html = [...vis].reverse().map((r) => {
+    const settled = historySettled(r);
     const d = r.decision || {};
     const transfers = Array.isArray(d.recommended_transfers) ? d.recommended_transfers : [];
     const xferHtml = transfers.length
@@ -613,21 +872,31 @@ function renderHistoryAccordion(state, rows) {
       return box.innerHTML;
     })();
 
+    // 摘要：已结算 → 结果三列；进行中 → 状态徽章（不写占位）
+    const summaryKv = settled
+      ? `<span class="acc-kv">积分 <b>${accText(r.points, "points")}</b></span>
+         <span class="acc-kv">当轮排名 <b>${accText(r.rank, "rank")}</b></span>
+         <span class="acc-kv">总排名 <b>${accText(r.overall_rank, "rank")}</b></span>`
+      : `<span class="acc-state gw-state st-live">本轮进行中</span>`;
+
+    // 展开区「比赛结果」：已结算 → 数值；进行中 → 说明行（不写「待结算」占位）
+    const resultHtml = settled
+      ? `<dl class="kv-list">
+          <div><dt>积分</dt><dd>${accText(r.points, "points")}</dd></div>
+          <div><dt>Gameweek Rank</dt><dd>${accText(r.rank, "rank")}</dd></div>
+          <div><dt>Overall Rank</dt><dd>${accText(r.overall_rank, "rank")}</dd></div>
+        </dl>`
+      : `<p class="muted">本轮比赛进行中 / 尚未开赛，结束并结算后自动回填积分与排名。</p>`;
+
     return `<details class="acc">
         <summary>
           <span class="acc-gw">GW${r.gw}</span>
-          <span class="acc-kv">积分 <b>${accText(r.points, "points")}</b></span>
-          <span class="acc-kv">当轮排名 <b>${accText(r.rank, "rank")}</b></span>
-          <span class="acc-kv">总排名 <b>${accText(r.overall_rank, "rank")}</b></span>
+          ${summaryKv}
         </summary>
         <div class="acc-body">
           <div class="acc-sec">
             <h4>比赛结果</h4>
-            <dl class="kv-list">
-              <div><dt>积分</dt><dd>${accText(r.points, "points")}</dd></div>
-              <div><dt>Gameweek Rank</dt><dd>${accText(r.rank, "rank")}</dd></div>
-              <div><dt>Overall Rank</dt><dd>${accText(r.overall_rank, "rank")}</dd></div>
-            </dl>
+            ${resultHtml}
           </div>
           <div class="acc-sec">
             <h4>转会选择</h4>
@@ -650,9 +919,9 @@ function renderHistoryAccordion(state, rows) {
 /* ---------------- Main ⑥ 趋势曲线（三条，Tab 切换 + 手绘 SVG） ---------------- */
 
 const TREND_META = [
-  { key: "overall_rank", title: "Overall Rank", cn: "总排名", reverse: true, color: "#ffd166" },
-  { key: "points", title: "GW Points", cn: "每轮积分", reverse: false, color: "#00ff87" },
-  { key: "rank", title: "GW Rank", cn: "单轮排名", reverse: true, color: "#7c8cff" },
+  { key: "overall_rank", title: "Overall Rank", cn: "总排名", reverse: true, color: "#E9A13B" },
+  { key: "points", title: "GW Points", cn: "每轮积分", reverse: false, color: "#58A854" },
+  { key: "rank", title: "GW Rank", cn: "单轮排名", reverse: true, color: "#4E9FD0" },
 ];
 let trendKey = "overall_rank";
 
@@ -756,22 +1025,17 @@ function drawTrend(rows, meta) {
 }
 
 function renderTrendChart(rows) {
+  // 与历史记录同口径：空洞轮（FPL 无真赛行，如新账号 GW2）不进入趋势 X 轴
+  const vis = rows.filter(historyVisible);
   const meta = TREND_META.find((m) => m.key === trendKey) || TREND_META[0];
-  const svg = drawTrend(rows, meta);
+  const svg = drawTrend(vis, meta);
   const box = $("#trend-box");
   box.innerHTML = svg;
   // 供 debug/测试访问
-  window.__lastTrend = { key: trendKey, rows: rows.length };
+  window.__lastTrend = { key: trendKey, rows: vis.length };
 }
 
-/* ---------------- External Links（「关于我」品牌卡 + 平台导航） ---------------- */
-
-/** heroMetrics 中配置的 state 字段 → 展示元信息 */
-const EXT_METRIC = {
-  rank: { label: "Overall Rank", kind: "rank", get: (s) => s.rank },
-  points: { label: "Total Points", kind: "points", get: (s) => s.points },
-  season: { label: "赛季", kind: "text", get: (s) => s.season },
-};
+/* ---------------- External Links（「关于我」：品牌 + 平台导航，桌面左栏 & 移动端主区尾部） ---------------- */
 
 function renderExternalLinks(state) {
   const cfg = window.SITE_CONFIG || {};
@@ -781,7 +1045,7 @@ function renderExternalLinks(state) {
     : (cfg.brandText ? { name: cfg.brandText } : null);
   const links = Array.isArray(cfg.externalLinks) ? cfg.externalLinks : [];
 
-  // 平台导航（视觉最弱：小图标 + 文字，仅作链接）
+  // 平台导航（辅助：小图标 + 文字，仅作链接）
   const navHtml = links.length
     ? `<ul class="ext-list">` +
       links
@@ -795,43 +1059,25 @@ function renderExternalLinks(state) {
       `</ul>`
     : "";
 
-  // 核心数据行：从 state 实时取（与 ① 摘要卡同源）
-  let heroHtml = "";
-  if (state && Array.isArray(cfg.heroMetrics)) {
-    const rows = cfg.heroMetrics
-      .map((key) => EXT_METRIC[key])
-      .filter(Boolean)
-      .map((m) => {
-        const raw = m.get(state);
-        const val = m.kind === "text" ? esc(raw || "-") : fmtNumber(raw, m.kind);
-        return `<div class="ext-hero-row"><span>${m.label}</span><b>${val}</b></div>`;
-      });
-    if (rows.length) heroHtml = `<div class="ext-hero">${rows.join("")}</div>`;
-  }
-
-  // 品牌头（视觉最大）
+  // 品牌头（主人 09-09 反馈：头像在上 → 名字强调在下；tagline 已废弃不渲染）
   let brandHtml = "";
   if (brand) {
     const name = esc(brand.name || "");
     const handle = brand.handle ? `<span class="ext-handle">${esc(brand.handle)}</span>` : "";
-    const tagline = brand.tagline ? `<div class="ext-tagline">${esc(brand.tagline)}</div>` : "";
-    brandHtml = `<div class="ext-brand">${name}${handle}</div>${tagline}`;
+    brandHtml = `<div class="ext-brand">${name}${handle}</div>`;
   }
+  const avatar = cfg.avatar && brand
+    ? `<img class="ext-avatar" src="${esc(cfg.avatar)}" alt="${esc(brand.name || brand.handle || "头像")}" loading="lazy">`
+    : "";
 
   const hasCard = !!brand || links.length;
-  const desktop = $("#external-links-desktop");
-  const footer = $("#external-links-footer");
-  if (hasCard) {
-    desktop.innerHTML = `<h2>关于我</h2>${brandHtml}${heroHtml}${navHtml}`;
-    footer.innerHTML = navHtml;
-    desktop.classList.remove("ext-empty");
-    footer.classList.remove("ext-empty");
-  } else {
-    desktop.innerHTML = "";
-    footer.innerHTML = "";
-    desktop.classList.add("ext-empty");
-    footer.classList.add("ext-empty");
-  }
+  const inner = `<h2>关于我</h2>${avatar}${brandHtml}${navHtml}`;
+  // 桌面：左栏 Sidebar 挂载点；移动端：主区末尾挂载点（同一内容，CSS 控制各显示其一）
+  [$("#external-links-desktop"), $("#external-links-mobile")].forEach((el) => {
+    if (!el) return;
+    el.innerHTML = hasCard ? inner : "";
+    el.classList.toggle("ext-empty", !hasCard);
+  });
 }
 
 /* ---------------- 兜底 / 状态 ---------------- */
@@ -869,6 +1115,23 @@ function bindSquadToggle(state) {
   renderSquadToggle(state);
 }
 
+/** ① 转会 CTA：滚动到 ③ 并切换「转会后」视图（design-ia-ux.md §4.2 #2） */
+function bindThisWeekCta(state) {
+  const sec = $("#this-week");
+  if (!sec || sec.dataset.ctaBound) return;
+  sec.dataset.ctaBound = "1";
+  sec.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-goto-sug]");
+    if (!btn) return;
+    if (!squadViewEnabled(state)) return;
+    squadView = "sug";
+    renderSquadToggle(state);
+    renderTeam(state);
+    const target = document.getElementById("sec-squad");
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
 /* ---------------- 入口 ---------------- */
 
 let historyJson = null; // 供 trend Tab 重绘使用
@@ -891,6 +1154,8 @@ async function init() {
     renderRecentThought(entry);
     renderSummaryCards(state, rows);
     renderThisWeek(state, entry);
+    startCountdown();
+    bindThisWeekCta(state);
     bindSquadToggle(state);
     renderTeam(state);
     renderThoughtsCurrent(entry);
