@@ -351,29 +351,72 @@ body {
 .t-hint { font-size: 10px; fill: rgba(139, 147, 179, 0.75); }
 .t-dot { stroke: var(--panel); stroke-width: 1; }
 
-/* ---------------- External Links ---------------- */
+/* ---------------- External Links（「关于我」，UX v1.0 层级） ----------------
+ * 视觉优先级：品牌名/用户名 → 核心数据 → 平台名 → 图标（导航用，降权）
+ */
 
 .ext-mount { margin-top: 0; }
 .ext-mount.ext-empty { display: none; }
-.ext-list { list-style: none; display: flex; flex-wrap: wrap; gap: 10px 14px; margin-top: 4px; }
+
+/* 品牌头（最大） */
+.ext-brand {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px;
+  font-size: 1.12rem; font-weight: 800; letter-spacing: 0.3px;
+}
+.ext-handle { color: var(--muted); font-size: 0.86rem; font-weight: 500; }
+.ext-tagline { color: var(--muted); font-size: 0.76rem; margin: 2px 0 10px; }
+
+/* 核心数据（次大，与战绩卡同一数据源） */
+.ext-hero {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 8px 11px; margin-bottom: 10px;
+  background: var(--panel-2); border: 1px solid var(--border); border-radius: 10px;
+}
+.ext-hero-row { display: flex; justify-content: space-between; gap: 10px; font-size: 0.82rem; color: var(--muted); }
+.ext-hero-row b { color: var(--text); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* 平台导航（最弱：小图标 + 弱化文字，仅作入口） */
+.ext-list { list-style: none; display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 2px; }
 .ext-list a {
   display: inline-flex; align-items: center; gap: 6px;
-  color: var(--text); text-decoration: none; font-size: 0.84rem;
+  color: var(--muted); text-decoration: none; font-size: 0.78rem;
 }
 .ext-list a:hover { color: var(--accent); }
 .ext-list img {
-  width: 26px; height: 26px; object-fit: contain;
-  border-radius: 6px;
-  background: var(--panel-2);
-  padding: 2px;
+  width: 16px; height: 16px; object-fit: contain;
+  opacity: 0.55; border-radius: 3px;
+  filter: saturate(0.7);
+  transition: opacity 0.15s;
 }
-.ext-brand { margin-top: 10px; font-size: 0.78rem; }
+.ext-list a:hover img { opacity: 0.95; filter: saturate(1); }
 
 /* ---------------- 页脚 / 状态 ---------------- */
 
 #external-links-footer { display: none; }
 footer { padding: 8px 16px 28px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; }
 #external-links-footer .ext-list { justify-content: center; }
+
+/* ---------------- 阵容双视图（当前 / 转会后） ---------------- */
+
+.squad-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
+.squad-note { font-size: 0.78rem; margin-bottom: 10px; min-height: 0; }
+.squad-note:empty { display: none; }
+.seg {
+  display: inline-flex; border: 1px solid var(--border); border-radius: 999px;
+  background: var(--panel-2); overflow: hidden;
+}
+.seg-btn {
+  background: transparent; border: 0; padding: 4px 13px;
+  color: var(--muted); font-size: 0.8rem; cursor: pointer;
+  font-family: inherit; transition: all 0.15s;
+}
+.seg-btn:hover { color: var(--text); }
+.seg-btn.active { background: rgba(0, 255, 135, 0.14); color: var(--accent); font-weight: 600; }
+
+/* ---------------- AI 思考日志：标题行 + 决策时间 ---------------- */
+
+#thoughts-gw { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 14px; margin-bottom: 8px; }
+.thoughts-time { color: var(--muted); font-size: 0.78rem; white-space: nowrap; }
 
 #load-status {
   padding: 9px 12px;

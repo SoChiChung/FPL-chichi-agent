@@ -77,10 +77,17 @@
           <div id="this-week"></div>
         </section>
 
-        <!-- ③ 本轮阵容 -->
+        <!-- ③ 本轮阵容（支持 当前 / 转会后 双视图） -->
         <section class="panel">
           <h2>本轮阵容</h2>
-          <div id="formation-line" class="muted"></div>
+          <div class="squad-bar">
+            <div id="formation-line" class="muted"></div>
+            <div id="squad-toggle" class="seg" hidden>
+              <button type="button" class="seg-btn active" data-v="cur">当前阵容</button>
+              <button type="button" class="seg-btn" data-v="sug">转会后阵容</button>
+            </div>
+          </div>
+          <div id="squad-note" class="muted squad-note"></div>
           <div id="team-xi" class="pitch"></div>
           <div class="bench-title">替补席（第 1 顺位恒为门将，其余按决策优先级）</div>
           <div id="team-bench" class="player-grid"></div>

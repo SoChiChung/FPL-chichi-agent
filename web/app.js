@@ -16,8 +16,17 @@ function esc(s) {
   }[c]));
 }
 
-function fmtNumber(n) {
-  return n == null ? "待结算" : Number(n).toLocaleString("zh-CN");
+/**
+ * 空态占位文案（字段感知，BugFix UX v1.0）：
+ * 排名类（rank/overall_rank）→「待结算排名」；积分类（points）→「待结算」。
+ * 避免「当轮排名待结算」被误读为「分数待结算」。
+ */
+function nullText(kind) {
+  return kind === "rank" ? "待结算排名" : "待结算";
+}
+
+function fmtNumber(n, kind) {
+  return n == null ? nullText(kind) : Number(n).toLocaleString("zh-CN");
 }
 
 function fmtNum(n) {
@@ -39,11 +48,12 @@ function fmtMoney(m) {
   return `£${(Number(m) || 0).toFixed(1)}m`;
 }
 
+/** 北京时间（Asia/Shanghai）格式化；无效输入原样返回 */
 function fmtTime(iso) {
   if (!iso) return "-";
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleString("zh-CN", { hour12: false });
+  return d.toLocaleString("zh-CN", { timeZone: "Asia/Shanghai", hour12: false });
 }
 
 /** 数字压缩显示：1_240_000 → 1.24M；234_000 → 234k */
@@ -269,13 +279,13 @@ function renderProfile(state, rows) {
 function statItems(state, rows) {
   const gwRank = lastSettledGwRank(rows);
   return [
-    { label: "Overall Rank", value: fmtNumber(state.rank), note: "" },
+    { label: "Overall Rank", value: fmtNumber(state.rank, "rank"), note: "" },
     {
       label: "Gameweek Rank",
-      value: gwRank ? fmtNumber(gwRank.rank) : "待结算",
+      value: gwRank ? fmtNumber(gwRank.rank, "rank") : nullText("rank"),
       note: gwRank ? `最近已结算 GW${gwRank.gw}` : "暂无已结算轮次",
     },
-    { label: "Total Points", value: fmtNumber(state.points), note: "" },
+    { label: "Total Points", value: fmtNumber(state.points, "points"), note: "" },
   ];
 }
 
@@ -329,14 +339,14 @@ function renderSummaryCards(state, rows) {
   const gwRank = lastSettledGwRank(rows);
   const cards = [
     { label: "当前 GW", value: `GW${state.current_gw ?? "-"}`, cls: "gameweek" },
-    { label: "Overall Rank", value: fmtNumber(state.rank), cls: "" },
+    { label: "Overall Rank", value: fmtNumber(state.rank, "rank"), cls: "" },
     {
       label: "Gameweek Rank",
-      value: gwRank ? fmtNumber(gwRank.rank) : "待结算",
+      value: gwRank ? fmtNumber(gwRank.rank, "rank") : nullText("rank"),
       cls: "",
       note: gwRank ? `GW${gwRank.gw}` : "",
     },
-    { label: "Total Points", value: fmtNumber(state.points), cls: "" },
+    { label: "Total Points", value: fmtNumber(state.points, "points"), cls: "" },
     { label: "Bank", value: fmtBank(state.bank), cls: "" },
   ];
   $("#summary-cards").innerHTML = cards
@@ -410,6 +420,16 @@ const POS_LABEL = { GKP: "门将", DEF: "后卫", MID: "中场", FWD: "前锋" }
 function playerResolve(state, ctx) {
   const d = ctx.d;
   const byId = ctx.byId;
+  // 转会后视图（suggested）：阵容 = 后端快照，XI/替补与 C/V 均由快照内
+  // starting / is_captain / is_vice_captain 标志决定（转会顶替已保留槽位）
+  if (ctx.suggested) {
+    const pool = Array.from(byId.values());
+    const xi = pool.filter((p) => p.starting);
+    const bench = pool.filter((p) => !p.starting);
+    const cap = pool.find((p) => p.is_captain) || {};
+    const vice = pool.find((p) => p.is_vice_captain) || {};
+    return { xi, bench, capId: cap.id, viceId: vice.id };
+  }
   const xiIds = (Array.isArray(d.starting_xi) ? d.starting_xi : []).map((o) => o.id);
   const benchIds = (Array.isArray(d.bench) ? d.bench : []).map((o) => o.id);
   const pick = (ids) => ids.map((id) => byId.get(id)).filter(Boolean);
@@ -451,13 +471,58 @@ function playerCard(p, capId, viceId, benchNo) {
     </div>`;
 }
 
+/** 阵容视图：cur = 当前阵容（state.team + decision 布局）；sug = 转会后阵容 */
+let squadView = "cur";
+
+/** URL 参数可指定初始视图（?view=sug 用于直达/分享转会后阵容） */
+function _resolveInitialView() {
+  try {
+    const v = new URLSearchParams(location.search).get("view");
+    if (v === "sug" || v === "cur") squadView = v;
+  } catch (_) {}
+}
+_resolveInitialView();
+
+function squadViewEnabled(state) {
+  return Array.isArray(state.suggested_squad) && state.suggested_squad.length > 0;
+}
+
+function renderSquadToggle(state) {
+  const toggle = $("#squad-toggle");
+  if (!toggle) return;
+  toggle.hidden = !squadViewEnabled(state);
+  toggle.querySelectorAll(".seg-btn").forEach((b) => {
+    b.classList.toggle("active", b.dataset.v === squadView);
+  });
+}
+
 function renderTeam(state) {
+  const suggested = squadView === "sug" && squadViewEnabled(state)
+    ? state.suggested_squad
+    : null;
   const team = Array.isArray(state.team) ? state.team : [];
-  const byId = new Map(team.map((p) => [p.id, p]));
-  const { xi, bench, capId, viceId } = playerResolve(state, { d: state.decision || {}, team, byId });
+  const pool = suggested || team;
+  const byId = new Map(pool.map((p) => [p.id, p]));
+  const { xi, bench, capId, viceId } = playerResolve(state, {
+    d: state.decision || {}, team: pool, byId, suggested: !!suggested,
+  });
 
   const formation = (state.decision && state.decision.formation) || state.formation || "-";
-  $("#formation-line").textContent = `阵型 ${formation} · 首发 ${xi.length} 人 / 替补 ${bench.length} 人`;
+  $("#formation-line").textContent = suggested
+    ? `阵型 ${formation} · 转会后首发 ${xi.length} 人 / 替补 ${bench.length} 人`
+    : `阵型 ${formation} · 首发 ${xi.length} 人 / 替补 ${bench.length} 人`;
+
+  // 转会后摘要（视图注记，非转会时不显示）
+  const noteEl = $("#squad-note");
+  if (noteEl) {
+    const rec = suggested && Array.isArray(state.decision && state.decision.recommended_transfers)
+      ? state.decision.recommended_transfers
+      : [];
+    const parts = rec
+      .map((t) => `${esc((t.out || {}).name || "?")} → ${esc((t.in || {}).name || "?")}`)
+      .join("；");
+    noteEl.textContent = parts ? `按 AI 建议（${rec.length} 笔）：${parts}` : "";
+  }
 
   const rows = ["GKP", "DEF", "MID", "FWD"]
     .filter((pos) => xi.some((p) => p.pos === pos))
@@ -493,14 +558,20 @@ function renderThoughtsCurrent(entry) {
     bodyEl.innerHTML = '<p class="muted">本轮决策尚未生成，暂无思考日志。</p>';
     return;
   }
-  gwEl.textContent = `GW${entry.gw} 的决策过程（最多展示 3 段，点开「更多细节」查看次要记录）`;
+  // 标题 + 决策时间（北京时间）——decision time 展示在正文上方（UX v1.0）
+  const timeHtml = entry.decided_at
+    ? `<span class="thoughts-time">决策时间 ${fmtTime(entry.decided_at)}（北京时间）</span>`
+    : "";
+  gwEl.innerHTML =
+    `<span class="thoughts-gw-tag">GW${entry.gw} 的决策过程（最多展示 3 段，点开「更多细节」查看次要记录）</span>` +
+    timeHtml;
   renderThoughtsInto(bodyEl, entry.notes);
 }
 
 /* ---------------- Main ⑤ 历史记录（Accordion） ---------------- */
 
-function accText(v) {
-  return v == null ? "待结算" : fmtNumber(v);
+function accText(v, kind) {
+  return v == null ? nullText(kind) : fmtNumber(v, kind);
 }
 
 function renderHistoryAccordion(state, rows) {
@@ -545,17 +616,17 @@ function renderHistoryAccordion(state, rows) {
     return `<details class="acc">
         <summary>
           <span class="acc-gw">GW${r.gw}</span>
-          <span class="acc-kv">积分 <b>${accText(r.points)}</b></span>
-          <span class="acc-kv">当轮排名 <b>${accText(r.rank)}</b></span>
-          <span class="acc-kv">总排名 <b>${accText(r.overall_rank)}</b></span>
+          <span class="acc-kv">积分 <b>${accText(r.points, "points")}</b></span>
+          <span class="acc-kv">当轮排名 <b>${accText(r.rank, "rank")}</b></span>
+          <span class="acc-kv">总排名 <b>${accText(r.overall_rank, "rank")}</b></span>
         </summary>
         <div class="acc-body">
           <div class="acc-sec">
             <h4>比赛结果</h4>
             <dl class="kv-list">
-              <div><dt>积分</dt><dd>${accText(r.points)}</dd></div>
-              <div><dt>Gameweek Rank</dt><dd>${accText(r.rank)}</dd></div>
-              <div><dt>Overall Rank</dt><dd>${accText(r.overall_rank)}</dd></div>
+              <div><dt>积分</dt><dd>${accText(r.points, "points")}</dd></div>
+              <div><dt>Gameweek Rank</dt><dd>${accText(r.rank, "rank")}</dd></div>
+              <div><dt>Overall Rank</dt><dd>${accText(r.overall_rank, "rank")}</dd></div>
             </dl>
           </div>
           <div class="acc-sec">
@@ -693,14 +764,25 @@ function renderTrendChart(rows) {
   window.__lastTrend = { key: trendKey, rows: rows.length };
 }
 
-/* ---------------- External Links（数据驱动，空数组不渲染） ---------------- */
+/* ---------------- External Links（「关于我」品牌卡 + 平台导航） ---------------- */
 
-function renderExternalLinks() {
+/** heroMetrics 中配置的 state 字段 → 展示元信息 */
+const EXT_METRIC = {
+  rank: { label: "Overall Rank", kind: "rank", get: (s) => s.rank },
+  points: { label: "Total Points", kind: "points", get: (s) => s.points },
+  season: { label: "赛季", kind: "text", get: (s) => s.season },
+};
+
+function renderExternalLinks(state) {
   const cfg = window.SITE_CONFIG || {};
+  // 品牌头：优先新结构 brand{name,handle,tagline}；兼容旧 brandText
+  const brand = (cfg.brand && (cfg.brand.name || cfg.brand.handle))
+    ? cfg.brand
+    : (cfg.brandText ? { name: cfg.brandText } : null);
   const links = Array.isArray(cfg.externalLinks) ? cfg.externalLinks : [];
-  const brand = cfg.brandText || "";
 
-  const listHtml = links.length
+  // 平台导航（视觉最弱：小图标 + 文字，仅作链接）
+  const navHtml = links.length
     ? `<ul class="ext-list">` +
       links
         .map(
@@ -710,15 +792,38 @@ function renderExternalLinks() {
             </a></li>`,
         )
         .join("") +
-      `</ul>` +
-      (brand ? `<div class="ext-brand muted">${esc(brand)}</div>` : "")
+      `</ul>`
     : "";
 
+  // 核心数据行：从 state 实时取（与 ① 摘要卡同源）
+  let heroHtml = "";
+  if (state && Array.isArray(cfg.heroMetrics)) {
+    const rows = cfg.heroMetrics
+      .map((key) => EXT_METRIC[key])
+      .filter(Boolean)
+      .map((m) => {
+        const raw = m.get(state);
+        const val = m.kind === "text" ? esc(raw || "-") : fmtNumber(raw, m.kind);
+        return `<div class="ext-hero-row"><span>${m.label}</span><b>${val}</b></div>`;
+      });
+    if (rows.length) heroHtml = `<div class="ext-hero">${rows.join("")}</div>`;
+  }
+
+  // 品牌头（视觉最大）
+  let brandHtml = "";
+  if (brand) {
+    const name = esc(brand.name || "");
+    const handle = brand.handle ? `<span class="ext-handle">${esc(brand.handle)}</span>` : "";
+    const tagline = brand.tagline ? `<div class="ext-tagline">${esc(brand.tagline)}</div>` : "";
+    brandHtml = `<div class="ext-brand">${name}${handle}</div>${tagline}`;
+  }
+
+  const hasCard = !!brand || links.length;
   const desktop = $("#external-links-desktop");
   const footer = $("#external-links-footer");
-  if (links.length) {
-    desktop.innerHTML = `<h2>External Links</h2>${listHtml}`;
-    footer.innerHTML = listHtml;
+  if (hasCard) {
+    desktop.innerHTML = `<h2>关于我</h2>${brandHtml}${heroHtml}${navHtml}`;
+    footer.innerHTML = navHtml;
     desktop.classList.remove("ext-empty");
     footer.classList.remove("ext-empty");
   } else {
@@ -750,6 +855,20 @@ function renderEmpty() {
   $("#trend-box").innerHTML = "";
 }
 
+function bindSquadToggle(state) {
+  const toggle = $("#squad-toggle");
+  if (!toggle || toggle.dataset.bound) return;
+  toggle.dataset.bound = "1";
+  toggle.addEventListener("click", (e) => {
+    const btn = e.target.closest(".seg-btn");
+    if (!btn) return;
+    squadView = btn.dataset.v;
+    renderSquadToggle(state);
+    renderTeam(state);
+  });
+  renderSquadToggle(state);
+}
+
 /* ---------------- 入口 ---------------- */
 
 let historyJson = null; // 供 trend Tab 重绘使用
@@ -772,12 +891,13 @@ async function init() {
     renderRecentThought(entry);
     renderSummaryCards(state, rows);
     renderThisWeek(state, entry);
+    bindSquadToggle(state);
     renderTeam(state);
     renderThoughtsCurrent(entry);
     renderHistoryAccordion(state, rows);
     renderTrendTabs();
     renderTrendChart(rows);
-    renderExternalLinks();
+    renderExternalLinks(state);
 
     setLoadStatus("");
     $("#load-status").style.display = "none";
@@ -788,7 +908,7 @@ async function init() {
       true,
     );
     renderEmpty();
-    renderExternalLinks();
+    renderExternalLinks(null);
   }
 }
 

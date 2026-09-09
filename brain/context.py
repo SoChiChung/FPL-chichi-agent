@@ -126,8 +126,10 @@ def build_state(
     return {
         "season": config.SEASON,
         "current_gw": gw,
-        "points": entry.get("summary_overall_points") or 0,
-        "rank": entry.get("summary_overall_rank") or 0,
+        # 赛季累计口径：FPL 未返回（如尚未参赛/赛季前）时保留 null，
+        # 前端据此显示「待结算」，而不是把缺失值 or 成 0 误导为真实 0。
+        "points": entry.get("summary_overall_points"),
+        "rank": entry.get("summary_overall_rank"),
         # bank 单位 = 百万（£m），与球员 price 一致；2.0 表示 £2.0m
         "bank": bank,
         "manager_name": (entry.get("name") or "").strip(),

@@ -47,6 +47,42 @@ def _transfer_notes(suggestions: list, t_notes: list, ts: dict) -> list:
     return lines
 
 
+def _build_suggested_squad(squad: list, suggestions: list, players_map: dict,
+                           market_scores: dict, team_data: dict, form_by_id: dict,
+                           recent_points: dict, engine_cfg: dict):
+    """应用全部建议转会后的 15 人完整快照（供前端「转会后阵容」视图）。
+
+    - 底 = 决策用基础 squad；逐笔 out→in 原位替换，保留出场槽位
+      （starting / multiplier / C / VC）——阵型与 XI 结构不因替换而变。
+    - in 球员从全池 players_map 取基础档案，再经 score_squad 单点补全
+      score_breakdown / lineup_score（recent_points 缺该球员 → streak 按 0 降级）。
+    - 任何一笔无法解析（out 不在阵 / in 不在全池）→ 返回 None（保守不落盘，
+      前端自动退化为单视图，避免给用户看残缺阵容）。
+    """
+    if not suggestions:
+        return None
+    pool = [dict(p) for p in squad]
+    for s in suggestions:
+        out_id, in_id = s["out"]["id"], s["in"]["id"]
+        idx = next((j for j, p in enumerate(pool) if p["id"] == out_id), None)
+        base = players_map.get(in_id)
+        if idx is None or base is None:
+            return None
+        slot = pool[idx]
+        incoming = {
+            **base, "id": in_id,
+            "market_score": market_scores.get(in_id, 0.0),
+            "starting": slot["starting"],
+            "multiplier": slot["multiplier"],
+            "is_captain": slot["is_captain"],
+            "is_vice_captain": slot["is_vice_captain"],
+        }
+        lineup_score.score_squad([incoming], team_data, form_by_id,
+                                 recent_points, engine_cfg)
+        pool[idx] = incoming
+    return pool
+
+
 def _fetch_recent_points(squad: list, events: list):
     """拉 15 人 element-summary，返回 (recent_points, recent_rounds, failures)。
 
@@ -168,6 +204,14 @@ def main():
     # 预算口径汇总（state.bank 为 £m；包内所有转会 100% 预算可行）
     transfer_package = transfer.summarize_package(state["bank"], suggestions)
 
+    # ---- 转会后阵容快照（suggested_squad）：应用全部建议转会后的完整 15 人 ----
+    # in 球员不在 state.team 内、且缺 score_breakdown 等完整字段，前端无法独立
+    # 补全一张球员卡 → 由后端用评分引擎补齐后落盘，前端「转会后阵容」视图直接渲染。
+    # 无建议转会时不写该字段（前端隐藏切换入口）。
+    suggested_squad = _build_suggested_squad(
+        squad, suggestions, players_map, market_scores, team_data,
+        form_by_id, recent_points, engine_cfg)
+
     decision = {
         "formation": formation,
         "captain": cap,
@@ -204,6 +248,8 @@ def main():
         "warnings": [n["detail"] for n in notes
                      if n.get("topic") in ("data_missing", "score_source")],
     }
+    if suggested_squad:
+        state["suggested_squad"] = suggested_squad
 
     data_store.validate_state(state)
     history, replaced = history_writer.init_history_for_account(
@@ -213,6 +259,10 @@ def main():
                       "detail": "history.json 属于其他账号，已从空历史开始当前账号"})
     history_writer.upsert_decision(history, gw, decision, notes, metrics,
                                    strategy_config.snapshot(cfg, weights, engine_cfg))
+    # 结算回填：GW 已 finished 的官方数据（points/rank/overall_rank）补写 history
+    filled = history_writer.backfill_settlement(history,
+                                                entry_history.get("current") or [],
+                                                events)
     data_store.validate_history(history)
     data_store.save_json(config.STATE_FILE, state)
     data_store.save_json(config.HISTORY_FILE, history)
@@ -229,6 +279,7 @@ def main():
         f"队长={(cap or {}).get('name') or '-'} "
         f"阵容来源={src_label} 转会={ts['status']} "
         f"建议转会={len(suggestions)} 笔 历史 {len(history['history'])} 轮 "
+        f"结算回填={filled} 项 建议阵容={'有' if suggested_squad else '无'} "
         f"Bank=£{state['bank']:.1f}m 净花费=£{pkg['transfer_cost']:.1f}m "
         f"转会后Bank=£{pkg['budget_after']:.1f}m "
         f"(耗时 {time.time() - t0:.1f}s)"

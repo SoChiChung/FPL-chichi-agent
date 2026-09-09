@@ -125,9 +125,9 @@
     },
     {
       "gw": 3,
-      "points": null,
-      "rank": null,
-      "overall_rank": null,
+      "points": 37,
+      "rank": 9502808,
+      "overall_rank": 10331456,
       "decision": {
         "formation": "352",
         "captain": {
@@ -596,7 +596,7 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 652.44（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 652.53（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
@@ -623,15 +623,16 @@
         }
       ],
       "metrics": {
-        "team_market_score": 496.76,
+        "team_market_score": 496.68,
         "captain_market_score": 69.15,
-        "formation_market_score": 402.34,
-        "team_lineup_score": 652.44,
+        "formation_market_score": 402.26,
+        "team_lineup_score": 652.53,
         "captain_score": 84.59
       },
       "budget_before": 2.0,
       "budget_after": 0.5,
-      "transfer_cost": 1.5
+      "transfer_cost": 1.5,
+      "decided_at": "2026-09-09T11:12:32Z"
     }
   ]
 }
