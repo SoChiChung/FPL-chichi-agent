@@ -123,6 +123,7 @@ def build_state(
         "points": entry.get("summary_overall_points") or 0,
         "rank": entry.get("summary_overall_rank") or 0,
         "bank": round(bank, 1),
+        "manager_name": (entry.get("name") or "").strip(),
         "formation": build_formation(team),
         "captain": next((t["name"] for t in team if t.get("is_captain")), ""),
         "vice": next((t["name"] for t in team if t.get("is_vice_captain")), ""),

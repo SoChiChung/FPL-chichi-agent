@@ -9,7 +9,10 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <h1>FPL AI Manager</h1>
+      <div>
+        <h1>FPL AI Manager</h1>
+        <div id="manager-line" class="muted"></div>
+      </div>
       <div id="season" class="muted"></div>
     </div>
   </header>
@@ -37,6 +40,17 @@
     <section class="panel">
       <h2>历史记录</h2>
       <div id="history-table"></div>
+    </section>
+
+    <section id="external-links" class="panel">
+      <h2>External Links</h2>
+      <div id="external-links-row" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:10px;">
+        <a href="#" title="小红书" style="display:inline-flex;align-items:center;"><img src="img/小红书icon.png" alt="小红书" style="height:32px;width:32px;object-fit:contain;"></a>
+        <a href="#" title="B站" style="display:inline-flex;align-items:center;"><img src="img/bilibili.png" alt="B站" style="height:32px;width:32px;object-fit:contain;"></a>
+        <a href="#" title="懂球帝" style="display:inline-flex;align-items:center;"><img src="img/dqd.png" alt="懂球帝" style="height:32px;width:32px;object-fit:contain;"></a>
+        <a href="#" title="微信" style="display:inline-flex;align-items:center;"><img src="img/wechat-logo.png" alt="微信" style="height:32px;width:32px;object-fit:contain;"></a>
+        <span style="font-weight:600;color:var(--muted);">FPL紫葱酱</span>
+      </div>
     </section>
   </main>
 

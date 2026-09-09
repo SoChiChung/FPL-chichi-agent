@@ -335,6 +335,8 @@ async function init() {
     ]);
     $("#season").textContent = `${state.season} 赛季`;
     $("#last-update").textContent = `数据更新时间: ${fmtTime(state.last_update)}`;
+    const mgr = state.manager_name;
+    $("#manager-line").textContent = mgr ? `经理：${mgr}` : "";
     const ctx = decisionCtx(state);
     renderOverview(state, ctx);
     renderEngineMeta(state, ctx);
