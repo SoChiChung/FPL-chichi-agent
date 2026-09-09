@@ -24,10 +24,19 @@ function fmtNum(n) {
   return typeof n === "number" ? n.toLocaleString("zh-CN", { maximumFractionDigits: 1 }) : "-";
 }
 
-/** Bank 单位修复：state.bank 为 FPL API 0.1M 单位，前端 /10 */
+/**
+ * Bank 展示：state.bank 现为 £m 浮点（与球员 price 同单位，如 2.0 = £2.0m）。
+ * 后端已把 FPL API 的 0.1M 整数（20 = £2.0m）在 context.build_state 里 /10 归一，
+ * 前端不再自行换算；若再除 10 会把 £2.0m 错显示成 £0.2m。
+ */
 function fmtBank(raw) {
-  const m = (Number(raw) || 0) / 10;
+  const m = Number(raw) || 0;
   return `£${m.toFixed(1)}m`;
+}
+
+/** £m 通用金额格式（净花费 / 预算等） */
+function fmtMoney(m) {
+  return `£${(Number(m) || 0).toFixed(1)}m`;
 }
 
 function fmtTime(iso) {
@@ -379,6 +388,10 @@ function renderThisWeek(state, entry) {
           </div>`;
         })
         .join("") + `</div>`;
+    const pkg = d.transfer_package || {};
+    if (pkg.budget_before != null) {
+      html += `<p class="muted xfer-summary">预算校验：净花费 ${fmtMoney(pkg.transfer_cost)}（卖出回血 ${fmtMoney(pkg.total_out_price)}，买入 ${fmtMoney(pkg.total_in_price)}），转会后 Bank ${fmtBank(pkg.budget_after)}${pkg.gain != null ? `；包总增益 +${fmtNum(pkg.gain)}` : ""}</p>`;
+    }
   } else {
     const noTransfer = Array.isArray(entry && entry.notes)
       ? (entry.notes.find((n) => n.topic === "no_transfer") || {}).detail
@@ -514,6 +527,15 @@ function renderHistoryAccordion(state, rows) {
           .join("")
       : '<p class="muted no-xfer">本轮未进行转会。</p>';
 
+    // 预算复盘行（历史条目带 transfer_package 时展示；旧数据缺字段则跳过）
+    const pkgH = (d.transfer_package) || {};
+    let budgetHtml = "";
+    if (transfers.length && pkgH.budget_before != null) {
+      budgetHtml = `<p class="muted xfer-summary">预算：Bank ${fmtBank(pkgH.budget_before)} → 转会后 ${fmtBank(pkgH.budget_after)}（净花费 ${fmtMoney(pkgH.transfer_cost)}）</p>`;
+    } else if (r.budget_before != null) {
+      budgetHtml = `<p class="muted xfer-summary">预算：Bank ${fmtBank(r.budget_before)}${r.transfer_cost != null ? `，净花费 ${fmtMoney(r.transfer_cost)} → 转会后 ${fmtBank(r.budget_after)}` : ""}</p>`;
+    }
+
     const notesHtml = (() => {
       const box = document.createElement("div");
       renderThoughtsInto(box, r.notes);
@@ -538,7 +560,7 @@ function renderHistoryAccordion(state, rows) {
           </div>
           <div class="acc-sec">
             <h4>转会选择</h4>
-            <div>${xferHtml}</div>
+            <div>${xferHtml}${budgetHtml}</div>
           </div>
           <div class="acc-sec">
             <h4>AI 思考日志</h4>

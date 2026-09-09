@@ -197,6 +197,13 @@ body {
 .x-meta { font-size: 0.76rem; font-variant-numeric: tabular-nums; }
 .xfer-reason { margin-top: 3px; font-size: 0.8rem; }
 .no-xfer { margin-top: 6px; font-size: 0.9rem; }
+.xfer-summary {
+  margin-top: 6px;
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+  border-top: 1px dashed var(--border);
+  padding-top: 6px;
+}
 
 /* ---------------- 阵容 ③ ---------------- */
 

@@ -22,7 +22,12 @@ def _summary(player: dict) -> dict:
 
 def upsert_decision(history: dict, gw: int, decision: dict, notes: list, metrics: dict,
                     strategy_snapshot: dict) -> None:
-    """把本轮决策写入 history（同一 GW 幂等覆盖，不重复追加）。"""
+    """把本轮决策写入 history（同一 GW 幂等覆盖，不重复追加）。
+
+    decision.transfer_package（预算口径）除写入 decision 外，还会把
+    budget_before / budget_after / transfer_cost 平铺到该轮条目顶层，
+    方便复盘时直接看出“AI 当时为什么买得起/买不起”。
+    """
     entry = next((h for h in history["history"] if h.get("gw") == gw), None)
     if entry is None:
         entry = {"gw": gw, "points": None, "rank": None, "overall_rank": None}
@@ -38,7 +43,13 @@ def upsert_decision(history: dict, gw: int, decision: dict, notes: list, metrics
         "transfer_status": decision.get("transfer_status"),
         "free_transfers": decision.get("free_transfers"),
         "recommended_transfers": decision["recommended_transfers"],
+        "transfer_package": decision.get("transfer_package"),
         "strategy_snapshot": strategy_snapshot,
     }
     entry["notes"] = notes
     entry["metrics"] = metrics
+    pkg = decision.get("transfer_package")
+    if isinstance(pkg, dict):
+        for key in ("budget_before", "budget_after", "transfer_cost"):
+            if key in pkg and pkg[key] is not None:
+                entry[key] = pkg[key]

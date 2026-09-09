@@ -206,15 +206,19 @@ class TestTransfer(unittest.TestCase):
             squad, players, scores, strategy_config.load(), 3.0, ts)
         gaps = [s["market_gap"] for s in suggestions]
         self.assertEqual(gaps, sorted(gaps, reverse=True))
-        # 触发者按 Gap 降序：5(DEF,85)、11(MID,84)、15(FWD,65)…
+        # 触发者按 Gap 降序：5(DEF,85)、11(MID,84)、9(MID,67)、15(FWD,65)…
+        # （v2 包搜索：替代者全局互斥分配，9 的最优 Star 被 11 占用后取次优）
         out_ids = {s["out"]["id"] for s in suggestions}
         self.assertIn(11, out_ids)
         self.assertIn(5, out_ids)
-        self.assertEqual(len(suggestions), 3)
+        self.assertEqual(len(suggestions), 4)
         for s in suggestions:
             self.assertEqual(s["in"]["pos"], s["out"]["pos"])
             self.assertNotIn(s["in"]["id"], {p["id"] for p in squad})
-            self.assertLessEqual(s["in"]["price"], 6.0 + 3.0)  # bank + out 价格
+        # 整包预算真实可执行：Σin = 27.0 ≤ bank(3.0) + Σout(24.0)
+        pkg = transfer.summarize_package(3.0, suggestions)
+        self.assertLessEqual(pkg["total_in_price"], pkg["budget_before"] + pkg["total_out_price"])
+        self.assertEqual(pkg["budget_after"], 0.0)
 
     def test_gap_below_threshold_no_suggestion(self):
         squad, players, scores = self._scenario()
@@ -253,13 +257,18 @@ class TestTransfer(unittest.TestCase):
         self.assertTrue(any(n["topic"] == "no_transfer" for n in notes))
 
     def test_replacement_unique_and_team_limit(self):
+        # 换入全局互斥：同一球员只进一次；同队禁令（不换出该队球员时不得换入）
+        # 的真实场景已由 tests/test_transfer_budget.Case3 覆盖（TemptingT1 被排除）。
         squad, players, scores = self._scenario()
         suggestions, _ = transfer.evaluate_transfers(
             squad, players, scores, strategy_config.load(), 3.0,
             {"status": "limited", "free_transfers": 5})
         in_ids = [s["in"]["id"] for s in suggestions]
+        out_ids = [s["out"]["id"] for s in suggestions]
         self.assertEqual(len(in_ids), len(set(in_ids)))          # 替代者不重复
-        self.assertNotIn(104, in_ids)                            # 同队限制
+        self.assertEqual(len(out_ids), len(set(out_ids)))        # 换出者不重复
+        self.assertEqual({s["in"]["pos"] for s in suggestions},
+                         {s["out"]["pos"] for s in suggestions})  # 同位置替换
 
     def test_unlimited_not_truncated_by_integer_limit(self):
         squad = []

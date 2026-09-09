@@ -165,6 +165,9 @@ def main():
     notes.extend(t_notes)
     notes.extend(ext_notes)
 
+    # 预算口径汇总（state.bank 为 £m；包内所有转会 100% 预算可行）
+    transfer_package = transfer.summarize_package(state["bank"], suggestions)
+
     decision = {
         "formation": formation,
         "captain": cap,
@@ -175,6 +178,7 @@ def main():
         "transfer_status": ts["status"],
         "free_transfers": ts["free_transfers"],
         "recommended_transfers": suggestions,
+        "transfer_package": transfer_package,
         "transfer_notes": _transfer_notes(suggestions, t_notes, ts),
     }
 
@@ -218,12 +222,15 @@ def main():
         "auto_pick": f"auto-pick GW{picks_gw}",
         "establish": "establish 生成",
     }[squad_source["type"]]
+    pkg = transfer_package
     print(
         f"[brain] 完成: GW{state['current_gw']} 目标GW{target_gw} 积分={state['points']} "
         f"排名={state['rank']} 阵型={formation or '-'} "
         f"队长={(cap or {}).get('name') or '-'} "
         f"阵容来源={src_label} 转会={ts['status']} "
         f"建议转会={len(suggestions)} 笔 历史 {len(history['history'])} 轮 "
+        f"Bank=£{state['bank']:.1f}m 净花费=£{pkg['transfer_cost']:.1f}m "
+        f"转会后Bank=£{pkg['budget_after']:.1f}m "
         f"(耗时 {time.time() - t0:.1f}s)"
     )
     if config.DEBUG:

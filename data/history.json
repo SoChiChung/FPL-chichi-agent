@@ -460,41 +460,34 @@
         "recommended_transfers": [
           {
             "out": {
-              "id": 346,
-              "name": "Calvert-Lewin",
-              "pos": "FWD",
-              "price": 6.0,
-              "market_score": 22.79
-            },
-            "in": {
-              "id": 411,
-              "name": "Haaland",
-              "pos": "FWD",
-              "price": 15.5,
-              "market_score": 65.47
-            },
-            "market_gap": 42.68,
-            "reason": "同位置 Market Score 差距超过阈值"
-          },
-          {
-            "out": {
               "id": 565,
               "name": "M.Sangaré",
               "pos": "MID",
               "price": 5.7,
-              "market_score": 17.07
+              "market_score": 16.98
             },
             "in": {
-              "id": 154,
-              "name": "Palmer",
+              "id": 367,
+              "name": "Gakpo",
               "pos": "MID",
-              "price": 9.6,
-              "market_score": 32.23
+              "price": 7.2,
+              "market_score": 31.68
             },
-            "market_gap": 15.16,
-            "reason": "同位置 Market Score 差距超过阈值"
+            "market_gap": 14.7,
+            "reason": "同位置 Market Score 差距超过阈值（最优替代 +15.41）"
           }
         ],
+        "transfer_package": {
+          "gain": 14.7,
+          "out_count": 1,
+          "total_out_price": 5.7,
+          "total_in_price": 7.2,
+          "budget_before": 2.0,
+          "transfer_cost": 1.5,
+          "budget_after": 0.5,
+          "feasible": true,
+          "score_base": "market_score"
+        },
         "strategy_snapshot": {
           "strategy": "market_consensus",
           "tsb_weight": 0.8,
@@ -603,12 +596,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 652.49（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 652.44（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "João Pedro",
-          "detail": "爆发视角 Captain Score 84.59（首发 11 人中最高；本轮 Lineup Score 78.85）"
+          "detail": "爆发视角 Captain Score 84.59（首发 11 人中最高；本轮 Lineup Score 78.86）"
         },
         {
           "topic": "transfer_status",
@@ -616,23 +609,13 @@
         },
         {
           "topic": "transfer_out",
-          "player": "Calvert-Lewin",
-          "detail": "同位置 Market Score 差距超过阈值"
-        },
-        {
-          "topic": "transfer_in",
-          "player": "Haaland",
-          "detail": "同位置 Market Score 最高者（65.47），满足预算与同队约束"
-        },
-        {
-          "topic": "transfer_out",
           "player": "M.Sangaré",
-          "detail": "同位置 Market Score 差距超过阈值"
+          "detail": "同位置 Market Score 差距超过阈值（最优替代 +15.41）"
         },
         {
           "topic": "transfer_in",
-          "player": "Palmer",
-          "detail": "同位置 Market Score 最高者（65.47），满足预算与同队约束"
+          "player": "Gakpo",
+          "detail": "同位置市场分最高可用者（31.68），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -640,12 +623,15 @@
         }
       ],
       "metrics": {
-        "team_market_score": 496.66,
-        "captain_market_score": 69.12,
-        "formation_market_score": 402.29,
-        "team_lineup_score": 652.49,
+        "team_market_score": 496.76,
+        "captain_market_score": 69.15,
+        "formation_market_score": 402.34,
+        "team_lineup_score": 652.44,
         "captain_score": 84.59
-      }
+      },
+      "budget_before": 2.0,
+      "budget_after": 0.5,
+      "transfer_cost": 1.5
     }
   ]
 }

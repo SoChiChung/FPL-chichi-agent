@@ -36,6 +36,14 @@ def validate_state(state: dict) -> None:
     missing = required - set(state)
     if missing:
         raise ValueError(f"state.json 缺少字段: {sorted(missing)}")
+    bank = state.get("bank")
+    if bank is not None:
+        if isinstance(bank, bool) or not isinstance(bank, (int, float)):
+            raise ValueError(f"state.bank 类型异常: {bank!r}")
+        if not (0 <= float(bank) <= 300):
+            raise ValueError(
+                f"state.bank 超合理范围: {bank}（应为 £m 单位浮点，如 2.0 = £2.0m；"
+                f"出现 ≥300 多半是 FPL 0.1m 整数未 /10）")
 
 
 def validate_history(history: dict) -> None:

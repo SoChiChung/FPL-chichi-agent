@@ -5,6 +5,7 @@
 from datetime import datetime, timezone
 
 from brain import config
+from brain.market import to_float
 
 
 def build_player_map(bootstrap: dict) -> dict:
@@ -109,20 +110,26 @@ def build_state(
             player["market_score"] = market_scores.get(pk["element"], 0.0)
         team.append(player)
 
-    # 银行优先取 picks 接口的实时值（进行中的 GW），否则取最近已完成轮次
-    bank = picks.get("entry_history", {}).get("bank")
-    if bank is None:
-        bank = 0.0
+    # 银行优先取 picks 接口的实时值（进行中的 GW），否则取最近已完成轮次。
+    # 单位说明：FPL API 的 bank 是 0.1m 整数（如 20 = £2.0m），必须 /10 归一为百万
+    # 浮点，才能与球员 price（now_cost/10，如 150 → 15.0）同单位做预算比较。
+    # 历史上曾直接把 API 原始值写入 state.bank，导致引擎误把 £2.0m 当 £20m，
+    # 推荐了根本买不起的球员（如 bank=20 时仍建议买 Haaland）。
+    raw_bank = picks.get("entry_history", {}).get("bank")
+    if raw_bank is None:
+        raw_bank = 0.0
         for row in entry_history.get("current", []):
             if row.get("event") == gw - 1:
-                bank = row.get("bank", bank)
+                raw_bank = row.get("bank", raw_bank)
+    bank = round(to_float(raw_bank) / 10.0, 1)
 
     return {
         "season": config.SEASON,
         "current_gw": gw,
         "points": entry.get("summary_overall_points") or 0,
         "rank": entry.get("summary_overall_rank") or 0,
-        "bank": round(bank, 1),
+        # bank 单位 = 百万（£m），与球员 price 一致；2.0 表示 £2.0m
+        "bank": bank,
         "manager_name": (entry.get("name") or "").strip(),
         "formation": build_formation(team),
         "captain": next((t["name"] for t in team if t.get("is_captain")), ""),
