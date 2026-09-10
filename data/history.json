@@ -464,21 +464,21 @@
               "name": "M.Sangaré",
               "pos": "MID",
               "price": 5.7,
-              "market_score": 17.11
+              "market_score": 17.14
             },
             "in": {
               "id": 367,
               "name": "Gakpo",
               "pos": "MID",
               "price": 7.2,
-              "market_score": 31.6
+              "market_score": 31.52
             },
-            "market_gap": 14.49,
-            "reason": "同位置 Market Score 差距超过阈值（最优替代 +16.96）"
+            "market_gap": 14.38,
+            "reason": "同位置 Market Score 差距超过阈值（最优替代 +17.19）"
           }
         ],
         "transfer_package": {
-          "gain": 14.49,
+          "gain": 14.38,
           "out_count": 1,
           "total_out_price": 5.7,
           "total_in_price": 7.2,
@@ -596,12 +596,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 653.63（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 653.81（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "João Pedro",
-          "detail": "爆发视角 Captain Score 84.62（首发 11 人中最高；本轮 Lineup Score 78.99）"
+          "detail": "爆发视角 Captain Score 84.62（首发 11 人中最高；本轮 Lineup Score 79.0）"
         },
         {
           "topic": "transfer_status",
@@ -610,12 +610,12 @@
         {
           "topic": "transfer_out",
           "player": "M.Sangaré",
-          "detail": "同位置 Market Score 差距超过阈值（最优替代 +16.96）"
+          "detail": "同位置 Market Score 差距超过阈值（最优替代 +17.19）"
         },
         {
           "topic": "transfer_in",
           "player": "Gakpo",
-          "detail": "同位置市场分最高可用者（31.60），满足预算与同队约束"
+          "detail": "同位置市场分最高可用者（31.52），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -623,10 +623,10 @@
         }
       ],
       "metrics": {
-        "team_market_score": 503.34,
-        "captain_market_score": 69.8,
-        "formation_market_score": 407.69,
-        "team_lineup_score": 653.63,
+        "team_market_score": 504.38,
+        "captain_market_score": 69.88,
+        "formation_market_score": 408.64,
+        "team_lineup_score": 653.81,
         "captain_score": 84.62
       },
       "budget_before": 2.0,
