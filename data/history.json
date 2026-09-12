@@ -379,17 +379,21 @@
       "decision": {
         "formation": "352",
         "captain": {
-          "id": 165,
-          "name": "João Pedro"
+          "id": 391,
+          "name": "Gvardiol"
         },
         "vice": {
-          "id": 40,
-          "name": "Rogers"
+          "id": 399,
+          "name": "Cherki"
         },
         "starting_xi": [
           {
             "id": 1,
             "name": "Raya"
+          },
+          {
+            "id": 391,
+            "name": "Gvardiol"
           },
           {
             "id": 8,
@@ -400,18 +404,6 @@
             "name": "Gabriel"
           },
           {
-            "id": 115,
-            "name": "De Cuyper"
-          },
-          {
-            "id": 40,
-            "name": "Rogers"
-          },
-          {
-            "id": 368,
-            "name": "Szoboszlai"
-          },
-          {
             "id": 399,
             "name": "Cherki"
           },
@@ -420,8 +412,16 @@
             "name": "B.Fernandes"
           },
           {
-            "id": 565,
-            "name": "M.Sangaré"
+            "id": 40,
+            "name": "Rogers"
+          },
+          {
+            "id": 367,
+            "name": "Gakpo"
+          },
+          {
+            "id": 368,
+            "name": "Szoboszlai"
           },
           {
             "id": 165,
@@ -438,12 +438,12 @@
             "name": "Calvert-Lewin"
           },
           {
-            "id": 391,
-            "name": "Gvardiol"
-          },
-          {
             "id": 259,
             "name": "Diop"
+          },
+          {
+            "id": 115,
+            "name": "De Cuyper"
           },
           {
             "id": 109,
@@ -452,38 +452,19 @@
         ],
         "squad": [],
         "squad_source": {
-          "type": "auto_pick",
-          "gw": 3
+          "type": "picks",
+          "gw": 4
         },
         "transfer_status": "limited",
         "free_transfers": 2,
-        "recommended_transfers": [
-          {
-            "out": {
-              "id": 565,
-              "name": "M.Sangaré",
-              "pos": "MID",
-              "price": 5.7,
-              "market_score": 15.09
-            },
-            "in": {
-              "id": 367,
-              "name": "Gakpo",
-              "pos": "MID",
-              "price": 7.2,
-              "market_score": 23.14
-            },
-            "market_gap": 8.05,
-            "reason": "同位置 Market Score 差距超过阈值（最优替代 +24.24）"
-          }
-        ],
+        "recommended_transfers": [],
         "transfer_package": {
-          "gain": 8.05,
-          "out_count": 1,
-          "total_out_price": 5.7,
-          "total_in_price": 7.2,
-          "budget_before": 2.0,
-          "transfer_cost": 1.5,
+          "gain": 0,
+          "out_count": 0,
+          "total_out_price": 0,
+          "total_in_price": 0,
+          "budget_before": 0.5,
+          "transfer_cost": 0,
           "budget_after": 0.5,
           "feasible": true,
           "score_base": "market_score"
@@ -588,50 +569,44 @@
       "notes": [
         {
           "topic": "squad_source",
-          "detail": "使用 GW3 FPL auto-pick 阵容作为当前基础阵容"
+          "detail": "使用当前 GW4 FPL 阵容作为基础阵容"
         },
         {
           "topic": "score_source",
-          "detail": "FPL Joe 目标 GW4 选源：projection=odds_market clean_sheet=odds_market fixture=sort_rating"
+          "detail": "FPL Joe 目标 GW5 选源：projection=odds_market clean_sheet=odds_market fixture=sort_rating"
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 648.07（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 632.6（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
-          "player": "João Pedro",
-          "detail": "爆发视角 Captain Score 84.63（首发 11 人中最高；本轮 Lineup Score 79.03）"
+          "player": "Gvardiol",
+          "detail": "爆发视角 Captain Score 86.40（首发 11 人中最高；本轮 Lineup Score 73.76）"
         },
         {
           "topic": "transfer_status",
           "detail": "已检测到已完结轮次转会历史，按免费转会数限制建议（2 次）"
         },
         {
-          "topic": "transfer_out",
-          "player": "M.Sangaré",
-          "detail": "同位置 Market Score 差距超过阈值（最优替代 +24.24）"
-        },
-        {
-          "topic": "transfer_in",
-          "player": "Gakpo",
-          "detail": "同位置市场分最高可用者（23.14），满足预算与同队约束"
+          "topic": "no_transfer",
+          "detail": "预算不足：可用 £12.7m（Bank £0.5m + 出售 £12.2m），最有利组合需 £24.6m（缺口 £11.9m），本轮放弃转会"
         },
         {
           "topic": "external_source",
-          "detail": "FPL Joe 已刷新: 请求 GW4-8 实际 1-38 缺失 [] 新鲜度 fresh 写入 3 个文件"
+          "detail": "FPL Joe 已刷新: 请求 GW5-9 实际 1-38 缺失 [] 新鲜度 fresh 写入 3 个文件"
         }
       ],
       "metrics": {
-        "team_market_score": 492.02,
-        "captain_market_score": 70.03,
-        "formation_market_score": 403.03,
-        "team_lineup_score": 648.07,
-        "captain_score": 84.63
+        "team_market_score": 460.74,
+        "captain_market_score": 23.35,
+        "formation_market_score": 378.05,
+        "team_lineup_score": 632.6,
+        "captain_score": 86.4
       },
-      "budget_before": 2.0,
+      "budget_before": 0.5,
       "budget_after": 0.5,
-      "transfer_cost": 1.5,
+      "transfer_cost": 0,
       "decided_at": "2026-09-09T11:12:32Z"
     }
   ]
