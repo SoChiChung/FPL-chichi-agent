@@ -464,21 +464,21 @@
               "name": "M.Sangaré",
               "pos": "MID",
               "price": 5.7,
-              "market_score": 15.46
+              "market_score": 15.26
             },
             "in": {
               "id": 367,
               "name": "Gakpo",
               "pos": "MID",
               "price": 7.2,
-              "market_score": 24.51
+              "market_score": 24.06
             },
-            "market_gap": 9.05,
-            "reason": "同位置 Market Score 差距超过阈值（最优替代 +23.13）"
+            "market_gap": 8.8,
+            "reason": "同位置 Market Score 差距超过阈值（最优替代 +23.56）"
           }
         ],
         "transfer_package": {
-          "gain": 9.05,
+          "gain": 8.8,
           "out_count": 1,
           "total_out_price": 5.7,
           "total_in_price": 7.2,
@@ -596,7 +596,7 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 652.76（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 651.69（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
@@ -610,12 +610,12 @@
         {
           "topic": "transfer_out",
           "player": "M.Sangaré",
-          "detail": "同位置 Market Score 差距超过阈值（最优替代 +23.13）"
+          "detail": "同位置 Market Score 差距超过阈值（最优替代 +23.56）"
         },
         {
           "topic": "transfer_in",
           "player": "Gakpo",
-          "detail": "同位置市场分最高可用者（24.51），满足预算与同队约束"
+          "detail": "同位置市场分最高可用者（24.06），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -623,10 +623,10 @@
         }
       ],
       "metrics": {
-        "team_market_score": 494.84,
+        "team_market_score": 493.45,
         "captain_market_score": 70.0,
-        "formation_market_score": 404.44,
-        "team_lineup_score": 652.76,
+        "formation_market_score": 403.61,
+        "team_lineup_score": 651.69,
         "captain_score": 84.63
       },
       "budget_before": 2.0,
