@@ -577,12 +577,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 639.84（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 645.11（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Gvardiol",
-          "detail": "爆发视角 Captain Score 86.40（首发 11 人中最高；本轮 Lineup Score 74.15）"
+          "detail": "爆发视角 Captain Score 86.40（首发 11 人中最高；本轮 Lineup Score 74.18）"
         },
         {
           "topic": "transfer_status",
@@ -598,10 +598,10 @@
         }
       ],
       "metrics": {
-        "team_market_score": 485.15,
-        "captain_market_score": 25.3,
-        "formation_market_score": 397.57,
-        "team_lineup_score": 639.84,
+        "team_market_score": 486.86,
+        "captain_market_score": 25.44,
+        "formation_market_score": 399.14,
+        "team_lineup_score": 645.11,
         "captain_score": 86.4
       },
       "budget_before": 0.5,
