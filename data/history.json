@@ -377,7 +377,7 @@
       "rank": null,
       "overall_rank": null,
       "decision": {
-        "formation": "352",
+        "formation": "343",
         "captain": {
           "id": 391,
           "name": "Gvardiol"
@@ -420,22 +420,22 @@
             "name": "Gakpo"
           },
           {
-            "id": 368,
-            "name": "Szoboszlai"
-          },
-          {
             "id": 165,
             "name": "João Pedro"
           },
           {
             "id": 464,
             "name": "Wissa"
+          },
+          {
+            "id": 346,
+            "name": "Calvert-Lewin"
           }
         ],
         "bench": [
           {
-            "id": 346,
-            "name": "Calvert-Lewin"
+            "id": 368,
+            "name": "Szoboszlai"
           },
           {
             "id": 259,
@@ -577,12 +577,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 644.33（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 343，Total Lineup Score 641.0（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Gvardiol",
-          "detail": "爆发视角 Captain Score 87.31（首发 11 人中最高；本轮 Lineup Score 76.26）"
+          "detail": "爆发视角 Captain Score 87.23（首发 11 人中最高；本轮 Lineup Score 76.31）"
         },
         {
           "topic": "transfer_status",
@@ -590,7 +590,7 @@
         },
         {
           "topic": "no_transfer",
-          "detail": "预算不足：可用 £6.5m（Bank £0.5m + 出售 £6.0m），最有利组合需 £15.5m（缺口 £9.0m），本轮放弃转会"
+          "detail": "预算不足：可用 £6.7m（Bank £0.5m + 出售 £6.2m），最有利组合需 £15.5m（缺口 £8.8m），本轮放弃转会"
         },
         {
           "topic": "external_source",
@@ -598,11 +598,11 @@
         }
       ],
       "metrics": {
-        "team_market_score": 510.4,
-        "captain_market_score": 32.99,
-        "formation_market_score": 413.28,
-        "team_lineup_score": 644.33,
-        "captain_score": 87.31
+        "team_market_score": 511.46,
+        "captain_market_score": 33.47,
+        "formation_market_score": 408.53,
+        "team_lineup_score": 641.0,
+        "captain_score": 87.23
       },
       "budget_before": 0.5,
       "budget_after": 0.5,
