@@ -135,14 +135,14 @@ state["suggested_squad"] = [   # 与 state.team 同构的 15 个球员对象（�
 
 - 新增条目时写 `entry["decided_at"] = <now UTC ISO-8601, seconds 精度>`；
 - **已存在条目不覆盖** `decided_at`（保留该轮「决策首次生成时间」，避免 30 分钟节奏的 bot 每次重跑把时间刷新成"刚刚"）。
-- 可选升级字段（记录备注，v1.0 可不做）：`decided_updated_at`（最近一次改写），供未来展示「最近修订」。
+- 可选升级字段（v1.0 未做 → **UX v1.2 已落地**）：`updated_at`（该 GW 决策**最近一次重算**时刻，每次运行覆盖写，与 `decided_at` 并存）。用于消解「同一 GW 长期重算导致决策时间看起来一直不动」的误读——见 §4.2。
 
 > 对齐 `docs/design.md v1.1 §6.1`（本属 Phase 2.5 内容，实现阶段落地缺失），非新设计。
 
 ### 4.2 展示（frontend）
 
-- Main ④「AI 思考日志（本轮）」：标题下新增时间行 —— `决策时间 <fmtTime(entry.decided_at)>`（本地时区；格式沿用现有 `fmtTime`，如 `2026/9/9 18:40:52`）。
-- 历史 Accordion「决策时间」区：渲染逻辑已存在（`fmtTime(r.decided_at)`），数据到位自动显示，无需改动；缺字段仍显示 `-`（符合 design.md §6.3 兜底）。
+- Main ④「AI 思考日志（本轮）」：标题下时间行 —— **UX v1.2** 起并列展示「首次决策 X · 最近重算 Y」（紧凑格式 `fmtDateCN`，如 `9月9日 19:12`）；两者相同或 `updated_at` 缺失时退化为单时间。
+- 历史 Accordion「决策时间」区：`updated_at` 与 `decided_at` 不同时显示两行（`首次决策：` / `最近重算：`，完整 `fmtTime`）；缺字段仍显示 `-`（符合 design.md §6.3 兜底）。
 - Sidebar「最近一次思考」可选：正文上方小字时间。
 - 单条 note 级时间戳（notes[i].ts）：**v1.0 不做**——同轮 notes 同一批次生成，以条目级 `decided_at` 为时间锚点即可满足追溯；如后续需要可扩展 note 结构。
 

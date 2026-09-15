@@ -3,8 +3,13 @@
 同一 GW 只保留一个条目：重复运行覆盖 decision/notes/metrics，
 结算回填的 points/rank/overall_rank 保持不变。
 
-decided_at：新条目（或旧数据缺失）在首次写入时记录决策时间（UTC ISO），
-已存在的值永不覆盖——避免 30 分钟节奏的 bot 每次重跑把时间刷新成"刚刚"。
+时间字段语义（两者并存，勿混用）：
+- decided_at：该 GW **首次**产出决策的时刻（UTC ISO）。新条目或旧数据缺失时
+  写入，已存在的值永不覆盖——避免 30 分钟节奏的 bot 每次重跑把时间刷新成
+  "刚刚"，破坏"当初是什么时候决定的"这一复盘基准。
+- updated_at：该 GW 决策**最近一次重算**的时刻（UTC ISO）。每次运行无条件覆盖，
+  供前端展示"AI 最近何时思考过"。旧数据（升级前）缺该字段时，下一次重算即补齐，
+  此时它等于 decided_at，属预期行为。
 """
 from datetime import datetime, timezone
 
@@ -39,10 +44,13 @@ def upsert_decision(history: dict, gw: int, decision: dict, notes: list, metrics
     if entry is None:
         entry = {"gw": gw, "points": None, "rank": None, "overall_rank": None}
         history["history"].append(entry)
-    # decided_at：首次（新条目或旧数据缺字段）记录，已存在不覆盖
-    entry.setdefault("decided_at",
-                     datetime.now(timezone.utc).isoformat(timespec="seconds")
-                     .replace("+00:00", "Z"))
+    # 时间戳只在本次运行取一次，保证首次写入时 decided_at 与 updated_at 严格相等
+    now_iso = (datetime.now(timezone.utc).isoformat(timespec="seconds")
+               .replace("+00:00", "Z"))
+    # decided_at：首次（新条目或旧数据缺字段）记录，已存在不覆盖 —— 复盘基准
+    entry.setdefault("decided_at", now_iso)
+    # updated_at：每次重算都刷新 —— 前端展示"AI 最近何时思考过"
+    entry["updated_at"] = now_iso
     entry["decision"] = {
         "formation": decision["formation"],
         "captain": _summary(decision["captain"]),

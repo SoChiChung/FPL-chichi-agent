@@ -199,7 +199,7 @@ IA 中的每条内容都挂在**一个 GW**上，全页统一用「GW 三态」�
 #### ④ AI 思考日志（理解层）
 | 元素 | 规则 |
 |---|---|
-| 标题行 | 「GW4 · 思考日志」+ **决策时间**小字（`fmtTime(decided_at)`，本地时区；缺失显示 `-`） |
+| 标题行 | 「GW4 · 思考日志」+ **决策时间**小字（`首次决策 9月9日 19:12 · 最近重算 9月15日 20:48`，本地时区；缺失显示 `-`） |
 | 正文 | notes 聚合：优先级 转会>队长>无转会>阵容>其他；≤3 段；每段 50–120 字（截断加…） |
 | 叙事排序 | 转会操作 → 队长选择 → 排兵/额度（非原始顺序） |
 | 折叠 | `external_source / data_missing / warning` 类收进「更多细节」`<details>` |
@@ -213,7 +213,7 @@ IA 中的每条内容都挂在**一个 GW**上，全页统一用「GW 三态」�
   1. **Result**：GW Points / GW Rank / Overall Rank（已结算值；未结算=进行中）
   2. **Transfers**：实际（已落）转会记录 out→in + reason；无则「本轮未进行转会」
   3. **Captain / 阵型**：当时的 C/V 与阵型选择
-  4. **Thought + Decision Time**：当时决策日志（≤3 段）+ `decided_at`
+  4. **Thought + Decision Time**：当时决策日志（≤3 段）+ `decided_at`（首次决策）/ `updated_at`（最近重算）
 - 语义：**每条历史 = 一次 AI 决策**（GW1 无决策不显示）。
 
 #### ⑥ 趋势曲线（回溯层 · 数据细节）
@@ -394,7 +394,7 @@ Header 名字/赛季 ─▶ Sidebar A Profile（风格·风险） ─▶ ① 本
 | ③ | 转会后视图 | `state.suggested_squad`（15 人） | 自带 `starting/is_captain/multiplier/score_breakdown`；无字段→视图隐藏 |
 | ③ | 差异行 | `decision.recommended_transfers` | `转出 X → 转入 Y（n 笔）` |
 | ④ | 正文 | `history[当前gw].notes` | 聚合：优先级排序 + 截断 + 折叠（v1.1 §5.1） |
-| ④ | 决策时间 | `history[当前gw].decided_at` | UTC→Asia/Shanghai `fmtTime`；null→`-` |
+| ④ | 决策时间 | `history[当前gw].decided_at` + `.updated_at` | 双时间并列（紧凑 `fmtDateCN`）；相同或缺 `updated_at` → 单时间；全空 → `-` |
 | ⑤ | 每轮四区 | `history[i]`（decision / notes / points / decided_at） | 字段感知空态 |
 | ⑥ | 三曲线 | `history[i].overall_rank / points / rank` | 反向轴 / null 跳点 / 单点画圆 |
 
@@ -402,10 +402,17 @@ Header 名字/赛季 ─▶ Sidebar A Profile（风格·风险） ─▶ ① 本
 
 | 字段 | 语义 | 展示 | 示例 |
 |---|---|---|---|
-| `decided_at` | **决策生成时间**（首次写入，不回刷） | ④/⑤ 决策时间，本地时区 | `2026-09-09T11:12:32Z` → 19:12 |
-| `last_update` | **数据快照时间** | Header/Footer「更新于」 | `2026-09-09T11:19:32Z` → 19:19 |
-| `next_deadline` | **本轮 FPL 截止** | ① 小字提醒 | `2026-09-12T12:30:00Z` |
-| （可选未来）`decided_updated_at` | 决策最近修订 | 暂不展示 | — |
+| `decided_at` | **决策首次生成时间**（`setdefault` 写入，永不回刷） | ④/⑤「首次决策」，本地时区 | `2026-09-09T11:12:32Z` → 9月9日 19:12 |
+| `updated_at` | **决策最近重算时间**（每次运行覆盖写；UX v1.2 落地） | ④/⑤「最近重算」 | `2026-09-15T12:48:48Z` → 9月15日 20:48 |
+| `last_update` | **数据快照时间** | Header/Footer「更新于」 | `2026-09-15T12:48:48Z` → 20:48 |
+| `next_deadline` | **本轮 FPL 截止** | ① 小字提醒 | `2026-09-18T17:30:00Z` |
+
+> **UX v1.2 修复（2026-09-15）**：`decided_at` 因「同一 GW 反复重算 + 首值冻结」，
+> 在 GW4→GW5 这类长窗口里会长期停在同一个时刻，被误读为「AI 没有在决策」。
+> 故另立 `updated_at` 每次刷新，前端并列展示两者：`首次决策 X · 最近重算 Y`；
+> 两者相同（或旧数据缺 `updated_at`）时退化为单时间，不重复展示。
+> 后端实现：`brain/history_writer.upsert_decision()` 取一次 `now`，`decided_at` 走
+> `setdefault`、`updated_at` 直接赋值。
 
 > 已知数据事实：GW2/GW3 的 `decided_at` 缺失（时间记录功能晚于这两轮决策）→ 显示 `-`，属自然限制而非缺陷。
 

@@ -791,6 +791,15 @@ function renderTeam(state) {
 
 /* ---------------- Main ④ AI 思考日志（本轮） ---------------- */
 
+/** 决策时间双字段（UX v1.2）：decided_at = 该 GW **首次**产出决策的时刻，
+ *  updated_at = **最近一次重算**的时刻（后端每轮重跑都会刷新）。
+ *  旧数据缺 updated_at、或两者相同 → 退化为单时间，避免把同一时刻写两遍。 */
+function decisionTimes(entry) {
+  const first = (entry && entry.decided_at) || null;
+  const last = (entry && entry.updated_at) || null;
+  return { first, last, dual: Boolean(first && last && first !== last) };
+}
+
 function renderThoughtsCurrent(entry) {
   const gwEl = $("#thoughts-gw");
   const bodyEl = $("#thoughts-current");
@@ -799,10 +808,14 @@ function renderThoughtsCurrent(entry) {
     bodyEl.innerHTML = '<p class="muted">本轮决策尚未生成，暂无思考日志。</p>';
     return;
   }
-  // 标题 + 决策时间（北京时间）——decision time 展示在正文上方（UX v1.0）
-  const timeHtml = entry.decided_at
-    ? `<span class="thoughts-time">决策时间 ${fmtTime(entry.decided_at)}（北京时间）</span>`
-    : "";
+  // 标题 + 决策时间（北京时间）——首次决策与最近重算并列（UX v1.2）
+  const t = decisionTimes(entry);
+  let timeHtml = "";
+  if (t.dual) {
+    timeHtml = `<span class="thoughts-time">首次决策 ${fmtDateCN(t.first)} · 最近重算 ${fmtDateCN(t.last)}（北京时间）</span>`;
+  } else if (t.first || t.last) {
+    timeHtml = `<span class="thoughts-time">决策时间 ${fmtDateCN(t.first || t.last)}（北京时间）</span>`;
+  }
   gwEl.innerHTML =
     `<span class="thoughts-gw-tag">GW${entry.gw} 的决策过程（最多展示 3 段，点开「更多细节」查看次要记录）</span>` +
     timeHtml;
@@ -841,6 +854,7 @@ function renderHistoryAccordion(state, rows) {
   const html = [...vis].reverse().map((r) => {
     const settled = historySettled(r);
     const d = r.decision || {};
+    const dt = decisionTimes(r);
     const transfers = Array.isArray(d.recommended_transfers) ? d.recommended_transfers : [];
     const xferHtml = transfers.length
       ? transfers
@@ -907,8 +921,11 @@ function renderHistoryAccordion(state, rows) {
             <div class="acc-thoughts">${notesHtml}</div>
           </div>
           <div class="acc-sec">
-            <h4>决策时间</h4>
-            <p class="muted">${fmtTime(r.decided_at)}</p>
+            <h4>决策时间（北京时间）</h4>
+            ${dt.dual
+              ? `<p class="muted">首次决策：${fmtTime(dt.first)}</p>
+                 <p class="muted">最近重算：${fmtTime(dt.last)}</p>`
+              : `<p class="muted">${fmtTime(dt.first || dt.last)}</p>`}
           </div>
         </div>
       </details>`;

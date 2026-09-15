@@ -586,7 +586,7 @@ b, strong { font-weight: 700; }
 }
 .thought-more ul { margin: 8px 0 0 20px; display: flex; flex-direction: column; gap: 4px; color: var(--muted); }
 
-.thoughts-time { color: var(--muted); font-size: 0.78rem; white-space: nowrap; }
+.thoughts-time { color: var(--muted); font-size: 0.78rem; }
 
 /* ---------------- ⑤ 历史记录（木纹日记册） ---------------- */
 
