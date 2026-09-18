@@ -615,7 +615,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-09-15T17:30:59Z",
-      "updated_at": "2026-09-17T23:57:13Z",
+      "updated_at": "2026-09-18T04:21:20Z",
       "decision": {
         "formation": "343",
         "captain": {
@@ -704,14 +704,14 @@
               "name": "Gakpo",
               "pos": "MID",
               "price": 7.2,
-              "market_score": 18.5
+              "market_score": 18.61
             },
             "in": {
               "id": 124,
               "name": "Groß",
               "pos": "MID",
               "price": 5.7,
-              "market_score": 33.86
+              "market_score": 33.97
             },
             "market_gap": 15.36,
             "reason": "同位置 Market Score 差距超过阈值（最优替代 +15.36）"
@@ -836,12 +836,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 343，Total Lineup Score 637.06（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 343，Total Lineup Score 637.77（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Gvardiol",
-          "detail": "爆发视角 Captain Score 87.23（首发 11 人中最高；本轮 Lineup Score 77.11）"
+          "detail": "爆发视角 Captain Score 87.23（首发 11 人中最高；本轮 Lineup Score 77.16）"
         },
         {
           "topic": "transfer_status",
@@ -855,7 +855,7 @@
         {
           "topic": "transfer_in",
           "player": "Groß",
-          "detail": "同位置市场分最高可用者（33.86），满足预算与同队约束"
+          "detail": "同位置市场分最高可用者（33.97），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -863,10 +863,10 @@
         }
       ],
       "metrics": {
-        "team_market_score": 526.33,
-        "captain_market_score": 37.5,
-        "formation_market_score": 419.66,
-        "team_lineup_score": 637.06,
+        "team_market_score": 527.0,
+        "captain_market_score": 37.75,
+        "formation_market_score": 420.13,
+        "team_lineup_score": 637.77,
         "captain_score": 87.23
       },
       "budget_before": 0.5,
