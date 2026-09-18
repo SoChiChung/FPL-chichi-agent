@@ -615,25 +615,21 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-09-15T17:30:59Z",
-      "updated_at": "2026-09-18T13:44:34Z",
+      "updated_at": "2026-09-18T20:33:28Z",
       "decision": {
-        "formation": "343",
+        "formation": "442",
         "captain": {
-          "id": 391,
-          "name": "Gvardiol"
+          "id": 8,
+          "name": "Calafiori"
         },
         "vice": {
-          "id": 399,
-          "name": "Cherki"
+          "id": 4,
+          "name": "Gabriel"
         },
         "starting_xi": [
           {
             "id": 1,
             "name": "Raya"
-          },
-          {
-            "id": 391,
-            "name": "Gvardiol"
           },
           {
             "id": 8,
@@ -644,20 +640,28 @@
             "name": "Gabriel"
           },
           {
-            "id": 399,
-            "name": "Cherki"
+            "id": 115,
+            "name": "De Cuyper"
           },
           {
-            "id": 426,
-            "name": "B.Fernandes"
+            "id": 259,
+            "name": "Diop"
           },
           {
             "id": 40,
             "name": "Rogers"
           },
           {
-            "id": 367,
-            "name": "Gakpo"
+            "id": 426,
+            "name": "B.Fernandes"
+          },
+          {
+            "id": 124,
+            "name": "Groß"
+          },
+          {
+            "id": 399,
+            "name": "Cherki"
           },
           {
             "id": 165,
@@ -666,10 +670,6 @@
           {
             "id": 464,
             "name": "Wissa"
-          },
-          {
-            "id": 346,
-            "name": "Calvert-Lewin"
           }
         ],
         "bench": [
@@ -678,12 +678,12 @@
             "name": "Szoboszlai"
           },
           {
-            "id": 259,
-            "name": "Diop"
+            "id": 391,
+            "name": "Gvardiol"
           },
           {
-            "id": 115,
-            "name": "De Cuyper"
+            "id": 346,
+            "name": "Calvert-Lewin"
           },
           {
             "id": 109,
@@ -692,8 +692,8 @@
         ],
         "squad": [],
         "squad_source": {
-          "type": "auto_pick",
-          "gw": 4
+          "type": "picks",
+          "gw": 5
         },
         "transfer_status": "limited",
         "free_transfers": 2,
@@ -703,9 +703,9 @@
           "out_count": 0,
           "total_out_price": 0,
           "total_in_price": 0,
-          "budget_before": 0.5,
+          "budget_before": 2.0,
           "transfer_cost": 0,
-          "budget_after": 0.5,
+          "budget_after": 2.0,
           "feasible": true,
           "score_base": "market_score"
         },
@@ -809,20 +809,20 @@
       "notes": [
         {
           "topic": "squad_source",
-          "detail": "使用 GW4 FPL auto-pick 阵容作为当前基础阵容"
+          "detail": "使用当前 GW5 FPL 阵容作为基础阵容"
         },
         {
           "topic": "score_source",
-          "detail": "FPL Joe 目标 GW5 选源：projection=odds_market clean_sheet=odds_market fixture=sort_rating"
+          "detail": "FPL Joe 目标 GW6 选源：projection=odds_market clean_sheet=odds_market fixture=sort_rating"
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 343，Total Lineup Score 636.65（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 442，Total Lineup Score 684.79（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
-          "player": "Gvardiol",
-          "detail": "爆发视角 Captain Score 87.23（首发 11 人中最高；本轮 Lineup Score 77.37）"
+          "player": "Calafiori",
+          "detail": "爆发视角 Captain Score 87.34（首发 11 人中最高；本轮 Lineup Score 80.59）"
         },
         {
           "topic": "transfer_status",
@@ -830,22 +830,22 @@
         },
         {
           "topic": "no_transfer",
-          "detail": "预算不足：可用 £8.3m（Bank £0.5m + 出售 £7.8m），最有利组合需 £15.6m（缺口 £7.3m），本轮放弃转会"
+          "detail": "预算不足：可用 £9.8m（Bank £2.0m + 出售 £7.8m），最有利组合需 £15.6m（缺口 £5.8m），本轮放弃转会"
         },
         {
           "topic": "external_source",
-          "detail": "FPL Joe 已刷新: 请求 GW5-9 实际 1-38 缺失 [] 新鲜度 fresh 写入 3 个文件"
+          "detail": "FPL Joe 已刷新: 请求 GW6-10 实际 1-38 缺失 [] 新鲜度 fresh 写入 3 个文件"
         }
       ],
       "metrics": {
-        "team_market_score": 530.2,
-        "captain_market_score": 38.81,
-        "formation_market_score": 422.43,
-        "team_lineup_score": 636.65,
-        "captain_score": 87.23
+        "team_market_score": 570.85,
+        "captain_market_score": 53.91,
+        "formation_market_score": 435.54,
+        "team_lineup_score": 684.79,
+        "captain_score": 87.34
       },
-      "budget_before": 0.5,
-      "budget_after": 0.5,
+      "budget_before": 2.0,
+      "budget_after": 2.0,
       "transfer_cost": 0
     }
   ]
