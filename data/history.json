@@ -615,7 +615,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-09-15T17:30:59Z",
-      "updated_at": "2026-09-18T23:05:34Z",
+      "updated_at": "2026-09-19T01:25:37Z",
       "decision": {
         "formation": "442",
         "captain": {
@@ -697,34 +697,15 @@
         },
         "transfer_status": "limited",
         "free_transfers": 2,
-        "recommended_transfers": [
-          {
-            "out": {
-              "id": 259,
-              "name": "Diop",
-              "pos": "DEF",
-              "price": 4.0,
-              "market_score": 19.88
-            },
-            "in": {
-              "id": 388,
-              "name": "Guéhi",
-              "pos": "DEF",
-              "price": 6.0,
-              "market_score": 25.69
-            },
-            "market_gap": 5.81,
-            "reason": "同位置 Market Score 差距超过阈值（最优替代 +15.64）"
-          }
-        ],
+        "recommended_transfers": [],
         "transfer_package": {
-          "gain": 5.81,
-          "out_count": 1,
-          "total_out_price": 4.0,
-          "total_in_price": 6.0,
+          "gain": 0,
+          "out_count": 0,
+          "total_out_price": 0,
+          "total_in_price": 0,
           "budget_before": 2.0,
-          "transfer_cost": 2.0,
-          "budget_after": 0.0,
+          "transfer_cost": 0,
+          "budget_after": 2.0,
           "feasible": true,
           "score_base": "market_score"
         },
@@ -836,26 +817,20 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 442，Total Lineup Score 673.98（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 442，Total Lineup Score 673.93（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Calafiori",
-          "detail": "爆发视角 Captain Score 87.19（首发 11 人中最高；本轮 Lineup Score 80.25）"
+          "detail": "爆发视角 Captain Score 87.19（首发 11 人中最高；本轮 Lineup Score 80.24）"
         },
         {
           "topic": "transfer_status",
           "detail": "已检测到已完结轮次转会历史，按免费转会数限制建议（2 次）"
         },
         {
-          "topic": "transfer_out",
-          "player": "Diop",
-          "detail": "同位置 Market Score 差距超过阈值（最优替代 +15.64）"
-        },
-        {
-          "topic": "transfer_in",
-          "player": "Guéhi",
-          "detail": "同位置市场分最高可用者（25.69），满足预算与同队约束"
+          "topic": "no_transfer",
+          "detail": "预算不足：可用 £9.8m（Bank £2.0m + 出售 £7.8m），最有利组合需 £15.6m（缺口 £5.8m），本轮放弃转会"
         },
         {
           "topic": "external_source",
@@ -863,15 +838,15 @@
         }
       ],
       "metrics": {
-        "team_market_score": 544.76,
-        "captain_market_score": 52.65,
-        "formation_market_score": 418.83,
-        "team_lineup_score": 673.98,
+        "team_market_score": 544.84,
+        "captain_market_score": 52.61,
+        "formation_market_score": 418.68,
+        "team_lineup_score": 673.93,
         "captain_score": 87.19
       },
       "budget_before": 2.0,
-      "budget_after": 0.0,
-      "transfer_cost": 2.0
+      "budget_after": 2.0,
+      "transfer_cost": 0
     }
   ]
 }
