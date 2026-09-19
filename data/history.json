@@ -615,7 +615,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-09-15T17:30:59Z",
-      "updated_at": "2026-09-19T06:22:57Z",
+      "updated_at": "2026-09-19T11:21:33Z",
       "decision": {
         "formation": "442",
         "captain": {
@@ -817,12 +817,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 442，Total Lineup Score 673.6（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 442，Total Lineup Score 673.41（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Calafiori",
-          "detail": "爆发视角 Captain Score 87.19（首发 11 人中最高；本轮 Lineup Score 80.16）"
+          "detail": "爆发视角 Captain Score 87.19（首发 11 人中最高；本轮 Lineup Score 80.14）"
         },
         {
           "topic": "transfer_status",
@@ -838,10 +838,10 @@
         }
       ],
       "metrics": {
-        "team_market_score": 540.85,
-        "captain_market_score": 52.22,
-        "formation_market_score": 415.12,
-        "team_lineup_score": 673.6,
+        "team_market_score": 540.56,
+        "captain_market_score": 52.1,
+        "formation_market_score": 414.13,
+        "team_lineup_score": 673.41,
         "captain_score": 87.19
       },
       "budget_before": 2.0,
