@@ -615,7 +615,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-09-15T17:30:59Z",
-      "updated_at": "2026-09-20T14:06:24Z",
+      "updated_at": "2026-09-20T17:34:42Z",
       "decision": {
         "formation": "442",
         "captain": {
@@ -648,16 +648,16 @@
             "name": "Diop"
           },
           {
-            "id": 40,
-            "name": "Rogers"
+            "id": 426,
+            "name": "B.Fernandes"
           },
           {
             "id": 124,
             "name": "Groß"
           },
           {
-            "id": 426,
-            "name": "B.Fernandes"
+            "id": 40,
+            "name": "Rogers"
           },
           {
             "id": 399,
@@ -817,12 +817,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 442，Total Lineup Score 656.35（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 442，Total Lineup Score 665.54（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Calafiori",
-          "detail": "爆发视角 Captain Score 86.77（首发 11 人中最高；本轮 Lineup Score 78.63）"
+          "detail": "爆发视角 Captain Score 87.95（首发 11 人中最高；本轮 Lineup Score 79.7）"
         },
         {
           "topic": "transfer_status",
@@ -838,11 +838,11 @@
         }
       ],
       "metrics": {
-        "team_market_score": 473.16,
-        "captain_market_score": 45.9,
-        "formation_market_score": 367.05,
-        "team_lineup_score": 656.35,
-        "captain_score": 86.77
+        "team_market_score": 478.22,
+        "captain_market_score": 46.31,
+        "formation_market_score": 371.43,
+        "team_lineup_score": 665.54,
+        "captain_score": 87.95
       },
       "budget_before": 2.0,
       "budget_after": 2.0,
