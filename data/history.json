@@ -615,7 +615,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-09-15T17:30:59Z",
-      "updated_at": "2026-09-20T20:27:52Z",
+      "updated_at": "2026-09-20T22:39:31Z",
       "decision": {
         "formation": "442",
         "captain": {
@@ -652,12 +652,12 @@
             "name": "Groß"
           },
           {
-            "id": 426,
-            "name": "B.Fernandes"
-          },
-          {
             "id": 40,
             "name": "Rogers"
+          },
+          {
+            "id": 426,
+            "name": "B.Fernandes"
           },
           {
             "id": 399,
@@ -817,7 +817,7 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 442，Total Lineup Score 664.8（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 442，Total Lineup Score 664.54（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
@@ -838,10 +838,10 @@
         }
       ],
       "metrics": {
-        "team_market_score": 478.31,
-        "captain_market_score": 23.24,
-        "formation_market_score": 372.0,
-        "team_lineup_score": 664.8,
+        "team_market_score": 478.26,
+        "captain_market_score": 23.26,
+        "formation_market_score": 372.26,
+        "team_lineup_score": 664.54,
         "captain_score": 87.62
       },
       "budget_before": 2.0,
