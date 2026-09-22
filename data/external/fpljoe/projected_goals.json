@@ -5,8 +5,8 @@
     "source": "fpljoe",
     "competition": "premier-league",
     "season": "2026-27",
-    "retrieved_at": "2026-09-21T22:28:46Z",
-    "source_updated_at": "2026-09-21T22:00:50Z",
+    "retrieved_at": "2026-09-22T01:04:20Z",
+    "source_updated_at": "2026-09-22T00:02:40Z",
     "requested_gameweek_start": 6,
     "requested_gameweek_end": 10,
     "actual_gameweek_min": 1,
@@ -660,6 +660,34 @@
     },
     {
       "gameweek": 10,
+      "home_team": "Everton",
+      "away_team": "Coventry City",
+      "kickoff_time": "2026-11-06T20:00:00.000Z",
+      "fpl_home_team_id": 9,
+      "fpl_home_team_name": "Everton",
+      "fpl_away_team_id": 7,
+      "fpl_away_team_name": "Coventry City",
+      "home_projected_goals": null,
+      "away_projected_goals": null,
+      "home_projected_goals_elevenify": 1.74,
+      "away_projected_goals_elevenify": 0.98
+    },
+    {
+      "gameweek": 10,
+      "home_team": "Leeds United",
+      "away_team": "Tottenham Hotspur",
+      "kickoff_time": "2026-11-07T12:30:00.000Z",
+      "fpl_home_team_id": 13,
+      "fpl_home_team_name": "Leeds",
+      "fpl_away_team_id": 19,
+      "fpl_away_team_name": "Spurs",
+      "home_projected_goals": null,
+      "away_projected_goals": null,
+      "home_projected_goals_elevenify": 1.36,
+      "away_projected_goals_elevenify": 1.24
+    },
+    {
+      "gameweek": 10,
       "home_team": "Arsenal",
       "away_team": "Hull City",
       "kickoff_time": "2026-11-07T15:00:00.000Z",
@@ -671,48 +699,6 @@
       "away_projected_goals": null,
       "home_projected_goals_elevenify": 2.72,
       "away_projected_goals_elevenify": 0.47
-    },
-    {
-      "gameweek": 10,
-      "home_team": "Brighton and Hove Albion",
-      "away_team": "Brentford",
-      "kickoff_time": "2026-11-07T15:00:00.000Z",
-      "fpl_home_team_id": 5,
-      "fpl_home_team_name": "Brighton",
-      "fpl_away_team_id": 4,
-      "fpl_away_team_name": "Brentford",
-      "home_projected_goals": null,
-      "away_projected_goals": null,
-      "home_projected_goals_elevenify": 1.74,
-      "away_projected_goals_elevenify": 1.33
-    },
-    {
-      "gameweek": 10,
-      "home_team": "Crystal Palace",
-      "away_team": "Liverpool",
-      "kickoff_time": "2026-11-07T15:00:00.000Z",
-      "fpl_home_team_id": 8,
-      "fpl_home_team_name": "Crystal Palace",
-      "fpl_away_team_id": 14,
-      "fpl_away_team_name": "Liverpool",
-      "home_projected_goals": null,
-      "away_projected_goals": null,
-      "home_projected_goals_elevenify": 1.27,
-      "away_projected_goals_elevenify": 1.82
-    },
-    {
-      "gameweek": 10,
-      "home_team": "Everton",
-      "away_team": "Coventry City",
-      "kickoff_time": "2026-11-07T15:00:00.000Z",
-      "fpl_home_team_id": 9,
-      "fpl_home_team_name": "Everton",
-      "fpl_away_team_id": 7,
-      "fpl_away_team_name": "Coventry City",
-      "home_projected_goals": null,
-      "away_projected_goals": null,
-      "home_projected_goals_elevenify": 1.74,
-      "away_projected_goals_elevenify": 0.98
     },
     {
       "gameweek": 10,
@@ -730,51 +716,9 @@
     },
     {
       "gameweek": 10,
-      "home_team": "Ipswich Town",
-      "away_team": "Bournemouth",
-      "kickoff_time": "2026-11-07T15:00:00.000Z",
-      "fpl_home_team_id": 12,
-      "fpl_home_team_name": "Ipswich",
-      "fpl_away_team_id": 3,
-      "fpl_away_team_name": "Bournemouth",
-      "home_projected_goals": null,
-      "away_projected_goals": null,
-      "home_projected_goals_elevenify": 1.24,
-      "away_projected_goals_elevenify": 1.75
-    },
-    {
-      "gameweek": 10,
-      "home_team": "Leeds United",
-      "away_team": "Tottenham Hotspur",
-      "kickoff_time": "2026-11-07T15:00:00.000Z",
-      "fpl_home_team_id": 13,
-      "fpl_home_team_name": "Leeds",
-      "fpl_away_team_id": 19,
-      "fpl_away_team_name": "Spurs",
-      "home_projected_goals": null,
-      "away_projected_goals": null,
-      "home_projected_goals_elevenify": 1.36,
-      "away_projected_goals_elevenify": 1.24
-    },
-    {
-      "gameweek": 10,
-      "home_team": "Manchester United",
-      "away_team": "Aston Villa",
-      "kickoff_time": "2026-11-07T15:00:00.000Z",
-      "fpl_home_team_id": 16,
-      "fpl_home_team_name": "Man Utd",
-      "fpl_away_team_id": 2,
-      "fpl_away_team_name": "Aston Villa",
-      "home_projected_goals": null,
-      "away_projected_goals": null,
-      "home_projected_goals_elevenify": 1.88,
-      "away_projected_goals_elevenify": 1.23
-    },
-    {
-      "gameweek": 10,
       "home_team": "Nottingham Forest",
       "away_team": "Manchester City",
-      "kickoff_time": "2026-11-07T15:00:00.000Z",
+      "kickoff_time": "2026-11-07T17:30:00.000Z",
       "fpl_home_team_id": 18,
       "fpl_home_team_name": "Nott'm Forest",
       "fpl_away_team_id": 15,
@@ -786,9 +730,51 @@
     },
     {
       "gameweek": 10,
+      "home_team": "Brighton and Hove Albion",
+      "away_team": "Brentford",
+      "kickoff_time": "2026-11-08T14:00:00.000Z",
+      "fpl_home_team_id": 5,
+      "fpl_home_team_name": "Brighton",
+      "fpl_away_team_id": 4,
+      "fpl_away_team_name": "Brentford",
+      "home_projected_goals": null,
+      "away_projected_goals": null,
+      "home_projected_goals_elevenify": 1.74,
+      "away_projected_goals_elevenify": 1.33
+    },
+    {
+      "gameweek": 10,
+      "home_team": "Crystal Palace",
+      "away_team": "Liverpool",
+      "kickoff_time": "2026-11-08T14:00:00.000Z",
+      "fpl_home_team_id": 8,
+      "fpl_home_team_name": "Crystal Palace",
+      "fpl_away_team_id": 14,
+      "fpl_away_team_name": "Liverpool",
+      "home_projected_goals": null,
+      "away_projected_goals": null,
+      "home_projected_goals_elevenify": 1.27,
+      "away_projected_goals_elevenify": 1.82
+    },
+    {
+      "gameweek": 10,
+      "home_team": "Ipswich Town",
+      "away_team": "Bournemouth",
+      "kickoff_time": "2026-11-08T14:00:00.000Z",
+      "fpl_home_team_id": 12,
+      "fpl_home_team_name": "Ipswich",
+      "fpl_away_team_id": 3,
+      "fpl_away_team_name": "Bournemouth",
+      "home_projected_goals": null,
+      "away_projected_goals": null,
+      "home_projected_goals_elevenify": 1.24,
+      "away_projected_goals_elevenify": 1.75
+    },
+    {
+      "gameweek": 10,
       "home_team": "Sunderland",
       "away_team": "Chelsea",
-      "kickoff_time": "2026-11-07T15:00:00.000Z",
+      "kickoff_time": "2026-11-08T14:00:00.000Z",
       "fpl_home_team_id": 20,
       "fpl_home_team_name": "Sunderland",
       "fpl_away_team_id": 6,
@@ -797,6 +783,20 @@
       "away_projected_goals": null,
       "home_projected_goals_elevenify": 1.19,
       "away_projected_goals_elevenify": 1.67
+    },
+    {
+      "gameweek": 10,
+      "home_team": "Manchester United",
+      "away_team": "Aston Villa",
+      "kickoff_time": "2026-11-08T16:30:00.000Z",
+      "fpl_home_team_id": 16,
+      "fpl_home_team_name": "Man Utd",
+      "fpl_away_team_id": 2,
+      "fpl_away_team_name": "Aston Villa",
+      "home_projected_goals": null,
+      "away_projected_goals": null,
+      "home_projected_goals_elevenify": 1.88,
+      "away_projected_goals_elevenify": 1.23
     }
   ],
   "teams": [
@@ -1601,6 +1601,46 @@
       "source": "elevenify"
     },
     {
+      "team": "Everton",
+      "gameweek": 10,
+      "opponent": "Coventry City",
+      "venue": "home",
+      "fpl_team_id": 9,
+      "fpl_team_name": "Everton",
+      "projected_goals": 1.74,
+      "source": "elevenify"
+    },
+    {
+      "team": "Coventry City",
+      "gameweek": 10,
+      "opponent": "Everton",
+      "venue": "away",
+      "fpl_team_id": 7,
+      "fpl_team_name": "Coventry City",
+      "projected_goals": 0.98,
+      "source": "elevenify"
+    },
+    {
+      "team": "Leeds United",
+      "gameweek": 10,
+      "opponent": "Tottenham Hotspur",
+      "venue": "home",
+      "fpl_team_id": 13,
+      "fpl_team_name": "Leeds",
+      "projected_goals": 1.36,
+      "source": "elevenify"
+    },
+    {
+      "team": "Tottenham Hotspur",
+      "gameweek": 10,
+      "opponent": "Leeds United",
+      "venue": "away",
+      "fpl_team_id": 19,
+      "fpl_team_name": "Spurs",
+      "projected_goals": 1.24,
+      "source": "elevenify"
+    },
+    {
       "team": "Arsenal",
       "gameweek": 10,
       "opponent": "Hull City",
@@ -1618,6 +1658,46 @@
       "fpl_team_id": 11,
       "fpl_team_name": "Hull City",
       "projected_goals": 0.47,
+      "source": "elevenify"
+    },
+    {
+      "team": "Fulham",
+      "gameweek": 10,
+      "opponent": "Newcastle United",
+      "venue": "home",
+      "fpl_team_id": 10,
+      "fpl_team_name": "Fulham",
+      "projected_goals": 1.47,
+      "source": "elevenify"
+    },
+    {
+      "team": "Newcastle United",
+      "gameweek": 10,
+      "opponent": "Fulham",
+      "venue": "away",
+      "fpl_team_id": 17,
+      "fpl_team_name": "Newcastle",
+      "projected_goals": 1.48,
+      "source": "elevenify"
+    },
+    {
+      "team": "Nottingham Forest",
+      "gameweek": 10,
+      "opponent": "Manchester City",
+      "venue": "home",
+      "fpl_team_id": 18,
+      "fpl_team_name": "Nott'm Forest",
+      "projected_goals": 1.1,
+      "source": "elevenify"
+    },
+    {
+      "team": "Manchester City",
+      "gameweek": 10,
+      "opponent": "Nottingham Forest",
+      "venue": "away",
+      "fpl_team_id": 15,
+      "fpl_team_name": "Man City",
+      "projected_goals": 1.85,
       "source": "elevenify"
     },
     {
@@ -1661,46 +1741,6 @@
       "source": "elevenify"
     },
     {
-      "team": "Everton",
-      "gameweek": 10,
-      "opponent": "Coventry City",
-      "venue": "home",
-      "fpl_team_id": 9,
-      "fpl_team_name": "Everton",
-      "projected_goals": 1.74,
-      "source": "elevenify"
-    },
-    {
-      "team": "Coventry City",
-      "gameweek": 10,
-      "opponent": "Everton",
-      "venue": "away",
-      "fpl_team_id": 7,
-      "fpl_team_name": "Coventry City",
-      "projected_goals": 0.98,
-      "source": "elevenify"
-    },
-    {
-      "team": "Fulham",
-      "gameweek": 10,
-      "opponent": "Newcastle United",
-      "venue": "home",
-      "fpl_team_id": 10,
-      "fpl_team_name": "Fulham",
-      "projected_goals": 1.47,
-      "source": "elevenify"
-    },
-    {
-      "team": "Newcastle United",
-      "gameweek": 10,
-      "opponent": "Fulham",
-      "venue": "away",
-      "fpl_team_id": 17,
-      "fpl_team_name": "Newcastle",
-      "projected_goals": 1.48,
-      "source": "elevenify"
-    },
-    {
       "team": "Ipswich Town",
       "gameweek": 10,
       "opponent": "Bournemouth",
@@ -1721,23 +1761,23 @@
       "source": "elevenify"
     },
     {
-      "team": "Leeds United",
+      "team": "Sunderland",
       "gameweek": 10,
-      "opponent": "Tottenham Hotspur",
+      "opponent": "Chelsea",
       "venue": "home",
-      "fpl_team_id": 13,
-      "fpl_team_name": "Leeds",
-      "projected_goals": 1.36,
+      "fpl_team_id": 20,
+      "fpl_team_name": "Sunderland",
+      "projected_goals": 1.19,
       "source": "elevenify"
     },
     {
-      "team": "Tottenham Hotspur",
+      "team": "Chelsea",
       "gameweek": 10,
-      "opponent": "Leeds United",
+      "opponent": "Sunderland",
       "venue": "away",
-      "fpl_team_id": 19,
-      "fpl_team_name": "Spurs",
-      "projected_goals": 1.24,
+      "fpl_team_id": 6,
+      "fpl_team_name": "Chelsea",
+      "projected_goals": 1.67,
       "source": "elevenify"
     },
     {
@@ -1758,46 +1798,6 @@
       "fpl_team_id": 2,
       "fpl_team_name": "Aston Villa",
       "projected_goals": 1.23,
-      "source": "elevenify"
-    },
-    {
-      "team": "Nottingham Forest",
-      "gameweek": 10,
-      "opponent": "Manchester City",
-      "venue": "home",
-      "fpl_team_id": 18,
-      "fpl_team_name": "Nott'm Forest",
-      "projected_goals": 1.1,
-      "source": "elevenify"
-    },
-    {
-      "team": "Manchester City",
-      "gameweek": 10,
-      "opponent": "Nottingham Forest",
-      "venue": "away",
-      "fpl_team_id": 15,
-      "fpl_team_name": "Man City",
-      "projected_goals": 1.85,
-      "source": "elevenify"
-    },
-    {
-      "team": "Sunderland",
-      "gameweek": 10,
-      "opponent": "Chelsea",
-      "venue": "home",
-      "fpl_team_id": 20,
-      "fpl_team_name": "Sunderland",
-      "projected_goals": 1.19,
-      "source": "elevenify"
-    },
-    {
-      "team": "Chelsea",
-      "gameweek": 10,
-      "opponent": "Sunderland",
-      "venue": "away",
-      "fpl_team_id": 6,
-      "fpl_team_name": "Chelsea",
-      "projected_goals": 1.67,
       "source": "elevenify"
     }
   ]
