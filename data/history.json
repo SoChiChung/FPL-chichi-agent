@@ -854,7 +854,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-09-21T18:31:15Z",
-      "updated_at": "2026-09-22T12:25:29Z",
+      "updated_at": "2026-09-22T17:10:26Z",
       "decision": {
         "formation": "442",
         "captain": {
@@ -887,16 +887,16 @@
             "name": "Diop"
           },
           {
+            "id": 124,
+            "name": "Groß"
+          },
+          {
             "id": 426,
             "name": "B.Fernandes"
           },
           {
             "id": 40,
             "name": "Rogers"
-          },
-          {
-            "id": 124,
-            "name": "Groß"
           },
           {
             "id": 399,
@@ -913,12 +913,12 @@
         ],
         "bench": [
           {
-            "id": 368,
-            "name": "Szoboszlai"
-          },
-          {
             "id": 391,
             "name": "Gvardiol"
+          },
+          {
+            "id": 368,
+            "name": "Szoboszlai"
           },
           {
             "id": 346,
@@ -1056,12 +1056,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 442，Total Lineup Score 673.29（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 442，Total Lineup Score 654.66（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Gabriel",
-          "detail": "爆发视角 Captain Score 87.07（首发 11 人中最高；本轮 Lineup Score 74.47）"
+          "detail": "爆发视角 Captain Score 86.72（首发 11 人中最高；本轮 Lineup Score 74.25）"
         },
         {
           "topic": "transfer_status",
@@ -1077,11 +1077,11 @@
         }
       ],
       "metrics": {
-        "team_market_score": 482.2,
-        "captain_market_score": 23.47,
-        "formation_market_score": 375.86,
-        "team_lineup_score": 673.29,
-        "captain_score": 87.07
+        "team_market_score": 482.38,
+        "captain_market_score": 23.46,
+        "formation_market_score": 375.99,
+        "team_lineup_score": 654.66,
+        "captain_score": 86.72
       },
       "budget_before": 2.0,
       "budget_after": 2.0,
