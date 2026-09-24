@@ -854,7 +854,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-09-21T18:31:15Z",
-      "updated_at": "2026-09-23T23:52:42Z",
+      "updated_at": "2026-09-24T03:38:08Z",
       "decision": {
         "formation": "442",
         "captain": {
@@ -1056,12 +1056,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 442，Total Lineup Score 649.54（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 442，Total Lineup Score 649.33（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Gabriel",
-          "detail": "爆发视角 Captain Score 86.68（首发 11 人中最高；本轮 Lineup Score 74.21）"
+          "detail": "爆发视角 Captain Score 86.66（首发 11 人中最高；本轮 Lineup Score 74.19）"
         },
         {
           "topic": "transfer_status",
@@ -1077,11 +1077,11 @@
         }
       ],
       "metrics": {
-        "team_market_score": 482.76,
+        "team_market_score": 482.6,
         "captain_market_score": 23.47,
-        "formation_market_score": 376.57,
-        "team_lineup_score": 649.54,
-        "captain_score": 86.68
+        "formation_market_score": 376.58,
+        "team_lineup_score": 649.33,
+        "captain_score": 86.66
       },
       "budget_before": 2.0,
       "budget_after": 2.0,
