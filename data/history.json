@@ -854,7 +854,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-09-21T18:31:15Z",
-      "updated_at": "2026-09-25T15:54:31Z",
+      "updated_at": "2026-09-25T19:53:07Z",
       "decision": {
         "formation": "442",
         "captain": {
@@ -1056,7 +1056,7 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 442，Total Lineup Score 650.96（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 442，Total Lineup Score 651.84（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
@@ -1079,8 +1079,8 @@
       "metrics": {
         "team_market_score": 483.41,
         "captain_market_score": 23.48,
-        "formation_market_score": 377.31,
-        "team_lineup_score": 650.96,
+        "formation_market_score": 377.39,
+        "team_lineup_score": 651.84,
         "captain_score": 86.69
       },
       "budget_before": 2.0,
