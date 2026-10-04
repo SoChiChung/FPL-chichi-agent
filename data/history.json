@@ -854,16 +854,16 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-09-21T18:31:15Z",
-      "updated_at": "2026-10-03T22:20:02Z",
+      "updated_at": "2026-10-04T01:51:45Z",
       "decision": {
-        "formation": "442",
+        "formation": "352",
         "captain": {
-          "id": 4,
-          "name": "Gabriel"
+          "id": 124,
+          "name": "Groß"
         },
         "vice": {
-          "id": 8,
-          "name": "Calafiori"
+          "id": 1,
+          "name": "Raya"
         },
         "starting_xi": [
           {
@@ -875,16 +875,12 @@
             "name": "Calafiori"
           },
           {
-            "id": 4,
-            "name": "Gabriel"
-          },
-          {
             "id": 115,
             "name": "De Cuyper"
           },
           {
-            "id": 259,
-            "name": "Diop"
+            "id": 391,
+            "name": "Gvardiol"
           },
           {
             "id": 124,
@@ -895,34 +891,38 @@
             "name": "Rogers"
           },
           {
-            "id": 426,
-            "name": "B.Fernandes"
-          },
-          {
             "id": 399,
             "name": "Cherki"
+          },
+          {
+            "id": 368,
+            "name": "Szoboszlai"
+          },
+          {
+            "id": 426,
+            "name": "B.Fernandes"
           },
           {
             "id": 165,
             "name": "João Pedro"
           },
           {
-            "id": 464,
-            "name": "Wissa"
+            "id": 346,
+            "name": "Calvert-Lewin"
           }
         ],
         "bench": [
           {
-            "id": 368,
-            "name": "Szoboszlai"
+            "id": 464,
+            "name": "Wissa"
           },
           {
-            "id": 391,
-            "name": "Gvardiol"
+            "id": 4,
+            "name": "Gabriel"
           },
           {
-            "id": 346,
-            "name": "Calvert-Lewin"
+            "id": 259,
+            "name": "Diop"
           },
           {
             "id": 109,
@@ -1052,16 +1052,16 @@
         },
         {
           "topic": "score_source",
-          "detail": "FPL Joe 目标 GW6 选源：projection=odds_market clean_sheet=odds_market fixture=sort_rating"
+          "detail": "FPL Joe 目标 GW6 选源：projection=odds_market clean_sheet=odds_market fixture=difficulty"
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 442，Total Lineup Score 626.53（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 177.95（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
-          "player": "Gabriel",
-          "detail": "爆发视角 Captain Score 86.33（首发 11 人中最高；本轮 Lineup Score 73.97）"
+          "player": "Groß",
+          "detail": "爆发视角 Captain Score 21.41（首发 11 人中最高；本轮 Lineup Score 37.12）"
         },
         {
           "topic": "transfer_status",
@@ -1077,11 +1077,11 @@
         }
       ],
       "metrics": {
-        "team_market_score": 483.77,
-        "captain_market_score": 23.35,
-        "formation_market_score": 378.16,
-        "team_lineup_score": 626.53,
-        "captain_score": 86.33
+        "team_market_score": 483.76,
+        "captain_market_score": 43.36,
+        "formation_market_score": 401.99,
+        "team_lineup_score": 177.95,
+        "captain_score": 21.41
       },
       "budget_before": 2.0,
       "budget_after": 2.0,
