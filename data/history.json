@@ -854,7 +854,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-09-21T18:31:15Z",
-      "updated_at": "2026-10-06T16:08:45Z",
+      "updated_at": "2026-10-06T21:07:39Z",
       "decision": {
         "formation": "352",
         "captain": {
@@ -1056,12 +1056,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 177.95（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 178.0（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Groß",
-          "detail": "爆发视角 Captain Score 22.37（首发 11 人中最高；本轮 Lineup Score 38.74）"
+          "detail": "爆发视角 Captain Score 22.38（首发 11 人中最高；本轮 Lineup Score 38.75）"
         },
         {
           "topic": "transfer_status",
@@ -1077,11 +1077,11 @@
         }
       ],
       "metrics": {
-        "team_market_score": 483.89,
-        "captain_market_score": 43.68,
-        "formation_market_score": 402.22,
-        "team_lineup_score": 177.95,
-        "captain_score": 22.37
+        "team_market_score": 484.15,
+        "captain_market_score": 43.76,
+        "formation_market_score": 402.48,
+        "team_lineup_score": 178.0,
+        "captain_score": 22.38
       },
       "budget_before": 2.0,
       "budget_after": 2.0,
