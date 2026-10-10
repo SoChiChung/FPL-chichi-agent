@@ -416,6 +416,14 @@ class TestFplJoeReader(unittest.TestCase):
             self.assertEqual(out["sources"]["projection"], "elevenify")
             self.assertEqual(out["teams"]["ARS"]["projection"], 1.8)
 
+    def test_reader_neutral_when_coverage_has_no_fixture_rows(self):
+        with tempfile.TemporaryDirectory() as folder:
+            self._write_docs(folder, rows=[])
+            out = fpl_joe.read_target_gw(2, {1: "ARS"}, folder)
+            self.assertTrue(out["neutral"]["projection"])
+            self.assertTrue(out["neutral"]["clean_sheet"])
+            self.assertTrue(out["neutral"]["fixture"])
+
 
 class TestApiElementSummary(unittest.TestCase):
     def test_points_by_round_extraction(self):

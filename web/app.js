@@ -181,10 +181,10 @@ function riskLevel(s) {
 /* notes 折叠区 topic：不进正文，收进「更多细节」（design.md §5.1.4） */
 const NOTE_FOLD = new Set(["external_source", "score_source", "data_missing", "warning"]);
 /* 单条 notes 优先级（转会类单独配对处理，恒排最前） */
-const NOTE_ORDER = { captain: 1, no_transfer: 2, lineup: 3, transfer_status: 4, squad_source: 5 };
+const NOTE_ORDER = { chip: 1, captain: 2, no_transfer: 3, lineup: 4, transfer_status: 5, squad_source: 6 };
 const TOPIC_TAG = {
   transfer_out: "转会", transfer_in: "转会", captain: "队长", no_transfer: "转会判断",
-  lineup: "阵容", transfer_status: "转会额度", squad_source: "阵容来源",
+  chip: "开卡策略", lineup: "阵容", transfer_status: "转会额度", squad_source: "阵容来源",
   external_source: "数据更新", score_source: "数据源", data_missing: "数据缺失", warning: "告警",
 };
 
@@ -247,6 +247,8 @@ function noteBodyText(n) {
       return d ? `转入 ${n.player || "?"}：${d}` : `转入 ${n.player || "?"}`;
     case "captain":
       return `队长 ${n.player || "?"}：${d}`;
+    case "chip":
+      return d;
     case "no_transfer": {
       const core = d.replace(/，?\s*不进行转会\s*$/, "").replace(/^[\s，、:：]+/, "");
       return core ? `本轮未进行转会 —— ${core}` : "本轮未进行转会";
@@ -492,6 +494,25 @@ function renderThisWeek(state, entry) {
     <p class="muted disclaimer">以下为 AI 建议，不自动提交到 FPL。</p>`;
 
   const transfers = Array.isArray(d.recommended_transfers) ? d.recommended_transfers : [];
+  const chipPlan = d.chip_plan || {};
+  const chipRec = d.recommended_chip || null;
+  const chipLabels = { wildcard: "Wildcard", free_hit: "Free Hit", bench_boost: "Bench Boost", triple_captain: "Triple Captain" };
+  if (chipRec) {
+    html += `<div class="chip-recommendation"><strong>🎟️ 本轮建议开 ${esc(chipRec.name || chipLabels[chipRec.chip] || "Chip")}</strong><span>${esc(chipRec.reason || "")}</span></div>`;
+    if (chipRec.follow_up_plan) {
+      const fp = chipRec.follow_up_plan;
+      html += `<div class="chip-followup"><b>Wildcard 后续排期</b><span>Free Hit：${fp.free_hit_gw ? `GW${fp.free_hit_gw}` : "等空赛/弱赛程"}</span><span>Triple Captain：${fp.triple_captain_gw ? `GW${fp.triple_captain_gw}` : "等双赛队长"}</span><span>Bench Boost：${fp.bench_boost_gw ? `GW${fp.bench_boost_gw}` : "Wildcard 后评估替补席"}</span><small>${esc(fp.note || "")}</small></div>`;
+    }
+  } else {
+    html += `<div class="chip-recommendation muted"><strong>🎟️ 本轮建议保留筹码</strong><span>当前阵容与赛程尚未达到开卡条件</span></div>`;
+  }
+  if (chipPlan.guarantee && chipPlan.guarantee.active) {
+    html += `<div class="chip-guarantee"><b>⏳ 半程用卡保底已启动</b><span>${esc(chipPlan.guarantee.message || "")}</span></div>`;
+  }
+  if (Array.isArray(chipPlan.plan) && chipPlan.plan.length) {
+    const planRows = chipPlan.plan.map((p) => `<span class="chip-plan-item"><b>${esc(p.name || chipLabels[p.chip] || p.chip)}</b>：${p.status === "used" ? "已使用" : (p.target_gw ? `关注 GW${p.target_gw}` : "继续观察")}<small>${esc(p.reason || "")}</small></span>`).join("");
+    html += `<div class="chip-plan">${planRows}</div>`;
+  }
   if (transfers.length) {
     html += `<div class="tw-transfers">` +
       transfers

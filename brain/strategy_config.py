@@ -16,6 +16,21 @@ DEFAULT_STRATEGY = {
     "injury_threshold": 75,
     "market_gap_threshold": 15,
     "max_free_transfers": 5,
+    "chip_strategy": {
+        "planning_horizon": 2,
+        "season_half_horizon": 19,
+        "wildcard_weak_squad_threshold": 5,
+        "free_hit_weak_player_threshold": 7,
+        "free_hit_fixture_difficulty_threshold": 4,
+        "bench_boost_score_threshold": 145,
+        "triple_captain_score_threshold": 70,
+        "wildcard_default_lead": 2,
+        "post_wildcard_bench_boost_gap": 1,
+        "post_wildcard_triple_captain_gap": 3,
+        "chip_guarantee_start_gw": 16,
+        "guarantee_priority": ["wildcard", "free_hit", "triple_captain", "bench_boost"],
+        "priority": ["wildcard", "free_hit", "triple_captain", "bench_boost"],
+    },
     "budget": 100.0,
     "squad_size": 15,
     "max_players_per_team": 3,
@@ -141,6 +156,7 @@ def snapshot(cfg: dict, weights: dict, lineup_cfg: dict = None) -> dict:
         "market_gap_threshold": cfg.get("market_gap_threshold"),
         "max_free_transfers": cfg.get("max_free_transfers"),
         "allow_hits": cfg.get("allow_hits"),
+        "chip_strategy": cfg.get("chip_strategy"),
     }
     if lineup_cfg:
         snap["lineup_engine"] = {

@@ -22,7 +22,7 @@ Phase 2（docs/decide.md v1.1）：
 import sys
 import time
 
-from brain import api, captain_score, config, context, data_store
+from brain import api, captain_score, chips, config, context, data_store
 from brain import history_writer, lineup_score, market, squad_builder, strategy_config, transfer
 from brain.external import fpl_joe
 from brain.market import to_float
@@ -187,6 +187,17 @@ def main():
                       "detail": f"爆发视角 Captain Score {cap['captain_score']:.2f}"
                                 f"（首发 11 人中最高；本轮 Lineup Score {cap.get('lineup_score', '-')}）"})
 
+    chip_cfg = dict(cfg)
+    chip_cfg["_api_chips"] = bootstrap.get("chips", [])
+    chip_plan = chips.evaluate(squad, cap, entry_history, events, fixtures,
+                               bootstrap.get("teams", []), target_gw, chip_cfg)
+    active_chip = chip_plan.get("current_recommendation")
+    if active_chip:
+        notes.append({"topic": "chip", "chip": active_chip["chip"],
+                      "detail": f"建议本轮使用 {active_chip['name']}：{active_chip['reason']}"})
+    else:
+        notes.append({"topic": "chip", "detail": "本轮暂不建议开卡；筹码计划已结合未来赛程保留更优窗口"})
+
     ts = transfer.resolve_transfer_status(
         entry_history, gw, cfg.get("max_free_transfers", 5), establish=(picks is None))
     if ts["status"] == "unlimited":
@@ -222,6 +233,8 @@ def main():
         "transfer_status": ts["status"],
         "free_transfers": ts["free_transfers"],
         "recommended_transfers": suggestions,
+        "chip_plan": chip_plan,
+        "recommended_chip": active_chip,
         "transfer_package": transfer_package,
         "transfer_notes": _transfer_notes(suggestions, t_notes, ts),
     }
@@ -263,6 +276,9 @@ def main():
     filled = history_writer.backfill_settlement(history,
                                                 entry_history.get("current") or [],
                                                 events)
+    added = history_writer.backfill_missing_finished(history,
+                                                     entry_history.get("current") or [],
+                                                     events)
     data_store.validate_history(history)
     data_store.save_json(config.STATE_FILE, state)
     data_store.save_json(config.HISTORY_FILE, history)
@@ -279,7 +295,7 @@ def main():
         f"队长={(cap or {}).get('name') or '-'} "
         f"阵容来源={src_label} 转会={ts['status']} "
         f"建议转会={len(suggestions)} 笔 历史 {len(history['history'])} 轮 "
-        f"结算回填={filled} 项 建议阵容={'有' if suggested_squad else '无'} "
+        f"结算回填={filled} 项 新增历史轮次={added} 建议阵容={'有' if suggested_squad else '无'} "
         f"Bank=£{state['bank']:.1f}m 净花费=£{pkg['transfer_cost']:.1f}m "
         f"转会后Bank=£{pkg['budget_after']:.1f}m "
         f"(耗时 {time.time() - t0:.1f}s)"

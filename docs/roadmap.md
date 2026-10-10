@@ -18,11 +18,11 @@
 
 | 阶段 | 内容 | 验收标准 |
 |------|------|----------|
-| **Phase 0（当前）** | 数据获取、状态保存、历史记录、Vercel 展示、决策骨架 | 每轮数据自动更新；前端完整渲染；决策模块仅有接口与 TODO |
+| **Phase 0** | 数据获取、状态保存、历史记录、Vercel 展示、决策骨架 | 每轮数据自动更新；前端完整渲染；决策模块仅有接口与 TODO |
 | **Phase 1** | 决策引擎：Market Score 评分、阵容构建、阵型、队长（CaptainSelector）、转会（Market Gap + 伤病）、决策日志（metrics） | 按 [decision-engine.md](decision-engine.md) 第 12 节验收清单 |
-| **Phase 2** | 前端增强（决策历史渲染、metrics 图表）；通知（Telegram/邮件）；回测（历史赛季验证参数）；xP API 接入（替换 CaptainSelector 实现）；出售价规则修正 | 参数有数据支撑；异常能及时通知 |
+| **Phase 2（当前）** | 筹码策略已完成；其余：metrics 图表、通知、回测、xP API 接入、出售价规则修正 | 筹码决策有赛程依据并可追踪 |
 | **Phase 3** | 自动执行：Auth 适配器、FreeTransferProvider 主来源（my-team API）、安全门 G1–G7、审计对账；先 dry-run 后真执行 | 连续 N 轮执行零失误，审计可完整对账 |
-| **Phase 4** | 赛季学习：写盘分析、自适应权重、Chip 策略（Wildcard/FH/BB/TC）、Ownership v2 / EO / Differential | 决策质量量化可追踪，策略每赛季迭代 |
+| **Phase 4** | 赛季学习：写盘分析、自适应权重、Ownership v2 / EO / Differential | 决策质量量化可追踪，策略每赛季迭代 |
 
 ## 当前待办
 
@@ -34,4 +34,4 @@
 
 - 自动登录、自动转会提交、自动阵容/队长提交（Phase 3 前仅接口）
 - xG / xA / EV / Monte Carlo / ML / 复杂优化器
-- Chip 策略（Wildcard / Free Hit / Bench Boost / Triple Captain）
+- 自动执行等 Phase 3 内容（本阶段只产生建议，不提交到 FPL）

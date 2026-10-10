@@ -250,6 +250,30 @@ b, strong { font-weight: 700; }
 .disclaimer { margin: 2px 0 10px; font-size: 0.78rem; }
 
 .tw-transfers { display: flex; flex-direction: column; gap: 10px; }
+.chip-recommendation {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 10px 13px; margin: 8px 0;
+  border: 1.5px solid #dfc47e; border-radius: 13px;
+  background: linear-gradient(110deg, #fff4d2, #fffdf4);
+  color: #654c22; font-size: 0.88rem;
+}
+.chip-recommendation span { color: var(--muted); font-size: 0.8rem; }
+.chip-followup {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px;
+  padding: 8px 11px; margin: 5px 0 8px; border-left: 3px solid var(--leaf);
+  background: #f0f7e8; border-radius: 0 10px 10px 0; color: var(--ink-soft); font-size: 0.78rem;
+}
+.chip-followup b, .chip-followup small { width: 100%; }
+.chip-followup small { color: var(--muted); }
+.chip-guarantee {
+  display: flex; flex-direction: column; gap: 2px; padding: 8px 11px; margin: 5px 0 9px;
+  border: 1.5px solid #e3a476; border-radius: 11px; background: #fff0e2;
+  color: #87451e; font-size: 0.8rem;
+}
+.chip-guarantee span { color: #986341; }
+.chip-plan { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 5px 12px; margin: 4px 0 10px; color: var(--muted); font-size: 0.76rem; }
+.chip-plan-item { display: flex; flex-direction: column; }
+.chip-plan-item b { color: var(--ink-soft); }
 .xfer {
   background: var(--paper);
   border: 2px solid #ecd9b4;

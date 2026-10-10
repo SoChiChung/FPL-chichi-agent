@@ -29,78 +29,25 @@ class Executor:            # Phase 3：自动登录 + 提交转会/阵容/队长
 - EO（Effective Ownership）队长权衡、热球员出售保护线。
 - 与 Market Consensus 的关系：Market Score 是"市场共识"，Ownership v2 是"与共识的偏离策略"，两者在 Phase 2 组合使用。
 
-## 4. Chip 策略（Phase 2+）
+## 4. Chip 策略（Phase 2，已实现）
 
-- Wildcard / Free Hit / Bench Boost / Triple Captain 均为配置驱动的规则（如"WC 第 10 轮附近"），不硬编码。
-- 决策日志预留 `chips_used` 字段。
+- 每个半赛季分别读取 Wildcard / Free Hit / Bench Boost / Triple Captain 的可用状态；优先使用 FPL bootstrap 的筹码时间窗，history chips 作为回退。
+- Free Hit 用于冲击单轮上限：若至少 7 名现有球员面临空赛或 FPL 困难赛程，建议临时换阵。
+- Wildcard 当前建议开出时，会同时排定后续 FH / TC / BB 候选轮；有官方已排赛程时依据双赛/空赛，无明确赛程时提供可调的暂定间隔。
+- 半程保底：剩余可用筹码数追平/超过截止前剩余轮数时进入必须排程模式；达到配置的临近截止轮次后，即使没有理想窗口也给出兜底开卡建议，防止筹码过期。
+- 按未来赛程、队长评分、替补席评分和伤停人数产出当前轮建议及剩余窗口规划。
+- 每轮最多推荐一张筹码；所有阈值、规划范围、优先级来自 `config/strategy.json`。
+- 决策写入 `decision.chip_plan` 与 `decision.recommended_chip`，同时在前端本轮建议和历史记录中展示。
 
-## 5. 自动执行模块设计（Phase 3，本阶段只设计不实现）
+## 5. FPL 操作提交（不实现）
 
-### 5.1 登录与会话
+FPL 现行 [2026/27 条款](https://fantasy.premierleague.com/help/terms) 的第 27 条要求密码保密、不得允许他人访问账户；第 28(d) 条禁止使用自动化系统访问游戏并提取信息。由本项目服务器或浏览器按钮登录、读取私人队伍并调用写入接口，会触及这些条款。因此本项目只生成决策建议，不保存账号密码或令牌，也不自动提交转会、阵容或 Chip。
 
-```
-┌─ Auth 适配器（可替换）────────────────────────────────┐
-│  FPLAuthProvider (interface)                          │
-│   ├─ login(email, password) → session                 │
-│   ├─ get_session() → 从 Secret 恢复                    │
-│   └─ refresh() → 会话过期时自动重登                    │
-│  基线实现：POST users.premierleague.com/accounts/login/│
-│  会话 = Cookie: pl_profile（长有效期）                 │
-│  ⚠ 登录流程已 SSO 化，开发时按最新流程验证              │
-└──────────────────────────────────────────────────────┘
-```
-
-- 凭证只进 GitHub Secrets（`FPL_EMAIL` / `FPL_PASSWORD` / `FPL_SESSION_COOKIE`），绝不进仓库。
-- 手动方式：登录一次后把 `pl_profile` 存入 Secret，直接复用；自动方式：存账号密码，过期自动重登。
-
-### 5.2 自动提交动作
-
-| 动作 | API | 说明 |
-|------|-----|------|
-| 转会 | `POST /api/my-team/{id}/transfers` | 单笔/双笔；扣分与 hit 由 FPL 端结算 |
-| 阵容/队长 | `POST /api/my-team/{id}/picks` | 首发 XI + 队长 + 副队长 + 替补排序 |
-| 免费转会数 | `GET /api/my-team/{id}/` | `transfers.limit`（FreeTransferProvider 主来源） |
-| 核对 | `GET /api/my-team/{id}/` | 提交前读真实状态，提交后校验结果 |
-
-### 5.3 安全门（执行前必须全部通过）
-
-```
-G1 时间门   距 deadline ≥ 15 分钟（可配），否则不执行
-G2 信心门   各类操作满足配置阈值
-G3 合法性门 预检：银行≥0、位置数、同队≤3、Chip 可用性、免费转会额度
-G4 热球员保护 卖出高持有球员需证据权重达标，否则拒绝并标记 risky
-G5 幂等门   POST 前 GET 真实状态，只提交差异；无差异则跳过
-G6 试运行门 默认 dry_run=true，只把"将执行的操作"写入历史，不调 API
-G7 审计门   每个操作写入 data/actions.json（时间/载荷/响应/risky），
-            下一轮结算时对账
-```
-
-**部分失败处理**：步骤按序执行、逐步校验；任一步失败即中止后续、保留已成功步骤，标记 `partial_failure` 等待人工处理（不自动重试，防止重复扣分）。
-
-**回滚**：同 GW 内 deadline 前可反向转会恢复（代价 = 4 分 hit），人工确认后触发；不提供自动回滚。
-
-### 5.4 审计
-
-`data/actions.json`（独立于决策历史，只记实际执行操作）：
-
-```json
-{
-  "actions": [
-    {
-      "at": "2026-09-05T17:00:00Z", "gw": 5,
-      "action": "transfer", "payload": {"out": 5, "in": 8},
-      "api_response": "success", "success": true,
-      "risky": false
-    }
-  ]
-}
-```
-
-原则：**决策历史 ≠ 操作历史**。决策可随意回看，操作必须可审计、可对账。
+账号持有人可以在 FPL 官方网站/App 查看 AI 建议，再自行手动确认操作。若 FPL 将来提供官方授权的管理接口和明确许可，再重新评估自动化方案。
 
 ## 6. 明确不实现清单
 
 - xG / xA / EV / Monte Carlo / ML / 复杂优化器（当前策略不依赖）
-- 自动登录、自动转会提交、自动阵容提交、自动队长提交（Phase 3 前）
+- 自动登录、API 写入和自动提交（见第 5 节官方条款）
 - 多账号支持
 - 付费 API / 数据服务（除非用户明确引入）

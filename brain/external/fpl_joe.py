@@ -310,6 +310,20 @@ def _coverage_source(meta: dict, gw: int):
     return "elevenify" if gw in set(sources.get("elevenify") or []) else None
 
 
+def _has_source_rows(doc: dict, target_gw: int, metric: str) -> bool:
+    """Coverage metadata alone is not sufficient: require actual values this GW."""
+    fields = {
+        "projection": ("home_projected_goals", "away_projected_goals",
+                       "home_projected_goals_elevenify", "away_projected_goals_elevenify"),
+        "clean_sheet": ("home_clean_sheet_probability", "away_clean_sheet_probability",
+                        "home_clean_sheet_elevenify", "away_clean_sheet_elevenify"),
+        "fixture": ("home_difficulty", "away_difficulty",
+                    "home_difficulty_sort_rating", "away_difficulty_sort_rating"),
+    }[metric]
+    return any(r.get("gameweek") == target_gw and any(r.get(k) is not None for k in fields)
+               for r in (doc.get("fixtures") or []))
+
+
 def read_target_gw(target_gw: int, team_id_to_abbr: dict, fpljoe_dir: str = None) -> dict:
     """读取三份 fpljoe 文件在目标 GW 的球队级原始值（评分输入，只读不落盘）。
 
@@ -339,6 +353,7 @@ def read_target_gw(target_gw: int, team_id_to_abbr: dict, fpljoe_dir: str = None
             and start is not None and start <= target_gw <= end
             and freshness not in _NEUTRAL_REASONS
             and source is not None
+            and _has_source_rows(doc, target_gw, metric)
         )
         if not usable:
             reason = _NEUTRAL_REASONS.get(freshness) or (

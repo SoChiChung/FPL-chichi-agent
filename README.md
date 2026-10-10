@@ -1,11 +1,12 @@
 # FPL AI Manager
 
-由 AI 管理的 Fantasy Premier League（FPL）账号。当前为 **Phase 1 决策引擎**：自动拉取数据、按 **Market Consensus Strategy**（跟随市场共识）产出阵容/阵型/队长/转会建议、写入状态与历史 JSON、GitHub Actions 定时更新、Vercel 静态展示。决策只产生建议，不执行任何 FPL 写操作。
+由 AI 管理的 Fantasy Premier League（FPL）账号。当前为 **Phase 2 决策引擎**：自动拉取数据、按 **Market Consensus Strategy**（跟随市场共识）产出阵容/阵型/队长/转会与筹码规划建议、写入状态与历史 JSON、GitHub Actions 定时更新、Vercel 静态展示。决策只产生建议，不执行任何 FPL 写操作。
 
 设计文档统一在 [docs/](docs/)：
 
 - [架构设计](docs/architecture.md)
 - [决策层设计（Market Consensus）](docs/decision-engine.md)
+- [模型决策详细说明（含 Chip 规划与保底）](docs/decision-engine.md)
 - [路线图](docs/roadmap.md)
 - [FPL API 资料](docs/api-notes.md)
 - [未来功能与自动执行设计](docs/future-features.md)
@@ -37,7 +38,8 @@ GitHub Actions (每 10 分钟自触发 + Python 闸门) ──► brain/ (Python
 │   ├── market.py                  # Market Score 计算（TSB + 净转会归一化）
 │   ├── squad_builder.py           # 空阵容时构建 15 人（两阶段贪心）
 │   ├── lineup.py                  # 阵型 + 首发 XI + 替补排序
-│   ├── captain.py                 # 队长 / 副队长（Market Score）
+│   ├── captain.py                 # 队长 / 副队长评分
+│   ├── chips.py                   # 按筹码状态与赛程规划 WC/FH/BB/TC
 │   ├── transfer.py                # 转会建议（Market Gap + 伤病）+ 免费转会推导
 │   └── history_writer.py          # history 决策条目（幂等 upsert）
 ├── config/
@@ -107,7 +109,7 @@ https://fantasy.premierleague.com/entry/123456/event/1
 |------|------|------|
 | Phase 0 | ✅ | 数据获取、state/history 生成、Actions、Vercel 展示、决策骨架 |
 | Phase 1 | ✅ 当前（2026-08-30） | Market Consensus 决策：Market Score 评分、阵容/阵型/队长（CaptainSelector）、转会建议（Market Gap + 伤病）、决策日志（metrics）、前端"本轮建议" |
-| Phase 2 | 预留 | xP 接入、前端增强（决策历史渲染）、通知、离线回测、Chip 策略 |
+| Phase 2 | ✅ 部分完成 | xP 接入、通知、离线回测（待做）；筹码规划已接入 |
 | Phase 3 | 预留 | 自动登录与自动执行（FreeTransferProvider 主来源、安全门与审计） |
 
 ## 常见问题

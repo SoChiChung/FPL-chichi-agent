@@ -62,6 +62,8 @@ def upsert_decision(history: dict, gw: int, decision: dict, notes: list, metrics
         "transfer_status": decision.get("transfer_status"),
         "free_transfers": decision.get("free_transfers"),
         "recommended_transfers": decision["recommended_transfers"],
+        "chip_plan": decision.get("chip_plan"),
+        "recommended_chip": decision.get("recommended_chip"),
         "transfer_package": decision.get("transfer_package"),
         "strategy_snapshot": strategy_snapshot,
     }
@@ -104,3 +106,29 @@ def backfill_settlement(history: dict, entry_history_current: list, events: list
                 entry[key] = val
                 filled += 1
     return filled
+
+
+def backfill_missing_finished(history: dict, entry_history_current: list, events: list) -> int:
+    """Create result-only history rows for finished GWs omitted by the decision run."""
+    existing = {h.get("gw") for h in history.get("history", [])}
+    rows = {r.get("event"): r for r in (entry_history_current or [])}
+    added = 0
+    for event in events or []:
+        gw = event.get("id")
+        row = rows.get(gw)
+        if not event.get("finished") or gw in existing or not row:
+            continue
+        history["history"].append({
+            "gw": gw,
+            "points": row.get("points"),
+            "rank": row.get("rank"),
+            "overall_rank": row.get("overall_rank"),
+            "decision": None,
+            "notes": [{"topic": "settlement_backfill",
+                       "detail": "该轮此前没有历史决策，已从 FPL 官方历史补录结算数据"}],
+            "metrics": {},
+        })
+        existing.add(gw)
+        added += 1
+    history["history"].sort(key=lambda h: h.get("gw", 0))
+    return added

@@ -76,6 +76,18 @@ class TestBackfillSettlement(unittest.TestCase):
         history_writer.backfill_settlement(hist, _current_rows(), _events())
         self.assertEqual([h["gw"] for h in hist["history"]], [3])  # GW1 孤儿不新建
 
+    def test_adds_missing_finished_result_rows_idempotently(self):
+        hist = _mk_history(gws=(2, 4))
+        added = history_writer.backfill_missing_finished(
+            hist, _current_rows(), _events(finished=(1, 2, 3, 4)))
+        self.assertEqual(added, 1)
+        gw3 = next(h for h in hist["history"] if h["gw"] == 3)
+        self.assertEqual((gw3["points"], gw3["rank"], gw3["overall_rank"]),
+                         (25, 123456, 800001))
+        self.assertIsNone(gw3["decision"])
+        self.assertEqual(history_writer.backfill_missing_finished(
+            hist, _current_rows(), _events(finished=(1, 2, 3, 4))), 0)
+
 
 class TestDecidedAt(unittest.TestCase):
     def test_new_entry_writes_decided_at(self):
