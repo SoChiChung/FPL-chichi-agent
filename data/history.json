@@ -854,16 +854,16 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-09-21T18:31:15Z",
-      "updated_at": "2026-10-10T04:49:16Z",
+      "updated_at": "2026-10-10T10:59:49Z",
       "decision": {
         "formation": "352",
         "captain": {
-          "id": 124,
-          "name": "Groß"
-        },
-        "vice": {
           "id": 1,
           "name": "Raya"
+        },
+        "vice": {
+          "id": 124,
+          "name": "Groß"
         },
         "starting_xi": [
           {
@@ -931,8 +931,8 @@
         ],
         "squad": [],
         "squad_source": {
-          "type": "auto_pick",
-          "gw": 5
+          "type": "picks",
+          "gw": 6
         },
         "transfer_status": "limited",
         "free_transfers": 2,
@@ -1048,20 +1048,20 @@
       "notes": [
         {
           "topic": "squad_source",
-          "detail": "使用 GW5 FPL auto-pick 阵容作为当前基础阵容"
+          "detail": "使用当前 GW6 FPL 阵容作为基础阵容"
         },
         {
           "topic": "score_source",
-          "detail": "FPL Joe 目标 GW6 选源：projection=odds_market clean_sheet=odds_market fixture=difficulty"
+          "detail": "FPL Joe 目标 GW7 选源：projection=odds_market clean_sheet=odds_market fixture=difficulty"
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 178.26（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 195.4（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
-          "player": "Groß",
-          "detail": "爆发视角 Captain Score 22.76（首发 11 人中最高；本轮 Lineup Score 39.52）"
+          "player": "Raya",
+          "detail": "爆发视角 Captain Score 23.62（首发 11 人中最高；本轮 Lineup Score 9.45）"
         },
         {
           "topic": "transfer_status",
@@ -1073,15 +1073,15 @@
         },
         {
           "topic": "external_source",
-          "detail": "FPL Joe 已刷新: 请求 GW6-10 实际 1-38 缺失 [] 新鲜度 fresh 写入 3 个文件"
+          "detail": "FPL Joe 已刷新: 请求 GW7-11 实际 1-38 缺失 [] 新鲜度 fresh 写入 3 个文件"
         }
       ],
       "metrics": {
-        "team_market_score": 481.8,
-        "captain_market_score": 47.6,
-        "formation_market_score": 403.8,
-        "team_lineup_score": 178.26,
-        "captain_score": 22.76
+        "team_market_score": 595.38,
+        "captain_market_score": 47.25,
+        "formation_market_score": 489.01,
+        "team_lineup_score": 195.4,
+        "captain_score": 23.62
       },
       "budget_before": 2.0,
       "budget_after": 2.0,
