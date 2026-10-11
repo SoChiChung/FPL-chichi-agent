@@ -2,14 +2,14 @@
   "season": "2026-27",
   "current_gw": 6,
   "points": 222,
-  "rank": 9694413,
+  "rank": 9694356,
   "bank": 2.0,
   "manager_name": "让两轮！ZCJenius",
   "formation": "352",
   "captain": "Groß",
   "vice": "Raya",
   "next_deadline": "2026-10-17T10:00:00Z",
-  "last_update": "2026-10-11T04:35:11Z",
+  "last_update": "2026-10-11T11:16:37Z",
   "team": [
     {
       "id": 1,
@@ -23,13 +23,13 @@
       "total_points": 33,
       "status": "a",
       "chance_of_playing_next_round": null,
-      "transfers_in_event": 6392,
-      "transfers_out_event": 5226,
+      "transfers_in_event": 7742,
+      "transfers_out_event": 6543,
       "starting": true,
       "multiplier": 1,
       "is_captain": false,
       "is_vice_captain": true,
-      "market_score": 43.24,
+      "market_score": 43.18,
       "score_breakdown": {
         "projection": null,
         "form": null,
@@ -39,8 +39,8 @@
         "attack": null,
         "attack_potential": null
       },
-      "lineup_score": 8.65,
-      "captain_score": 21.62
+      "lineup_score": 8.64,
+      "captain_score": 21.59
     },
     {
       "id": 115,
@@ -48,19 +48,19 @@
       "pos": "DEF",
       "team": "BHA",
       "price": 5.0,
-      "selected_by": 32.4,
-      "selected_by_percent": 32.4,
+      "selected_by": 32.6,
+      "selected_by_percent": 32.6,
       "form": "10.7",
       "total_points": 53,
       "status": "a",
       "chance_of_playing_next_round": null,
-      "transfers_in_event": 107138,
-      "transfers_out_event": 859,
+      "transfers_in_event": 129105,
+      "transfers_out_event": 942,
       "starting": true,
       "multiplier": 1,
       "is_captain": false,
       "is_vice_captain": false,
-      "market_score": 44.45,
+      "market_score": 45.12,
       "score_breakdown": {
         "projection": 0.0,
         "form": 87.97,
@@ -70,7 +70,7 @@
         "attack": 21.99,
         "attack_potential": 17.59
       },
-      "lineup_score": 11.09,
+      "lineup_score": 11.22,
       "captain_score": 3.52
     },
     {
@@ -85,13 +85,13 @@
       "total_points": 38,
       "status": "a",
       "chance_of_playing_next_round": null,
-      "transfers_in_event": 29266,
-      "transfers_out_event": 1538,
+      "transfers_in_event": 34758,
+      "transfers_out_event": 1817,
       "starting": true,
       "multiplier": 1,
       "is_captain": false,
       "is_vice_captain": false,
-      "market_score": 52.23,
+      "market_score": 52.28,
       "score_breakdown": {
         "projection": 0.0,
         "form": 47.37,
@@ -101,7 +101,7 @@
         "attack": 11.84,
         "attack_potential": 9.47
       },
-      "lineup_score": 11.63,
+      "lineup_score": 11.64,
       "captain_score": 1.89
     },
     {
@@ -116,13 +116,13 @@
       "total_points": 37,
       "status": "a",
       "chance_of_playing_next_round": null,
-      "transfers_in_event": 19570,
-      "transfers_out_event": 3188,
+      "transfers_in_event": 22410,
+      "transfers_out_event": 3925,
       "starting": true,
       "multiplier": 1,
       "is_captain": false,
       "is_vice_captain": false,
-      "market_score": 31.85,
+      "market_score": 31.77,
       "score_breakdown": {
         "projection": 0.0,
         "form": 45.11,
@@ -132,7 +132,7 @@
         "attack": 11.28,
         "attack_potential": 9.02
       },
-      "lineup_score": 7.5,
+      "lineup_score": 7.48,
       "captain_score": 1.8
     },
     {
@@ -141,19 +141,19 @@
       "pos": "MID",
       "team": "CHE",
       "price": 7.8,
-      "selected_by": 43.3,
-      "selected_by_percent": 43.3,
+      "selected_by": 43.4,
+      "selected_by_percent": 43.4,
       "form": "6.3",
       "total_points": 38,
       "status": "a",
       "chance_of_playing_next_round": null,
-      "transfers_in_event": 64274,
-      "transfers_out_event": 1942,
+      "transfers_in_event": 78385,
+      "transfers_out_event": 2238,
       "starting": true,
       "multiplier": 1,
       "is_captain": false,
       "is_vice_captain": false,
-      "market_score": 48.88,
+      "market_score": 49.33,
       "score_breakdown": {
         "projection": 0.0,
         "form": 54.89,
@@ -163,8 +163,8 @@
         "attack": 13.72,
         "attack_potential": 10.98
       },
-      "lineup_score": 26.24,
-      "captain_score": 14.77
+      "lineup_score": 26.33,
+      "captain_score": 14.82
     },
     {
       "id": 124,
@@ -172,19 +172,19 @@
       "pos": "MID",
       "team": "BHA",
       "price": 6.0,
-      "selected_by": 36.8,
-      "selected_by_percent": 36.8,
+      "selected_by": 36.9,
+      "selected_by_percent": 36.9,
       "form": "12.3",
       "total_points": 53,
       "status": "a",
       "chance_of_playing_next_round": null,
-      "transfers_in_event": 94629,
-      "transfers_out_event": 1152,
+      "transfers_in_event": 111392,
+      "transfers_out_event": 1365,
       "starting": true,
       "multiplier": 2,
       "is_captain": true,
       "is_vice_captain": false,
-      "market_score": 46.72,
+      "market_score": 47.01,
       "score_breakdown": {
         "projection": 0.0,
         "form": 100.0,
@@ -194,8 +194,8 @@
         "attack": 25.0,
         "attack_potential": 20.0
       },
-      "lineup_score": 39.34,
-      "captain_score": 22.67
+      "lineup_score": 39.4,
+      "captain_score": 22.7
     },
     {
       "id": 426,
@@ -203,19 +203,19 @@
       "pos": "MID",
       "team": "MUN",
       "price": 11.9,
-      "selected_by": 36.8,
-      "selected_by_percent": 36.8,
+      "selected_by": 36.7,
+      "selected_by_percent": 36.7,
       "form": "1.7",
       "total_points": 32,
       "status": "a",
       "chance_of_playing_next_round": null,
-      "transfers_in_event": 3156,
-      "transfers_out_event": 47935,
+      "transfers_in_event": 3442,
+      "transfers_out_event": 63276,
       "starting": true,
       "multiplier": 1,
       "is_captain": false,
       "is_vice_captain": false,
-      "market_score": 33.24,
+      "market_score": 32.38,
       "score_breakdown": {
         "projection": 0.0,
         "form": 20.3,
@@ -225,8 +225,8 @@
         "attack": 5.08,
         "attack_potential": 4.06
       },
-      "lineup_score": 12.74,
-      "captain_score": 6.98
+      "lineup_score": 12.57,
+      "captain_score": 6.89
     },
     {
       "id": 399,
@@ -240,13 +240,13 @@
       "total_points": 34,
       "status": "a",
       "chance_of_playing_next_round": null,
-      "transfers_in_event": 29069,
-      "transfers_out_event": 4940,
+      "transfers_in_event": 33819,
+      "transfers_out_event": 5988,
       "starting": true,
       "multiplier": 1,
       "is_captain": false,
       "is_vice_captain": false,
-      "market_score": 33.64,
+      "market_score": 33.61,
       "score_breakdown": {
         "projection": 0.0,
         "form": 30.08,
@@ -271,13 +271,13 @@
       "total_points": 20,
       "status": "a",
       "chance_of_playing_next_round": null,
-      "transfers_in_event": 8303,
-      "transfers_out_event": 14283,
+      "transfers_in_event": 9768,
+      "transfers_out_event": 17028,
       "starting": true,
       "multiplier": 1,
       "is_captain": false,
       "is_vice_captain": false,
-      "market_score": 31.67,
+      "market_score": 31.58,
       "score_breakdown": {
         "projection": 0.0,
         "form": 20.3,
@@ -287,8 +287,8 @@
         "attack": 5.08,
         "attack_potential": 4.06
       },
-      "lineup_score": 12.43,
-      "captain_score": 6.82
+      "lineup_score": 12.41,
+      "captain_score": 6.81
     },
     {
       "id": 346,
@@ -302,13 +302,13 @@
       "total_points": 24,
       "status": "a",
       "chance_of_playing_next_round": null,
-      "transfers_in_event": 15617,
-      "transfers_out_event": 21920,
+      "transfers_in_event": 18272,
+      "transfers_out_event": 25617,
       "starting": true,
       "multiplier": 1,
       "is_captain": false,
       "is_vice_captain": false,
-      "market_score": 25.71,
+      "market_score": 25.65,
       "score_breakdown": {
         "projection": 0.0,
         "form": 42.86,
@@ -318,8 +318,8 @@
         "attack": 10.71,
         "attack_potential": 8.57
       },
-      "lineup_score": 19.07,
-      "captain_score": 9.43
+      "lineup_score": 19.06,
+      "captain_score": 9.42
     },
     {
       "id": 165,
@@ -327,19 +327,19 @@
       "pos": "FWD",
       "team": "CHE",
       "price": 7.7,
-      "selected_by": 67.3,
-      "selected_by_percent": 67.3,
+      "selected_by": 67.5,
+      "selected_by_percent": 67.5,
       "form": "8.0",
       "total_points": 45,
       "status": "a",
       "chance_of_playing_next_round": 100,
-      "transfers_in_event": 122750,
-      "transfers_out_event": 1375,
+      "transfers_in_event": 140971,
+      "transfers_out_event": 1510,
       "starting": true,
       "multiplier": 1,
       "is_captain": false,
       "is_vice_captain": false,
-      "market_score": 73.84,
+      "market_score": 74.0,
       "score_breakdown": {
         "projection": 0.0,
         "form": 67.67,
@@ -349,7 +349,7 @@
         "attack": 16.92,
         "attack_potential": 13.53
       },
-      "lineup_score": 36.76,
+      "lineup_score": 36.79,
       "captain_score": 16.55
     },
     {
@@ -364,13 +364,13 @@
       "total_points": 32,
       "status": "a",
       "chance_of_playing_next_round": null,
-      "transfers_in_event": 10966,
-      "transfers_out_event": 2875,
+      "transfers_in_event": 14308,
+      "transfers_out_event": 3371,
       "starting": false,
       "multiplier": 0,
       "is_captain": false,
       "is_vice_captain": false,
-      "market_score": 26.08,
+      "market_score": 26.17,
       "score_breakdown": {
         "projection": null,
         "form": null,
@@ -380,7 +380,7 @@
         "attack": null,
         "attack_potential": null
       },
-      "lineup_score": 5.22,
+      "lineup_score": 5.23,
       "captain_score": 0.0
     },
     {
@@ -395,13 +395,13 @@
       "total_points": 15,
       "status": "a",
       "chance_of_playing_next_round": null,
-      "transfers_in_event": 8318,
-      "transfers_out_event": 17734,
+      "transfers_in_event": 9285,
+      "transfers_out_event": 20976,
       "starting": false,
       "multiplier": 0,
       "is_captain": false,
       "is_vice_captain": false,
-      "market_score": 22.45,
+      "market_score": 22.32,
       "score_breakdown": {
         "projection": 0.0,
         "form": 12.78,
@@ -411,7 +411,7 @@
         "attack": 3.19,
         "attack_potential": 2.56
       },
-      "lineup_score": 8.64,
+      "lineup_score": 8.62,
       "captain_score": 0.0
     },
     {
@@ -420,19 +420,19 @@
       "pos": "DEF",
       "team": "ARS",
       "price": 7.9,
-      "selected_by": 22.3,
-      "selected_by_percent": 22.3,
+      "selected_by": 22.2,
+      "selected_by_percent": 22.2,
       "form": "4.0",
       "total_points": 27,
       "status": "a",
       "chance_of_playing_next_round": null,
-      "transfers_in_event": 1803,
-      "transfers_out_event": 20460,
+      "transfers_in_event": 2205,
+      "transfers_out_event": 23788,
       "starting": false,
       "multiplier": 0,
       "is_captain": false,
       "is_vice_captain": false,
-      "market_score": 24.19,
+      "market_score": 24.04,
       "score_breakdown": {
         "projection": 0.0,
         "form": 37.59,
@@ -442,7 +442,7 @@
         "attack": 9.4,
         "attack_potential": 7.52
       },
-      "lineup_score": 5.78,
+      "lineup_score": 5.75,
       "captain_score": 0.0
     },
     {
@@ -457,13 +457,13 @@
       "total_points": 14,
       "status": "a",
       "chance_of_playing_next_round": null,
-      "transfers_in_event": 658,
-      "transfers_out_event": 6657,
+      "transfers_in_event": 784,
+      "transfers_out_event": 8159,
       "starting": false,
       "multiplier": 0,
       "is_captain": false,
       "is_vice_captain": false,
-      "market_score": 17.02,
+      "market_score": 16.93,
       "score_breakdown": {
         "projection": 0.0,
         "form": 24.81,
@@ -473,7 +473,7 @@
         "attack": 6.2,
         "attack_potential": 4.96
       },
-      "lineup_score": 4.02,
+      "lineup_score": 4.01,
       "captain_score": 0.0
     }
   ],
@@ -492,19 +492,19 @@
       "pos": "MID",
       "team": "BHA",
       "price": 6.0,
-      "selected_by": 36.8,
-      "selected_by_percent": 36.8,
+      "selected_by": 36.9,
+      "selected_by_percent": 36.9,
       "form": "12.3",
       "total_points": 53,
       "status": "a",
       "chance_of_playing_next_round": null,
-      "transfers_in_event": 94629,
-      "transfers_out_event": 1152,
+      "transfers_in_event": 111392,
+      "transfers_out_event": 1365,
       "starting": true,
       "multiplier": 2,
       "is_captain": true,
       "is_vice_captain": false,
-      "market_score": 46.72,
+      "market_score": 47.01,
       "score_breakdown": {
         "projection": 0.0,
         "form": 100.0,
@@ -514,8 +514,8 @@
         "attack": 25.0,
         "attack_potential": 20.0
       },
-      "lineup_score": 39.34,
-      "captain_score": 22.67
+      "lineup_score": 39.4,
+      "captain_score": 22.7
     },
     "vice": {
       "id": 1,
@@ -529,13 +529,13 @@
       "total_points": 33,
       "status": "a",
       "chance_of_playing_next_round": null,
-      "transfers_in_event": 6392,
-      "transfers_out_event": 5226,
+      "transfers_in_event": 7742,
+      "transfers_out_event": 6543,
       "starting": true,
       "multiplier": 1,
       "is_captain": false,
       "is_vice_captain": true,
-      "market_score": 43.24,
+      "market_score": 43.18,
       "score_breakdown": {
         "projection": null,
         "form": null,
@@ -545,8 +545,8 @@
         "attack": null,
         "attack_potential": null
       },
-      "lineup_score": 8.65,
-      "captain_score": 21.62
+      "lineup_score": 8.64,
+      "captain_score": 21.59
     },
     "starting_xi": [
       {
@@ -635,33 +635,33 @@
     ]
   },
   "lineup_scores": {
-    "1": 8.65,
-    "115": 11.09,
-    "8": 11.63,
-    "391": 7.5,
-    "40": 26.24,
-    "124": 39.34,
-    "426": 12.74,
+    "1": 8.64,
+    "115": 11.22,
+    "8": 11.64,
+    "391": 7.48,
+    "40": 26.33,
+    "124": 39.4,
+    "426": 12.57,
     "399": 15.75,
-    "368": 12.43,
-    "346": 19.07,
-    "165": 36.76,
-    "109": 5.22,
-    "464": 8.64,
-    "4": 5.78,
-    "259": 4.02
+    "368": 12.41,
+    "346": 19.06,
+    "165": 36.79,
+    "109": 5.23,
+    "464": 8.62,
+    "4": 5.75,
+    "259": 4.01
   },
   "captain_scores": {
-    "1": 21.62,
+    "1": 21.59,
     "115": 3.52,
     "8": 1.89,
     "391": 1.8,
-    "40": 14.77,
-    "124": 22.67,
-    "426": 6.98,
+    "40": 14.82,
+    "124": 22.7,
+    "426": 6.89,
     "399": 8.78,
-    "368": 6.82,
-    "346": 9.43,
+    "368": 6.81,
+    "346": 9.42,
     "165": 16.55,
     "109": 0.0,
     "464": 0.0,
