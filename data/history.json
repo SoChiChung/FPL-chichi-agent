@@ -854,7 +854,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-09-21T18:31:15Z",
-      "updated_at": "2026-10-12T06:20:16Z",
+      "updated_at": "2026-10-12T15:54:32Z",
       "decision": {
         "formation": "352",
         "captain": {
@@ -871,12 +871,12 @@
             "name": "Raya"
           },
           {
-            "id": 8,
-            "name": "Calafiori"
-          },
-          {
             "id": 115,
             "name": "De Cuyper"
+          },
+          {
+            "id": 8,
+            "name": "Calafiori"
           },
           {
             "id": 391,
@@ -1056,12 +1056,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 209.21（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 198.37（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Groß",
-          "detail": "爆发视角 Captain Score 22.88（首发 11 人中最高；本轮 Lineup Score 39.75）"
+          "detail": "爆发视角 Captain Score 22.91（首发 11 人中最高；本轮 Lineup Score 39.83）"
         },
         {
           "topic": "transfer_status",
@@ -1077,11 +1077,11 @@
         }
       ],
       "metrics": {
-        "team_market_score": 555.48,
-        "captain_market_score": 48.76,
-        "formation_market_score": 467.07,
-        "team_lineup_score": 209.21,
-        "captain_score": 22.88
+        "team_market_score": 555.84,
+        "captain_market_score": 49.14,
+        "formation_market_score": 467.58,
+        "team_lineup_score": 198.37,
+        "captain_score": 22.91
       },
       "budget_before": 2.0,
       "budget_after": 2.0,
