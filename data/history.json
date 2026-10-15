@@ -1093,7 +1093,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-10-13T18:01:57Z",
-      "updated_at": "2026-10-15T00:19:05Z",
+      "updated_at": "2026-10-15T05:00:12Z",
       "decision": {
         "formation": "352",
         "captain": {
@@ -1182,21 +1182,21 @@
               "name": "Szoboszlai",
               "pos": "MID",
               "price": 6.9,
-              "market_score": 22.9
+              "market_score": 22.88
             },
             "in": {
               "id": 427,
               "name": "Mbeumo",
               "pos": "MID",
               "price": 7.9,
-              "market_score": 23.83
+              "market_score": 23.84
             },
-            "market_gap": 0.93,
+            "market_gap": 0.96,
             "reason": "状态 d 非 available"
           }
         ],
         "transfer_package": {
-          "gain": 0.93,
+          "gain": 0.96,
           "out_count": 1,
           "total_out_price": 6.9,
           "total_in_price": 7.9,
@@ -1314,12 +1314,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 206.21（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 206.25（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Groß",
-          "detail": "爆发视角 Captain Score 22.24（首发 11 人中最高；本轮 Lineup Score 38.75）"
+          "detail": "爆发视角 Captain Score 22.25（首发 11 人中最高；本轮 Lineup Score 38.77）"
         },
         {
           "topic": "transfer_status",
@@ -1333,7 +1333,7 @@
         {
           "topic": "transfer_in",
           "player": "Mbeumo",
-          "detail": "同位置市场分最高可用者（23.83），满足预算与同队约束"
+          "detail": "同位置市场分最高可用者（23.84），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -1341,11 +1341,11 @@
         }
       ],
       "metrics": {
-        "team_market_score": 558.09,
-        "captain_market_score": 50.58,
-        "formation_market_score": 471.98,
-        "team_lineup_score": 206.21,
-        "captain_score": 22.24
+        "team_market_score": 558.41,
+        "captain_market_score": 50.68,
+        "formation_market_score": 472.21,
+        "team_lineup_score": 206.25,
+        "captain_score": 22.25
       },
       "budget_before": 2.0,
       "budget_after": 1.0,
