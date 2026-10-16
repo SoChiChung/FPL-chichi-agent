@@ -1093,7 +1093,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-10-13T18:01:57Z",
-      "updated_at": "2026-10-15T22:34:47Z",
+      "updated_at": "2026-10-16T01:01:42Z",
       "decision": {
         "formation": "352",
         "captain": {
@@ -1182,7 +1182,7 @@
               "name": "Szoboszlai",
               "pos": "MID",
               "price": 6.9,
-              "market_score": 22.18
+              "market_score": 22.07
             },
             "in": {
               "id": 427,
@@ -1191,12 +1191,12 @@
               "price": 7.9,
               "market_score": 23.8
             },
-            "market_gap": 1.62,
+            "market_gap": 1.73,
             "reason": "状态 d 非 available"
           }
         ],
         "transfer_package": {
-          "gain": 1.62,
+          "gain": 1.73,
           "out_count": 1,
           "total_out_price": 6.9,
           "total_in_price": 7.9,
@@ -1341,9 +1341,9 @@
         }
       ],
       "metrics": {
-        "team_market_score": 560.34,
+        "team_market_score": 560.37,
         "captain_market_score": 51.17,
-        "formation_market_score": 474.24,
+        "formation_market_score": 474.27,
         "team_lineup_score": 206.67,
         "captain_score": 22.3
       },
