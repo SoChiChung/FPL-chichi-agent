@@ -1093,7 +1093,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-10-13T18:01:57Z",
-      "updated_at": "2026-10-16T01:01:42Z",
+      "updated_at": "2026-10-16T06:10:51Z",
       "decision": {
         "formation": "352",
         "captain": {
@@ -1182,7 +1182,7 @@
               "name": "Szoboszlai",
               "pos": "MID",
               "price": 6.9,
-              "market_score": 22.07
+              "market_score": 21.93
             },
             "in": {
               "id": 427,
@@ -1191,12 +1191,12 @@
               "price": 7.9,
               "market_score": 23.8
             },
-            "market_gap": 1.73,
+            "market_gap": 1.87,
             "reason": "状态 d 非 available"
           }
         ],
         "transfer_package": {
-          "gain": 1.73,
+          "gain": 1.87,
           "out_count": 1,
           "total_out_price": 6.9,
           "total_in_price": 7.9,
@@ -1314,12 +1314,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 206.67（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 206.74（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Groß",
-          "detail": "爆发视角 Captain Score 22.30（首发 11 人中最高；本轮 Lineup Score 38.87）"
+          "detail": "爆发视角 Captain Score 22.31（首发 11 人中最高；本轮 Lineup Score 38.89）"
         },
         {
           "topic": "transfer_status",
@@ -1341,11 +1341,11 @@
         }
       ],
       "metrics": {
-        "team_market_score": 560.37,
-        "captain_market_score": 51.17,
-        "formation_market_score": 474.27,
-        "team_lineup_score": 206.67,
-        "captain_score": 22.3
+        "team_market_score": 560.6,
+        "captain_market_score": 51.27,
+        "formation_market_score": 474.58,
+        "team_lineup_score": 206.74,
+        "captain_score": 22.31
       },
       "budget_before": 2.0,
       "budget_after": 1.0,
