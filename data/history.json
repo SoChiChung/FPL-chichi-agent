@@ -1093,7 +1093,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-10-13T18:01:57Z",
-      "updated_at": "2026-10-17T13:52:19Z",
+      "updated_at": "2026-10-17T16:52:59Z",
       "decision": {
         "formation": "352",
         "captain": {
@@ -1295,12 +1295,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 220.26（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 204.92（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Raya",
-          "detail": "爆发视角 Captain Score 23.96（首发 11 人中最高；本轮 Lineup Score 9.58）"
+          "detail": "爆发视角 Captain Score 23.78（首发 11 人中最高；本轮 Lineup Score 9.51）"
         },
         {
           "topic": "transfer_status",
@@ -1316,11 +1316,11 @@
         }
       ],
       "metrics": {
-        "team_market_score": 619.39,
-        "captain_market_score": 47.92,
-        "formation_market_score": 518.0,
-        "team_lineup_score": 220.26,
-        "captain_score": 23.96
+        "team_market_score": 600.15,
+        "captain_market_score": 47.56,
+        "formation_market_score": 502.7,
+        "team_lineup_score": 204.92,
+        "captain_score": 23.78
       },
       "budget_before": 1.0,
       "budget_after": 1.0,
