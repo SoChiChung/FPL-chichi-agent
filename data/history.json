@@ -1093,7 +1093,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-10-13T18:01:57Z",
-      "updated_at": "2026-10-17T21:37:14Z",
+      "updated_at": "2026-10-17T23:49:27Z",
       "decision": {
         "formation": "352",
         "captain": {
@@ -1182,21 +1182,21 @@
               "name": "Wissa",
               "pos": "FWD",
               "price": 6.2,
-              "market_score": 18.74
+              "market_score": 18.63
             },
             "in": {
               "id": 552,
               "name": "Brobbey",
               "pos": "FWD",
               "price": 5.7,
-              "market_score": 19.04
+              "market_score": 19.01
             },
-            "market_gap": 0.3,
-            "reason": "同位置 Market Score 差距超过阈值（最优替代 +59.01）"
+            "market_gap": 0.38,
+            "reason": "同位置 Market Score 差距超过阈值（最优替代 +58.99）"
           }
         ],
         "transfer_package": {
-          "gain": 0.3,
+          "gain": 0.38,
           "out_count": 1,
           "total_out_price": 6.2,
           "total_in_price": 5.7,
@@ -1314,7 +1314,7 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 190.78（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 190.73（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
@@ -1328,12 +1328,12 @@
         {
           "topic": "transfer_out",
           "player": "Wissa",
-          "detail": "同位置 Market Score 差距超过阈值（最优替代 +59.01）"
+          "detail": "同位置 Market Score 差距超过阈值（最优替代 +58.99）"
         },
         {
           "topic": "transfer_in",
           "player": "Brobbey",
-          "detail": "同位置市场分最高可用者（19.04），满足预算与同队约束"
+          "detail": "同位置市场分最高可用者（19.01），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -1341,10 +1341,10 @@
         }
       ],
       "metrics": {
-        "team_market_score": 606.39,
+        "team_market_score": 606.08,
         "captain_market_score": 48.19,
-        "formation_market_score": 507.18,
-        "team_lineup_score": 190.78,
+        "formation_market_score": 506.95,
+        "team_lineup_score": 190.73,
         "captain_score": 24.09
       },
       "budget_before": 1.0,
