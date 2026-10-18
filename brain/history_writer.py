@@ -132,3 +132,50 @@ def backfill_missing_finished(history: dict, entry_history_current: list, events
         added += 1
     history["history"].sort(key=lambda h: h.get("gw", 0))
     return added
+
+
+def backfill_actual_transfers(history: dict, transfers: list, elements: list,
+                              entry_history_current: list = None) -> int:
+    """把 FPL 官方实际转会记录按 event 回填到历史条目。"""
+    by_id = {p.get("id"): p for p in (elements or [])}
+    by_event = {}
+    for transfer in transfers or []:
+        gw = transfer.get("event")
+        if gw is None:
+            continue
+        out = by_id.get(transfer.get("element_out"), {})
+        incoming = by_id.get(transfer.get("element_in"), {})
+        by_event.setdefault(gw, []).append({
+            "out": {"id": transfer.get("element_out"), "name": out.get("web_name", "?")},
+            "in": {"id": transfer.get("element_in"), "name": incoming.get("web_name", "?")},
+            "time": transfer.get("time"),
+            "cost": transfer.get("element_in_cost"),
+        })
+
+    current_rows = {r.get("event"): r for r in (entry_history_current or [])}
+    entries = {h.get("gw"): h for h in history.get("history", [])}
+    for gw in by_event:
+        if gw in entries:
+            continue
+        result = current_rows.get(gw, {})
+        entry = {
+            "gw": gw,
+            "points": result.get("points"),
+            "rank": result.get("rank"),
+            "overall_rank": result.get("overall_rank"),
+            "decision": None,
+            "notes": [{"topic": "transfer_backfill",
+                       "detail": "该轮此前没有历史决策，已从 FPL 官方转会记录补录实际操作"}],
+            "metrics": {},
+        }
+        history.setdefault("history", []).append(entry)
+        entries[gw] = entry
+
+    updated = 0
+    for gw, entry in entries.items():
+        actual = by_event.get(gw, [])
+        if entry.get("actual_transfers") != actual:
+            entry["actual_transfers"] = actual
+            updated += 1
+    history["history"].sort(key=lambda h: h.get("gw", 0))
+    return updated

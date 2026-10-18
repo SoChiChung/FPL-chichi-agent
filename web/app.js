@@ -544,8 +544,8 @@ function renderThisWeek(state, entry) {
       ? (entry.notes.find((n) => n.topic === "no_transfer") || {}).detail
       : null;
     html += noTransfer
-      ? `<p class="no-xfer">本轮未进行转会 —— ${esc(noTransfer)}</p>`
-      : '<p class="no-xfer">本轮未进行转会。</p>';
+      ? `<p class="no-xfer">AI 建议本轮不转会 —— ${esc(noTransfer)}</p>`
+      : '<p class="no-xfer">AI 本轮没有转会建议。</p>';
   }
   $("#this-week").innerHTML = html;
 }
@@ -877,8 +877,10 @@ function renderHistoryAccordion(state, rows) {
     const d = r.decision || {};
     const dt = decisionTimes(r);
     const transfers = Array.isArray(d.recommended_transfers) ? d.recommended_transfers : [];
-    const xferHtml = transfers.length
-      ? transfers
+    const actualTransfers = Array.isArray(r.actual_transfers) ? r.actual_transfers : null;
+    const shownTransfers = actualTransfers === null ? transfers : actualTransfers;
+    const xferHtml = shownTransfers.length
+      ? shownTransfers
           .map((t) => {
             const o = t.out || {};
             const i = t.in || {};
@@ -886,11 +888,11 @@ function renderHistoryAccordion(state, rows) {
                 <span class="x-out">${esc(o.name || "?")}</span>
                 <span class="x-arrow">→</span>
                 <span class="x-in">${esc(i.name || "?")}</span>
-                <span class="muted xfer-reason-inline">${esc(t.reason || "")}</span>
+                <span class="muted xfer-reason-inline">${actualTransfers === null ? esc(t.reason || "AI 建议") : "实际转会"}</span>
               </div>`;
           })
           .join("")
-      : '<p class="muted no-xfer">本轮未进行转会。</p>';
+      : `<p class="muted no-xfer">${actualTransfers === null ? "AI 本轮没有转会建议。" : "本轮实际没有转会。"}</p>`;
 
     // 预算复盘行（历史条目带 transfer_package 时展示；旧数据缺字段则跳过）
     const pkgH = (d.transfer_package) || {};

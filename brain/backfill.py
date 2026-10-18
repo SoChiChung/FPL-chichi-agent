@@ -5,6 +5,7 @@ from brain import api, config, data_store, history_writer
 def run():
     bootstrap = api.get_bootstrap()
     entry_history = api.get_entry_history(config.TEAM_ID)
+    actual_transfers = api.get_entry_transfers(config.TEAM_ID)
     history, replaced = history_writer.init_history_for_account(
         data_store.load_json(config.HISTORY_FILE, None), config.TEAM_ID, config.SEASON)
     if replaced:
@@ -14,9 +15,12 @@ def run():
         history, entry_history.get("current") or [], bootstrap.get("events") or [])
     added = history_writer.backfill_missing_finished(
         history, entry_history.get("current") or [], bootstrap.get("events") or [])
+    transfer_rows = history_writer.backfill_actual_transfers(
+        history, actual_transfers, bootstrap.get("elements") or [],
+        entry_history.get("current") or [])
     data_store.validate_history(history)
     data_store.save_json(config.HISTORY_FILE, history)
-    print(f"[backfill] 完成：补入结算字段 {updated} 项，新增已完赛轮次 {added} 轮")
+    print(f"[backfill] 完成：补入结算字段 {updated} 项，新增已完赛轮次 {added} 轮，更新实际转会轮次 {transfer_rows} 轮")
 
 
 if __name__ == "__main__":

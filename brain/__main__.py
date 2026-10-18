@@ -114,6 +114,7 @@ def main():
     fixtures = api.get_fixtures()
     entry = api.get_entry(config.TEAM_ID)
     entry_history = api.get_entry_history(config.TEAM_ID)
+    actual_transfers = api.get_entry_transfers(config.TEAM_ID)
 
     events = bootstrap["events"]
     gw = context.resolve_current_gw(events)
@@ -279,6 +280,9 @@ def main():
     added = history_writer.backfill_missing_finished(history,
                                                      entry_history.get("current") or [],
                                                      events)
+    history_writer.backfill_actual_transfers(
+        history, actual_transfers, bootstrap.get("elements") or [],
+        entry_history.get("current") or [])
     data_store.validate_history(history)
     data_store.save_json(config.STATE_FILE, state)
     data_store.save_json(config.HISTORY_FILE, history)

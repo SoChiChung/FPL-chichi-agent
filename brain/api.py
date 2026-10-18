@@ -88,6 +88,11 @@ def get_entry_history(team_id: int) -> dict:
     return _fetch(f"/entry/{team_id}/history/")
 
 
+def get_entry_transfers(team_id: int) -> list:
+    """账号实际完成的转会列表（含 event、转入/转出球员 ID 和价格）。"""
+    return _fetch(f"/entry/{team_id}/transfers/")
+
+
 def get_picks(team_id: int, gw: int) -> dict:
     """指定 GW 的首发 / 替补 / 队长 / 副队长。"""
     return _fetch(f"/entry/{team_id}/event/{gw}/picks/")
