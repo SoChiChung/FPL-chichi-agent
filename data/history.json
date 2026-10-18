@@ -1093,7 +1093,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-10-13T18:01:57Z",
-      "updated_at": "2026-10-18T03:30:27Z",
+      "updated_at": "2026-10-18T08:38:36Z",
       "decision": {
         "formation": "352",
         "captain": {
@@ -1182,21 +1182,21 @@
               "name": "Wissa",
               "pos": "FWD",
               "price": 6.2,
-              "market_score": 18.56
+              "market_score": 18.59
             },
             "in": {
               "id": 552,
               "name": "Brobbey",
               "pos": "FWD",
               "price": 5.7,
-              "market_score": 19.19
+              "market_score": 19.47
             },
-            "market_gap": 0.63,
-            "reason": "同位置 Market Score 差距超过阈值（最优替代 +59.30）"
+            "market_gap": 0.88,
+            "reason": "同位置 Market Score 差距超过阈值（最优替代 +59.55）"
           }
         ],
         "transfer_package": {
-          "gain": 0.63,
+          "gain": 0.88,
           "out_count": 1,
           "total_out_price": 6.2,
           "total_in_price": 5.7,
@@ -1314,12 +1314,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 191.11（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 191.73（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Raya",
-          "detail": "爆发视角 Captain Score 24.18（首发 11 人中最高；本轮 Lineup Score 9.67）"
+          "detail": "爆发视角 Captain Score 24.33（首发 11 人中最高；本轮 Lineup Score 9.73）"
         },
         {
           "topic": "transfer_status",
@@ -1328,12 +1328,12 @@
         {
           "topic": "transfer_out",
           "player": "Wissa",
-          "detail": "同位置 Market Score 差距超过阈值（最优替代 +59.30）"
+          "detail": "同位置 Market Score 差距超过阈值（最优替代 +59.55）"
         },
         {
           "topic": "transfer_in",
           "player": "Brobbey",
-          "detail": "同位置市场分最高可用者（19.19），满足预算与同队约束"
+          "detail": "同位置市场分最高可用者（19.47），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -1341,11 +1341,11 @@
         }
       ],
       "metrics": {
-        "team_market_score": 608.61,
-        "captain_market_score": 48.37,
-        "formation_market_score": 508.95,
-        "team_lineup_score": 191.11,
-        "captain_score": 24.18
+        "team_market_score": 612.51,
+        "captain_market_score": 48.66,
+        "formation_market_score": 511.98,
+        "team_lineup_score": 191.73,
+        "captain_score": 24.33
       },
       "budget_before": 1.0,
       "budget_after": 1.5,
