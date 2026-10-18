@@ -1124,7 +1124,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-10-13T18:01:57Z",
-      "updated_at": "2026-10-18T21:41:11Z",
+      "updated_at": "2026-10-18T23:57:15Z",
       "decision": {
         "formation": "541",
         "captain": {
@@ -1212,18 +1212,18 @@
               "id": 464,
               "name": "Wissa",
               "pos": "FWD",
-              "price": 6.2,
-              "market_score": 16.15
+              "price": 6.1,
+              "market_score": 16.02
             },
             "in": {
               "id": 249,
               "name": "Barry",
               "pos": "FWD",
               "price": 5.7,
-              "market_score": 18.21
+              "market_score": 18.15
             },
-            "market_gap": 2.06,
-            "reason": "同位置 Market Score 差距超过阈值（最优替代 +61.60）"
+            "market_gap": 2.13,
+            "reason": "同位置 Market Score 差距超过阈值（最优替代 +61.68）"
           }
         ],
         "chip_plan": {
@@ -1246,8 +1246,8 @@
           "chip_already_used_this_gw": false,
           "current_recommendation": {
             "chip": "bench_boost",
-            "score": 162.39,
-            "reason": "替补四人合计预期评分 162.4，达到开卡阈值 145.0",
+            "score": 162.35,
+            "reason": "替补四人合计预期评分 162.3，达到开卡阈值 145.0",
             "name": "Bench Boost"
           },
           "planning_horizon": 2,
@@ -1293,7 +1293,7 @@
               {
                 "gw": 9,
                 "players": 10,
-                "strength": 485.64,
+                "strength": 485.68,
                 "reasons": {
                   "blank": 0,
                   "difficult": 10
@@ -1302,26 +1302,26 @@
             ]
           },
           "signals": {
-            "bench_score": 162.39,
-            "captain_score": 51.54,
+            "bench_score": 162.35,
+            "captain_score": 51.55,
             "captain_fixture_count": 1,
             "captain_fixture_difficulty": 4.0
           }
         },
         "recommended_chip": {
           "chip": "bench_boost",
-          "score": 162.39,
-          "reason": "替补四人合计预期评分 162.4，达到开卡阈值 145.0",
+          "score": 162.35,
+          "reason": "替补四人合计预期评分 162.3，达到开卡阈值 145.0",
           "name": "Bench Boost"
         },
         "transfer_package": {
-          "gain": 2.06,
+          "gain": 2.13,
           "out_count": 1,
-          "total_out_price": 6.2,
+          "total_out_price": 6.1,
           "total_in_price": 5.7,
           "budget_before": 1.0,
-          "transfer_cost": -0.5,
-          "budget_after": 1.5,
+          "transfer_cost": -0.4,
+          "budget_after": 1.4,
           "feasible": true,
           "score_base": "market_score"
         },
@@ -1470,17 +1470,17 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 541，Total Lineup Score 543.7（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 541，Total Lineup Score 543.76（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Groß",
-          "detail": "爆发视角 Captain Score 51.54（首发 11 人中最高；本轮 Lineup Score 57.26）"
+          "detail": "爆发视角 Captain Score 51.55（首发 11 人中最高；本轮 Lineup Score 57.28）"
         },
         {
           "topic": "chip",
           "chip": "bench_boost",
-          "detail": "建议本轮使用 Bench Boost：替补四人合计预期评分 162.4，达到开卡阈值 145.0"
+          "detail": "建议本轮使用 Bench Boost：替补四人合计预期评分 162.3，达到开卡阈值 145.0"
         },
         {
           "topic": "transfer_status",
@@ -1489,12 +1489,12 @@
         {
           "topic": "transfer_out",
           "player": "Wissa",
-          "detail": "同位置 Market Score 差距超过阈值（最优替代 +61.60）"
+          "detail": "同位置 Market Score 差距超过阈值（最优替代 +61.68）"
         },
         {
           "topic": "transfer_in",
           "player": "Barry",
-          "detail": "同位置市场分最高可用者（18.21），满足预算与同队约束"
+          "detail": "同位置市场分最高可用者（18.15），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -1502,15 +1502,15 @@
         }
       ],
       "metrics": {
-        "team_market_score": 612.41,
-        "captain_market_score": 55.76,
-        "formation_market_score": 503.38,
-        "team_lineup_score": 543.7,
-        "captain_score": 51.54
+        "team_market_score": 612.52,
+        "captain_market_score": 55.84,
+        "formation_market_score": 503.7,
+        "team_lineup_score": 543.76,
+        "captain_score": 51.55
       },
       "budget_before": 1.0,
-      "budget_after": 1.5,
-      "transfer_cost": -0.5,
+      "budget_after": 1.4,
+      "transfer_cost": -0.4,
       "actual_transfers": [
         {
           "out": {
