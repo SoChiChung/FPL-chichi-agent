@@ -25,6 +25,7 @@ def build_player_map(bootstrap: dict) -> dict:
             "name": p["web_name"],
             "pos": pos_short.get(p["element_type"], "?"),
             "team": team_short.get(p["team"], "?"),
+            "team_id": p.get("team"),
             "price": round(p["now_cost"] / 10, 1),
             "selected_by": selected_by,
             "selected_by_percent": selected_by,
@@ -34,8 +35,55 @@ def build_player_map(bootstrap: dict) -> dict:
             "chance_of_playing_next_round": p.get("chance_of_playing_next_round"),
             "transfers_in_event": p.get("transfers_in_event", 0),
             "transfers_out_event": p.get("transfers_out_event", 0),
+            "points_per_game": to_float(p.get("points_per_game")),
         }
     return players
+
+
+def official_fixture_fallback(fixtures: list, teams: list, gw: int) -> dict:
+    """Build team-level FDR inputs and readable opponent labels from official fixtures."""
+    team_by_id = {t["id"]: t for t in teams or []}
+    grouped = {}
+    for fixture in fixtures or []:
+        if fixture.get("event") != gw:
+            continue
+        home_id, away_id = fixture.get("team_h"), fixture.get("team_a")
+        home, away = team_by_id.get(home_id), team_by_id.get(away_id)
+        if not home or not away:
+            continue
+        grouped.setdefault(home_id, []).append({
+            "opponent": away.get("short_name"), "venue": "H",
+            "difficulty": fixture.get("team_h_difficulty"),
+        })
+        grouped.setdefault(away_id, []).append({
+            "opponent": home.get("short_name"), "venue": "A",
+            "difficulty": fixture.get("team_a_difficulty"),
+        })
+    ratings = {}
+    for team_id, rows in grouped.items():
+        values = [to_float(r["difficulty"]) for r in rows if r.get("difficulty") is not None]
+        ratings[team_by_id[team_id]["short_name"]] = {
+            "fixture": sum(values) / len(values) if values else None,
+        }
+    return {"teams": ratings, "by_team_id": grouped}
+
+
+def project_five_gw_points(players: dict, fixtures: list, teams: list, start_gw: int) -> None:
+    """Attach a transparent five-GW points estimate using PPG and official fixtures/FDR."""
+    horizon = {}
+    for fixture in fixtures or []:
+        event = fixture.get("event")
+        if event is None or not start_gw <= event < start_gw + 5:
+            continue
+        horizon.setdefault(fixture.get("team_h"), []).append(fixture.get("team_h_difficulty"))
+        horizon.setdefault(fixture.get("team_a"), []).append(fixture.get("team_a_difficulty"))
+    for info in players.values():
+        team_id = info.get("team_id")
+        difficulties = horizon.get(team_id, [])
+        ppg = to_float(info.get("points_per_game"))
+        info["five_gw_points"] = round(sum(
+            ppg * (1 + (3 - to_float(difficulty, 3)) * 0.08)
+            for difficulty in difficulties), 2)
 
 
 def resolve_current_gw(events: list) -> int:

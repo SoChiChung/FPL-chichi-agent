@@ -76,14 +76,17 @@ def resolve_transfer_status(entry_history: dict, current_gw: int, max_free_trans
 
 
 def _summary(player: dict) -> dict:
-    """建议条目的 out/in 摘要：id/name/pos/price/market_score。"""
-    return {
+    """建议条目的 out/in 摘要：id/name/pos/price/market_score/5GW points。"""
+    summary = {
         "id": player.get("id"),
         "name": player.get("name", "?"),
         "pos": player.get("pos", "?"),
         "price": round(to_float(player.get("price")), 1),
         "market_score": round(to_float(player.get("market_score")), 2),
     }
+    if player.get("five_gw_points") is not None:
+        summary["five_gw_points"] = round(to_float(player.get("five_gw_points")), 2)
+    return summary
 
 
 def _money(x) -> float:
@@ -104,7 +107,7 @@ def _sell_reason(player: dict, injury_threshold: float):
 
 
 def _best_package(outs: list, limit: int, bank: float, max_per_team: int,
-                  squad_team_count: Counter, with_budget: bool):
+                  squad_team_count: Counter, with_budget: bool, free_limit=None):
     """DFS 搜索字典序最优转会包。
 
     目标 key = (covered_forced, gain, in_sum)（covered_forced 优先，
@@ -149,7 +152,10 @@ def _best_package(outs: list, limit: int, bank: float, max_per_team: int,
             return None
         covered = sum(1 for p in chosen if p["forced"])
         gain = round(sum(p["gain"] for p in chosen), 2)
+        hits = max(0, len(chosen) - (free_limit if free_limit is not None else limit))
+        net_gain = round(gain - hits * 4, 2)
         return {"chosen": list(chosen), "covered": covered, "gain": gain,
+                "hits": hits, "net_gain": net_gain,
                 "in_sum": in_sum, "out_sum": out_sum}
 
     def dfs(i, chosen, taken_in, covered, gain):
@@ -157,7 +163,7 @@ def _best_package(outs: list, limit: int, bank: float, max_per_team: int,
         if i >= n or len(chosen) >= limit:
             leaf = _validate(chosen)
             if leaf is not None:
-                key = (leaf["covered"], leaf["gain"], leaf["in_sum"])
+                key = (leaf["covered"], leaf["net_gain"], leaf["gain"], leaf["in_sum"])
                 if best is None or key > best[0]:
                     best = (key, leaf)
             return
@@ -200,14 +206,17 @@ def evaluate_transfers(squad, players_map, market_scores, cfg, bank, transfer_st
     notes = []
     unlimited = transfer_status.get("status") == "unlimited"
     free = transfer_status.get("free_transfers")
-    if not unlimited and (free is None or free <= 0):
+    if not unlimited and (free is None or free <= 0) and not cfg.get("allow_hits", False):
         notes.append({"topic": "no_transfer", "detail": "免费转会数为 0，本轮不进行转会"})
         return suggestions, notes
     if unlimited:
         # 新账号不限次数，但包搜索仍需一个合理上界（防御），不与免费数冲突
         limit = max(1, min(int(cfg.get("max_free_transfers", 5)), len(squad)))
+        free_limit = limit
     else:
-        limit = max(1, int(free))
+        free_limit = max(0, int(free or 0))
+        limit = free_limit + (int(cfg.get("max_hit_transfers", 2)) if cfg.get("allow_hits") else 0)
+        limit = max(1, limit)
 
     threshold = to_float(cfg.get("market_gap_threshold"), 15.0)
     injury_threshold = to_float(cfg.get("injury_threshold"), 75.0)
@@ -239,7 +248,11 @@ def evaluate_transfers(squad, players_map, market_scores, cfg, bank, transfer_st
         reason, forced = _sell_reason(p, injury_threshold)
         cands = []
         for pid, info, in_ms in pools.get(pos, []):
-            gain = round(in_ms - p_ms, 2)
+            # Five-GW value proxy: per-game points rate over the requested horizon.
+            # When unavailable, retain the existing market-score uplift as a fallback.
+            out_projection = to_float(p.get("five_gw_points"))
+            in_projection = to_float(info.get("five_gw_points"))
+            gain = round(in_projection - out_projection, 2) if (out_projection or in_projection) else round(in_ms - p_ms, 2)
             if gain <= 0:            # 只保留能提升 squad 分的换入
                 continue
             cands.append((in_ms, pid, info, gain))
@@ -248,13 +261,17 @@ def evaluate_transfers(squad, players_map, market_scores, cfg, bank, transfer_st
                 notes.append({"topic": "no_transfer", "player": p.get("name", "?"),
                               "detail": f"{reason}，但未找到市场分更高的同位置替代者，暂不换出"})
             continue
-        cands.sort(key=lambda c: (-c[0], c[1]))
+        cands.sort(key=lambda c: (-c[3], c[1]))
         cands = cands[:IN_CANDIDATES_CAP]
         best_gain = cands[0][3]
         if not reason:
-            if best_gain <= threshold + EPS:
+            has_projection = bool(p.get("five_gw_points") or any(
+                c[2].get("five_gw_points") for c in cands))
+            if (not has_projection and best_gain <= threshold + EPS
+                    and not (cfg.get("allow_hits") and free_limit == 0)):
                 continue                    # 最优替代分差未达阈值 → 不触发
-            reason = f"同位置 Market Score 差距超过阈值（最优替代 +{best_gain:.2f}）"
+            reason = (f"未来 5 轮预计增加 {best_gain:.2f} 分" if has_projection else
+                      f"同位置 Market Score 差距超过阈值（最优替代 +{best_gain:.2f}）")
         outs.append({"player": p, "reason": reason, "forced": bool(forced),
                      "best_gain": best_gain, "cands": cands})
 
@@ -269,7 +286,7 @@ def evaluate_transfers(squad, players_map, market_scores, cfg, bank, transfer_st
 
     # ---- 2) 包搜索（含包级预算校验）----
     best = _best_package(outs, limit, bank, max_per_team, squad_team_count,
-                         with_budget=True)
+                         with_budget=True, free_limit=free if not unlimited else limit)
     if best is None or not best["chosen"]:
         # 无预算可行的整包 → 生成“差多少钱”的可调试说明，绝不输出买不起的方案
         best_any = _best_package(outs, limit, bank, max_per_team, squad_team_count,
@@ -302,6 +319,7 @@ def evaluate_transfers(squad, players_map, market_scores, cfg, bank, transfer_st
             "out": _summary(out_entry),
             "in": _summary(in_entry),
             "market_gap": round(pair["gain"], 2),
+            "hit_cost": 4 if best["hits"] and len(suggestions) >= int(free or 0) else 0,
             "reason": reason,
         })
         notes.append({"topic": "transfer_out",
@@ -310,8 +328,11 @@ def evaluate_transfers(squad, players_map, market_scores, cfg, bank, transfer_st
         notes.append({
             "topic": "transfer_in",
             "player": info.get("name", "?"),
-            "detail": f"同位置市场分最高可用者（{in_score:.2f}），满足预算与同队约束",
+            "detail": f"未来 5 轮预估收益更高（Market Score {in_score:.2f}），满足预算与同队约束",
         })
+    if best.get("hits"):
+        notes.append({"topic": "transfer_hit", "detail":
+                      f"未来 5 轮预计净增 {best['net_gain']:.2f} 分，扣除 {best['hits']} 笔 hit（{best['hits'] * 4} 分）后仍值得转会"})
     return suggestions, notes
 
 
@@ -328,9 +349,18 @@ def summarize_package(bank, suggestions: list) -> dict:
     out_sum = round(sum(_money(s["out"].get("price")) for s in suggestions), 1)
     in_sum = round(sum(_money(s["in"].get("price")) for s in suggestions), 1)
     gain = round(sum(to_float(s.get("market_gap")) for s in suggestions), 2)
+    five_gw_before = round(sum(to_float(s.get("out", {}).get("five_gw_points"))
+                               for s in suggestions), 2)
+    five_gw_after = round(sum(to_float(s.get("in", {}).get("five_gw_points"))
+                              for s in suggestions), 2)
+    hit_cost = sum(to_float(s.get("hit_cost")) for s in suggestions)
     cost = round(in_sum - out_sum, 1)
     return {
         "gain": gain,
+        "five_gw_before": five_gw_before,
+        "five_gw_after": five_gw_after,
+        "five_gw_net_gain": round(five_gw_after - five_gw_before - hit_cost, 2),
+        "hit_cost": hit_cost,
         "out_count": len(suggestions),
         "total_out_price": out_sum,
         "total_in_price": in_sum,

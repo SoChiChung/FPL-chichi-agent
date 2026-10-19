@@ -243,18 +243,26 @@ class TestTransfer(unittest.TestCase):
 
     def test_free_transfer_limit(self):
         squad, players, scores = self._scenario()
+        cfg = strategy_config.load()
         suggestions, _ = transfer.evaluate_transfers(
-            squad, players, scores, strategy_config.load(), 3.0,
+            squad, players, scores, cfg, 3.0,
             {"status": "limited", "free_transfers": 1})
-        self.assertLessEqual(len(suggestions), 1)
+        # 免费 1 笔 + allow_hits 允许的 max_hit_transfers 笔扣分转会
+        self.assertLessEqual(len(suggestions), 1 + int(cfg["max_hit_transfers"]))
+        # 超出免费额度的部分逐笔计 -4 分
+        for idx, s in enumerate(suggestions):
+            self.assertEqual(s["hit_cost"], 0 if idx == 0 else 4)
 
     def test_no_free_transfers(self):
         squad, players, scores = self._scenario()
+        cfg = strategy_config.load()
         suggestions, notes = transfer.evaluate_transfers(
-            squad, players, scores, strategy_config.load(), 3.0,
+            squad, players, scores, cfg, 3.0,
             {"status": "limited", "free_transfers": 0})
-        self.assertEqual(suggestions, [])
-        self.assertTrue(any(n["topic"] == "no_transfer" for n in notes))
+        # 免费额度为 0 且 allow_hits=True：最多做 max_hit_transfers 笔扣分转会
+        self.assertLessEqual(len(suggestions), int(cfg["max_hit_transfers"]))
+        self.assertTrue(all(s["hit_cost"] == 4 for s in suggestions))
+        self.assertTrue(any(n["topic"] == "transfer_hit" for n in notes))
 
     def test_replacement_unique_and_team_limit(self):
         # 换入全局互斥：同一球员只进一次；同队禁令（不换出该队球员时不得换入）
@@ -294,7 +302,8 @@ class TestTransfer(unittest.TestCase):
         self.assertEqual(len(sug_u), 4)   # 不被 max_free_transfers=5 截断（unlimited 全出）
         limited = {"status": "limited", "free_transfers": 2}
         sug_l, _ = transfer.evaluate_transfers(squad, players, scores, cfg, 0.0, limited)
-        self.assertEqual(len(sug_l), 2)   # limited 截断为 2
+        # 免费 2 笔 + max_hit_transfers 笔扣分转会
+        self.assertEqual(len(sug_l), 2 + int(cfg["max_hit_transfers"]))
 
     def test_history_provider_fallback(self):
         entry_history = {"current": [

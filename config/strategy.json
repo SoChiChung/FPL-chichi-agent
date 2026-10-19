@@ -1,7 +1,8 @@
 {
   "strategy": "market_consensus",
 
-  "allow_hits": false,
+  "allow_hits": true,
+  "max_hit_transfers": 2,
   "injury_threshold": 75,
   "market_gap_threshold": 15,
   "max_free_transfers": 5,

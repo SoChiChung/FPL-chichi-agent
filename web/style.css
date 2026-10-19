@@ -540,6 +540,7 @@ b, strong { font-weight: 700; }
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 .player-sub { color: var(--muted); font-size: 0.76rem; margin: 2px 0 8px; }
+.player-fixtures { color: var(--muted); font-size: 0.72rem; margin: -5px 0 8px; }
 .player-bars { display: flex; flex-direction: column; gap: 6px; }
 
 /* C / V 徽章（木牌 / 天蓝徽章）+ 新入 / 拟转出 */

@@ -36,6 +36,7 @@ jobs:
         run: |
           git config user.name "FPL AI Bot"
           git config user.email "fpl-ai-bot@users.noreply.github.com"
+          # 只提交 data/：web/data/ 已被 .gitignore 忽略，git add 会返回非零码中断 run
           git add data/
           if git diff --cached --quiet; then
             echo "无数据变化，跳过提交"
@@ -65,6 +66,7 @@ jobs:
         run: |
           git config user.name "FPL AI Bot"
           git config user.email "fpl-ai-bot@users.noreply.github.com"
+          # 与上同：web/data/ 被忽略，只提交 data/history.json
           git add data/history.json
           if git diff --cached --quiet; then
             echo "无历史回填变化，跳过提交"

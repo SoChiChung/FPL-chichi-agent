@@ -181,9 +181,9 @@ function riskLevel(s) {
 /* notes 折叠区 topic：不进正文，收进「更多细节」（design.md §5.1.4） */
 const NOTE_FOLD = new Set(["external_source", "score_source", "data_missing", "warning"]);
 /* 单条 notes 优先级（转会类单独配对处理，恒排最前） */
-const NOTE_ORDER = { chip: 1, captain: 2, no_transfer: 3, lineup: 4, transfer_status: 5, squad_source: 6 };
+const NOTE_ORDER = { chip: 1, captain: 2, transfer_hit: 3, no_transfer: 4, lineup: 5, transfer_status: 6, squad_source: 7 };
 const TOPIC_TAG = {
-  transfer_out: "转会", transfer_in: "转会", captain: "队长", no_transfer: "转会判断",
+  transfer_out: "转会", transfer_in: "转会", transfer_hit: "扣分转会", captain: "队长", no_transfer: "转会判断",
   chip: "开卡策略", lineup: "阵容", transfer_status: "转会额度", squad_source: "阵容来源",
   external_source: "数据更新", score_source: "数据源", data_missing: "数据缺失", warning: "告警",
 };
@@ -524,15 +524,15 @@ function renderThisWeek(state, entry) {
               <span class="x-out">${esc(o.name || "?")}</span>
               <span class="x-arrow">→</span>
               <span class="x-in">${esc(i.name || "?")}</span>
-              <span class="muted x-meta">${esc(o.pos || "-")} £${o.price ?? "-"}m → ${esc(i.pos || "-")} £${i.price ?? "-"}m</span>
+              <span class="muted x-meta">${esc(o.pos || "-")} £${o.price ?? "-"}m → ${esc(i.pos || "-")} £${i.price ?? "-"}m${o.five_gw_points != null && i.five_gw_points != null ? ` · 5轮 ${fmtNum(o.five_gw_points)}→${fmtNum(i.five_gw_points)}分` : ""}</span>
             </div>
-            <div class="xfer-reason muted">${esc(t.reason || "")}</div>
+            <div class="xfer-reason muted">${t.hit_cost ? `扣 ${t.hit_cost} 分 · ` : ""}${esc(t.reason || "")}</div>
           </div>`;
         })
         .join("") + `</div>`;
     const pkg = d.transfer_package || {};
     if (pkg.budget_before != null) {
-      html += `<p class="muted xfer-summary">预算校验：净花费 ${fmtMoney(pkg.transfer_cost)}（卖出回血 ${fmtMoney(pkg.total_out_price)}，买入 ${fmtMoney(pkg.total_in_price)}），转会后 Bank ${fmtBank(pkg.budget_after)}${pkg.gain != null ? `；包总增益 +${fmtNum(pkg.gain)}` : ""}</p>`;
+      html += `<p class="muted xfer-summary">预算校验：净花费 ${fmtMoney(pkg.transfer_cost)}（卖出回血 ${fmtMoney(pkg.total_out_price)}，买入 ${fmtMoney(pkg.total_in_price)}），转会后 Bank ${fmtBank(pkg.budget_after)}${pkg.five_gw_before != null ? `；换出球员未来5轮 ${fmtNum(pkg.five_gw_before)} 分 → 换入 ${fmtNum(pkg.five_gw_after)} 分，扣分后净增 ${fmtNum(pkg.five_gw_net_gain)} 分` : ""}</p>`;
     }
     // CTA：跳到 ③ 阵容区并切「转会后」视图（design-ia-ux.md §4.2）
     html += `<div class="tw-cta-row">
@@ -592,6 +592,9 @@ function playerCard(p, capId, viceId, benchNo, flags) {
   }
   const bd = p.score_breakdown || {};
   const no = benchNo != null ? `<span class="bench-no">${benchNo}</span>` : "";
+  const fixtureText = Array.isArray(p.fixtures) && p.fixtures.length
+    ? p.fixtures.map((f) => `${f.opponent || "?"} (${f.venue || "?"})`).join(" · ")
+    : "本轮暂无赛程";
   const bars =
     metricBar("Form", bd.form, "近期状态 Form%") +
     metricBar("Goal Pot.", bd.projection, "进球预测 Goal Potential%") +
@@ -602,6 +605,7 @@ function playerCard(p, capId, viceId, benchNo, flags) {
         <span class="player-name">${no}${esc(p.name)}</span><span class="badge-group">${badges.join("")}</span>
       </div>
       <div class="player-sub">${esc(p.pos || "·")} · ${esc(p.team || "—")} · £${p.price ?? "?"}m</div>
+      <div class="player-fixtures">本轮：${esc(fixtureText)}</div>
       <div class="player-bars">${bars}</div>
     </div>`;
 }
@@ -888,7 +892,7 @@ function renderHistoryAccordion(state, rows) {
                 <span class="x-out">${esc(o.name || "?")}</span>
                 <span class="x-arrow">→</span>
                 <span class="x-in">${esc(i.name || "?")}</span>
-                <span class="muted xfer-reason-inline">${actualTransfers === null ? esc(t.reason || "AI 建议") : "实际转会"}</span>
+              <span class="muted xfer-reason-inline">${actualTransfers === null ? esc(t.hit_cost ? `扣 ${t.hit_cost} 分 · ${t.reason || "AI 建议"}` : (t.reason || "AI 建议")) : "实际转会"}</span>
               </div>`;
           })
           .join("")
@@ -898,7 +902,7 @@ function renderHistoryAccordion(state, rows) {
     const pkgH = (d.transfer_package) || {};
     let budgetHtml = "";
     if (transfers.length && pkgH.budget_before != null) {
-      budgetHtml = `<p class="muted xfer-summary">预算：Bank ${fmtBank(pkgH.budget_before)} → 转会后 ${fmtBank(pkgH.budget_after)}（净花费 ${fmtMoney(pkgH.transfer_cost)}）</p>`;
+      budgetHtml = `<p class="muted xfer-summary">预算：Bank ${fmtBank(pkgH.budget_before)} → 转会后 ${fmtBank(pkgH.budget_after)}（净花费 ${fmtMoney(pkgH.transfer_cost)}）${pkgH.five_gw_before != null ? `；换出球员未来5轮 ${fmtNum(pkgH.five_gw_before)} 分 → 换入 ${fmtNum(pkgH.five_gw_after)} 分，扣分后净增 ${fmtNum(pkgH.five_gw_net_gain)} 分` : ""}</p>`;
     } else if (r.budget_before != null) {
       budgetHtml = `<p class="muted xfer-summary">预算：Bank ${fmtBank(r.budget_before)}${r.transfer_cost != null ? `，净花费 ${fmtMoney(r.transfer_cost)} → 转会后 ${fmtBank(r.budget_after)}` : ""}</p>`;
     }

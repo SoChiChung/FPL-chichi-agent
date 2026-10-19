@@ -133,6 +133,7 @@ def main():
     weights = strategy_config.get_weights(cfg, gw)
 
     players_map = context.build_player_map(bootstrap)
+    context.project_five_gw_points(players_map, fixtures, bootstrap.get("teams") or [], target_gw)
     market_scores = market.compute_market_scores(players_map, weights)
 
     # ---- 基础阵容：当前/最近可用 picks；完全找不到则 establish ----
@@ -168,11 +169,33 @@ def main():
                                 f"其 Streak 按 0 处理"})
 
     team_abbr_by_id = {t["id"]: t["short_name"] for t in bootstrap["teams"]}
+    team_id_by_abbr = {t["short_name"]: t["id"] for t in bootstrap["teams"]}
     team_data = fpl_joe.read_target_gw(target_gw, team_abbr_by_id)
+    official_fixtures = context.official_fixture_fallback(
+        fixtures, bootstrap.get("teams") or [], target_gw)
+    # FPL Joe currently can return fresh metadata with an empty fixture payload.
+    # Use the official FDR in that case so Fixture does not collapse to 0 for everyone.
+    used_official_fdr = False
+    for abbr, values in official_fixtures["teams"].items():
+        existing = team_data.setdefault("teams", {}).setdefault(abbr, {})
+        if values.get("fixture") is not None and existing.get("fixture") is None:
+            existing["fixture"] = values["fixture"]
+            used_official_fdr = True
+    if used_official_fdr:
+        team_data.setdefault("neutral", {})["fixture"] = False
+        team_data.setdefault("sources", {})["fixture"] = "official_fpl_fdr_fallback"
+        team_data.setdefault("notes", []).append({
+            "topic": "score_source",
+            "detail": f"FPL Joe GW{target_gw} Fixture 无比赛数据，已回退官方 FDR",
+        })
 
     # ---- Phase 2 决策：本轮评分 → 全局最优首发 → 爆发队长 ----
     squad, score_notes = lineup_score.score_squad(
         squad, team_data, form_by_id, recent_points, engine_cfg)
+    for p in squad:
+        p["five_gw_points"] = players_map.get(p.get("id"), {}).get("five_gw_points", 0.0)
+        p["fixtures"] = official_fixtures["by_team_id"].get(
+            team_id_by_abbr.get(p.get("team")), [])
     formation, starting_xi, bench = lineup_score.select_starting_xi(squad, engine_cfg)
     captain = captain_score.Phase2CaptainSelector(engine_cfg)
     cap, vice = captain.select(starting_xi)

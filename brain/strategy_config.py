@@ -12,7 +12,8 @@ from brain import config
 
 DEFAULT_STRATEGY = {
     "strategy": "market_consensus",
-    "allow_hits": False,
+    "allow_hits": True,
+    "max_hit_transfers": 2,
     "injury_threshold": 75,
     "market_gap_threshold": 15,
     "max_free_transfers": 5,
@@ -156,6 +157,7 @@ def snapshot(cfg: dict, weights: dict, lineup_cfg: dict = None) -> dict:
         "market_gap_threshold": cfg.get("market_gap_threshold"),
         "max_free_transfers": cfg.get("max_free_transfers"),
         "allow_hits": cfg.get("allow_hits"),
+        "max_hit_transfers": cfg.get("max_hit_transfers"),
         "chip_strategy": cfg.get("chip_strategy"),
     }
     if lineup_cfg:

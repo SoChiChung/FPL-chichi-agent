@@ -39,11 +39,13 @@ def captain_scores(starting_xi: list, cfg: dict):
 
 
 def choose_captain(starting_xi: list):
-    """返回 (captain, vice)：首发中 Captain Score 最高/次高，并列 element_id 小者。"""
+    """队长最高分；副队长优先选不同球队的最高分球员，降低延期赛风险。"""
     ordered = sorted(
         starting_xi, key=lambda p: (-to_float(p.get("captain_score")), p.get("id", 0)))
     captain = ordered[0] if ordered else None
-    vice = ordered[1] if len(ordered) > 1 else None
+    vice = next((p for p in ordered[1:] if p.get("team") != (captain or {}).get("team")), None)
+    if vice is None and len(ordered) > 1:
+        vice = ordered[1]
     return captain, vice
 
 
