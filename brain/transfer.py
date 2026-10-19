@@ -154,7 +154,8 @@ def _sell_reason(player: dict, injury_threshold: float):
 
 def _best_package(outs: list, limit: int, bank: float, max_per_team: int,
                   squad_team_count: Counter, with_budget: bool, free_limit=None,
-                  base_squad=None, base_projection=None, gain_multiplier=1.0):
+                  base_squad=None, base_projection=None, gain_multiplier=1.0,
+                  minimum_hit_return_multiple=2.0):
     """DFS 搜索预计首发积分净收益最高的转会包。
 
     整队首发投影可用时按整队未来积分变化排序；否则用候选球员积分变化。
@@ -176,6 +177,7 @@ def _best_package(outs: list, limit: int, bank: float, max_per_team: int,
         suffix_forced[i] = suffix_forced[i + 1] + (1 if outs[i]["forced"] else 0)
 
     best = None  # (key, leaf)
+    hit_threshold_blocked = False
 
     def _validate(chosen):
         """预算 + 同队 ≤ 3 校验（预算只在 with_budget 时强制）。
@@ -206,14 +208,18 @@ def _best_package(outs: list, limit: int, bank: float, max_per_team: int,
         if before and after:
             gain = round(after["points"] - before["points"], 2)
         hits = max(0, len(chosen) - (free_limit if free_limit is not None else limit))
-        net_gain = round(gain * gain_multiplier - hits * 4, 2)
+        calibrated_gain = gain * gain_multiplier
+        if hits and calibrated_gain + EPS < 4 * minimum_hit_return_multiple * hits:
+            hit_threshold_blocked = True
+            return None
+        net_gain = round(calibrated_gain - hits * 4, 2)
         return {"chosen": list(chosen), "covered": covered, "gain": gain,
                 "hits": hits, "net_gain": net_gain,
                 "in_sum": in_sum, "out_sum": out_sum,
                 "projection_before": before, "projection_after": after}
 
     def dfs(i, chosen, taken_in, covered, gain):
-        nonlocal best
+        nonlocal best, hit_threshold_blocked
         if i >= n or len(chosen) >= limit:
             leaf = _validate(chosen)
             if leaf is not None:
@@ -247,6 +253,8 @@ def _best_package(outs: list, limit: int, bank: float, max_per_team: int,
         dfs(i + 1, chosen, taken_in, covered, gain)
 
     dfs(0, [], set(), 0, 0.0)
+    if (best is None or not best[1]["chosen"]) and hit_threshold_blocked:
+        return {"chosen": [], "threshold_blocked": True}
     return best[1] if best else None
 
 
@@ -279,6 +287,7 @@ def evaluate_transfers(squad, players_map, market_scores, cfg, bank, transfer_st
     threshold = to_float(cfg.get("market_gap_threshold"), 15.0)
     injury_threshold = to_float(cfg.get("injury_threshold"), 75.0)
     max_per_team = max(1, int(cfg.get("max_players_per_team", 3)))
+    min_hit_return_multiple = max(1.0, to_float(cfg.get("minimum_hit_return_multiple"), 2.0))
     bank = _money(bank)
 
     squad_ids = {p["id"] for p in squad}
@@ -356,7 +365,13 @@ def evaluate_transfers(squad, players_map, market_scores, cfg, bank, transfer_st
                          with_budget=True, free_limit=free if not unlimited else limit,
                          base_squad=squad if base_projection else None,
                          base_projection=base_projection,
-                         gain_multiplier=gain_multiplier)
+                         gain_multiplier=gain_multiplier,
+                         minimum_hit_return_multiple=min_hit_return_multiple)
+    if best and best.get("threshold_blocked"):
+        notes.append({"topic": "no_transfer", "detail":
+                      f"扣分转会门槛未达到：每笔 hit 扣 4 分，未来 5 轮预计至少增加 "
+                      f"{4 * min_hit_return_multiple:.0f} 分才会采用"})
+        return suggestions, notes
     if best is None or not best["chosen"]:
         # 无预算可行的整包 → 生成“差多少钱”的可调试说明，绝不输出买不起的方案
         best_any = _best_package(outs, limit, bank, max_per_team, squad_team_count,
@@ -385,7 +400,8 @@ def evaluate_transfers(squad, players_map, market_scores, cfg, bank, transfer_st
                                 "predicted_gain": best["gain"],
                                 "gain_multiplier": gain_multiplier,
                                 "calibrated_gain": round(best["gain"] * gain_multiplier, 2),
-                                "hit_cost": best["hits"] * 4})
+                                "hit_cost": best["hits"] * 4,
+                                "minimum_hit_return_multiple": min_hit_return_multiple})
     # ---- 3) 输出最优包 ----
     reason_by_out = {o["player"].get("id"): o["reason"] for o in outs}
     for pair in best["chosen"]:
@@ -440,15 +456,23 @@ def summarize_package(bank, suggestions: list, evaluation_meta=None) -> dict:
     cost = round(in_sum - out_sum, 1)
     before = meta.get("projection_before") or {}
     after = meta.get("projection_after") or {}
+    projected_rounds = before.get("rounds") or after.get("rounds") or []
+    round_count = len(projected_rounds)
+    average_before = before.get("points", five_gw_before) / round_count if round_count else None
+    average_after = after.get("points", five_gw_after) / round_count if round_count else None
     return {
         "gain": gain,
         "five_gw_before": before.get("points", five_gw_before),
         "five_gw_after": after.get("points", five_gw_after),
         "five_gw_net_gain": round(to_float(meta.get("calibrated_gain", five_gw_after - five_gw_before)) - hit_cost, 2),
+        "per_gw_average_before": round(average_before, 2) if average_before is not None else None,
+        "per_gw_average_after": round(average_after, 2) if average_after is not None else None,
+        "per_gw_average_net_gain": round(to_float(meta.get("calibrated_gain", five_gw_after - five_gw_before)) / round_count, 2) if round_count else None,
         "hit_cost": hit_cost,
         "projection_before": before,
         "projection_after": after,
         "gain_multiplier": meta.get("gain_multiplier", 1.0),
+        "minimum_hit_return_multiple": meta.get("minimum_hit_return_multiple", 2.0),
         "calibration_samples": 0,
         "projection_method": "目标轮使用 FPL 官方 ep_next，后续按 points_per_game 和官方赛程难度估算；每轮按合法首发 11 人计算并给队长加倍，不计替补",
         "out_count": len(suggestions),

@@ -3,6 +3,7 @@
 
   "allow_hits": true,
   "max_hit_transfers": 2,
+  "minimum_hit_return_multiple": 2.0,
   "injury_threshold": 75,
   "market_gap_threshold": 15,
   "max_free_transfers": 5,

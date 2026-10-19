@@ -59,7 +59,13 @@ function transferProjectionSummary(pkg) {
       : null;
   }).filter(Boolean).join("，");
   const samples = Number(pkg.calibration_samples) || 0;
-  return `；首发11人+队长未来5轮预计 ${fmtNum(pkg.five_gw_before)}→${fmtNum(pkg.five_gw_after)} 分，扣分后净增 ${fmtNum(pkg.five_gw_net_gain)} 分${byRound ? `（${byRound}）` : ""}；历史校准样本 ${samples} 组`;
+  const avgBefore = pkg.per_gw_average_before;
+  const avgAfter = pkg.per_gw_average_after;
+  const average = avgBefore != null && avgAfter != null
+    ? `；单轮平均 ${fmtNum(avgBefore)}→${fmtNum(avgAfter)} 分`
+    : "";
+  const hitThreshold = Number(pkg.minimum_hit_return_multiple) || 2;
+  return `；首发11人+队长未来5轮合计 ${fmtNum(pkg.five_gw_before)}→${fmtNum(pkg.five_gw_after)} 分${average}，扣分后5轮净增 ${fmtNum(pkg.five_gw_net_gain)} 分${byRound ? `（${byRound}）` : ""}；每笔 hit 要求未来5轮至少增 ${fmtNum(4 * hitThreshold)} 分；历史校准样本 ${samples} 组`;
 }
 
 /** 北京时间（Asia/Shanghai）格式化；无效输入原样返回 */
