@@ -32,7 +32,7 @@ GitHub Actions (每 10 分钟自触发 + Python 闸门) ──► brain/ (Python
 │   ├── api.py                     # FPL API 客户端
 │   ├── config.py                  # 代码级常量（TEAM_ID 在这里）
 │   ├── data_store.py              # JSON 原子读写 + 校验
-│   ├── context.py                 # GW 上下文构建（决策字段）
+│   ├── context.py                 # GW 上下文与模型评分到 FPL 预期积分的映射
 │   ├── strategy.py                # 决策接口骨架（CaptainSelector/FreeTransferProvider）
 │   ├── strategy_config.py         # strategy.json 加载 + 按 GW 取权重分段
 │   ├── market.py                  # Market Score 计算（TSB + 净转会归一化）
@@ -40,8 +40,8 @@ GitHub Actions (每 10 分钟自触发 + Python 闸门) ──► brain/ (Python
 │   ├── lineup.py                  # 阵型 + 首发 XI + 替补排序
 │   ├── captain.py                 # 队长 / 副队长评分
 │   ├── chips.py                   # 按筹码状态与赛程规划 WC/FH/BB/TC
-│   ├── transfer.py                # 转会建议（Market Gap + 伤病）+ 免费转会推导
-│   └── history_writer.py          # history 决策条目（幂等 upsert）
+│   ├── transfer.py                # 五轮首发预期积分优化、免费转会与扣分转会评估
+│   └── history_writer.py          # history 决策及已结束轮次的转会效果校准
 ├── config/
 │   └── strategy.json              # 策略参数唯一配置（权重/阈值/阵型池）
 ├── data/
@@ -55,6 +55,24 @@ GitHub Actions (每 10 分钟自触发 + Python 闸门) ──► brain/ (Python
 ├── vercel.json
 └── README.md
 ```
+
+## 预计积分与转会策略
+
+### 模型预计积分
+
+预计积分来自本项目自己的球员评分模型，不直接读取 FPL 官方 `ep_next`。模型逐轮评估球员的进攻潜力、状态和赛程等特征，再按位置将模型评分映射到 FPL 积分单位。映射使用本赛季球员的实际 `points_per_game` 作为校准标签（至少出场 90 分钟且 PPG 大于 0 的球员）；它用于确定模型分数与积分的尺度，不作为官方预测的替代输入。
+
+未来五轮的赛程数量决定该轮是否有比赛以及是否为双赛轮：无赛程计 0 场，双赛轮按两场累计。转会评估逐轮排出合法首发阵容（1 名门将，后场 3–5 人、中场 2–5 人、前锋 1–3 人），只累计首发 11 人的预计积分，并把队长预计积分再计一次；替补席不计入常规预计分。前端展示五轮合计、单轮平均和逐轮转入前后对比。
+
+### 转会与扣分门槛
+
+引擎比较当前阵容与候选转会后阵容的未来五轮首发及队长预计积分，并在可选范围内寻找收益最高的组合。是否转会看预计收益，而不是只看球员市场评分差。
+
+当前 `config/strategy.json` 允许扣分转会，最多评估 2 笔额外转会。每笔 hit 扣 4 分；`minimum_hit_return_multiple` 为 2，因此每笔 hit 要求五轮校准后预计增益至少 8 分。扣除 hit 后组合仍须有正的净收益才会被推荐；未达到门槛时保留当前阵容/免费转会方案。
+
+### 历史复盘
+
+每轮历史保存 AI 最终推荐的转会组合、转会前后五轮逐轮预计积分，以及赛后实际积分。至少积累 3 组已结束轮次后，模型才开始用历史结果对转会收益做保守校准；校准系数限制在 0.5–1.25，且只使用当前积分模型版本的记录，避免旧模型数据直接影响新决策。历史复盘会随新轮次结算逐步积累，不代表模型会自动修改评分公式或代码。
 
 ## 快速开始（本地）
 
@@ -109,7 +127,7 @@ https://fantasy.premierleague.com/entry/123456/event/1
 |------|------|------|
 | Phase 0 | ✅ | 数据获取、state/history 生成、Actions、Vercel 展示、决策骨架 |
 | Phase 1 | ✅ 当前（2026-08-30） | Market Consensus 决策：Market Score 评分、阵容/阵型/队长（CaptainSelector）、转会建议（Market Gap + 伤病）、决策日志（metrics）、前端"本轮建议" |
-| Phase 2 | ✅ 部分完成 | xP 接入、通知、离线回测（待做）；筹码规划已接入 |
+| Phase 2 | ✅ 部分完成 | 自有模型预计积分、五轮转会评估与历史效果校准、筹码规划；通知与离线回测待做 |
 | Phase 3 | 预留 | 自动登录与自动执行（FreeTransferProvider 主来源、安全门与审计） |
 
 ## 常见问题
