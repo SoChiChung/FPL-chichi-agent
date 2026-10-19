@@ -243,6 +243,8 @@ def learned_transfer_calibration(history: dict) -> dict:
     """Conservative online calibration from settled final recommendations (>=3 samples)."""
     ratios = []
     for _, package in _transfer_packages(history):
+        if package.get("point_model_version") != 1:
+            continue
         outcome = package.get("recommended_outcome") or {}
         predicted = package.get("five_gw_after", 0) - package.get("five_gw_before", 0)
         actual = outcome.get("actual_gain")

@@ -92,14 +92,12 @@ def score_squad(squad, team_data: dict, form_by_id: dict, recent_points: dict,
     form_by_id: {element_id: 官方 form 原始值}（覆盖全联盟，取自 bootstrap）。
     recent_points: {element_id: [P(GW-1), P(GW-2), P(GW-3)]}（近者在前，缺位 None）。
     cfg: strategy_config.get_lineup_engine() 结果。
+    projection_by_id 为旧调用兼容参数；积分预测不再读取 FPL 官方 ep_next。
     """
     notes = list(team_data.get("notes") or [])
     neutral = team_data.get("neutral") or {}
     teams = team_data.get("teams") or {}
     neutral_score = to_float(cfg.get("fallback_neutral_score"), 50.0)
-    projection_by_id = projection_by_id or {}
-    projection_values = [to_float(v) for v in projection_by_id.values() if v is not None]
-    projection_lo, projection_hi = _minmax(projection_values)
 
     # 球队级三项原始值 → League-wide 分数表（fixture 先取负）
     raw = {"projection": {}, "clean_sheet": {}, "fixture": {}}
@@ -129,9 +127,7 @@ def score_squad(squad, team_data: dict, form_by_id: dict, recent_points: dict,
 
         for key in ("projection", "clean_sheet", "fixture"):
             if neutral.get(key):
-                official_xp = projection_by_id.get(p.get("id")) if key == "projection" else None
-                parts[key] = (_norm(to_float(official_xp), projection_lo, projection_hi)
-                              if official_xp is not None else neutral_score)
+                parts[key] = neutral_score
                 continue
             score_map = league[key]
             has_raw = (teams.get(abbr) or {}).get(key) is not None

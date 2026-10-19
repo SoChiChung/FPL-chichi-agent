@@ -474,7 +474,7 @@ def summarize_package(bank, suggestions: list, evaluation_meta=None) -> dict:
         "gain_multiplier": meta.get("gain_multiplier", 1.0),
         "minimum_hit_return_multiple": meta.get("minimum_hit_return_multiple", 2.0),
         "calibration_samples": 0,
-        "projection_method": "目标轮使用 FPL 官方 ep_next，后续按 points_per_game 和官方赛程难度估算；每轮按合法首发 11 人计算并给队长加倍，不计替补",
+        "projection_method": "由本模型逐轮评分映射至 FPL 积分单位；使用历史 points_per_game 作校准标签，不使用官方 ep_next 预测",
         "out_count": len(suggestions),
         "total_out_price": out_sum,
         "total_in_price": in_sum,
@@ -482,5 +482,6 @@ def summarize_package(bank, suggestions: list, evaluation_meta=None) -> dict:
         "transfer_cost": cost,
         "budget_after": round(bank - cost, 1),
         "feasible": True,
+        "point_model_version": 1,
         "score_base": "fpl_starting_xi_points_with_captain",
     }

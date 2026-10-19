@@ -31,12 +31,12 @@ def build_player_map(bootstrap: dict) -> dict:
             "selected_by_percent": selected_by,
             "form": p.get("form", "0"),
             "total_points": p.get("total_points", 0),
+            "minutes": p.get("minutes", 0),
             "status": p.get("status", ""),
             "chance_of_playing_next_round": p.get("chance_of_playing_next_round"),
             "transfers_in_event": p.get("transfers_in_event", 0),
             "transfers_out_event": p.get("transfers_out_event", 0),
             "points_per_game": to_float(p.get("points_per_game")),
-            "ep_next": p.get("ep_next"),
         }
     return players
 
@@ -69,36 +69,71 @@ def official_fixture_fallback(fixtures: list, teams: list, gw: int) -> dict:
     return {"teams": ratings, "by_team_id": grouped}
 
 
-def project_five_gw_points(players: dict, fixtures: list, teams: list, start_gw: int) -> None:
-    """Attach five-GW estimates in FPL-point units: official ep_next first, then PPG/FDR."""
-    horizon = {}
+def project_five_gw_points(players: dict, model_scores_by_gw: dict,
+                           fixtures: list, start_gw: int) -> dict:
+    """Map our 0-100 model scores into FPL-point units using historical PPG labels.
+
+    The model score is the predictor; current-season points_per_game is used only as
+    the observed outcome scale for a per-position linear calibration. Official ep_next
+    and official FDR are not used as point forecasts.
+    """
+    by_position = {}
+    for pid, info in players.items():
+        score = model_scores_by_gw.get(start_gw, {}).get(pid)
+        ppg = info.get("points_per_game")
+        if (score is None or ppg is None or to_float(ppg) <= 0
+                or to_float(info.get("minutes")) < 90):
+            continue
+        by_position.setdefault(info.get("pos"), []).append(
+            (to_float(score), to_float(ppg)))
+
+    calibrations = {}
+    for pos, rows in by_position.items():
+        mean_score = sum(x for x, _ in rows) / len(rows)
+        mean_points = sum(y for _, y in rows) / len(rows)
+        variance = sum((x - mean_score) ** 2 for x, _ in rows)
+        covariance = sum((x - mean_score) * (y - mean_points) for x, y in rows)
+        slope = covariance / variance if variance > 1e-9 else 0.0
+        # Keep the mapping monotonic: a higher model score cannot predict fewer points.
+        # The small floor avoids a flat mapping when early-season labels are noisy.
+        slope = max(0.01, slope)
+        calibrations[pos] = {
+            "intercept": round(mean_points - slope * mean_score, 4),
+            "slope": round(slope, 4),
+            "samples": len(rows),
+        }
+
+    fixture_counts = {}
     for fixture in fixtures or []:
         event = fixture.get("event")
         if event is None or not start_gw <= event < start_gw + 5:
             continue
-        horizon.setdefault((fixture.get("team_h"), event), []).append(
-            fixture.get("team_h_difficulty"))
-        horizon.setdefault((fixture.get("team_a"), event), []).append(
-            fixture.get("team_a_difficulty"))
-    for info in players.values():
+        for team_id in (fixture.get("team_h"), fixture.get("team_a")):
+            fixture_counts[(team_id, event)] = fixture_counts.get((team_id, event), 0) + 1
+
+    event_ids = list(range(start_gw, start_gw + 5))
+    for pid, info in players.items():
+        calibration = calibrations.get(info.get("pos"), {})
+        intercept = calibration.get("intercept", 0.0)
+        slope = calibration.get("slope", 0.0)
         team_id = info.get("team_id")
-        ppg = to_float(info.get("points_per_game"))
         event_points = []
-        event_ids = list(range(start_gw, start_gw + 5))
+        event_model_scores = []
         for event in event_ids:
-            difficulties = horizon.get((team_id, event), [])
-            if not difficulties:
+            match_count = fixture_counts.get((team_id, event), 0)
+            model_score = model_scores_by_gw.get(event, {}).get(pid)
+            event_model_scores.append(
+                round(to_float(model_score), 2) if model_score is not None else None)
+            if not match_count or model_score is None:
                 event_points.append(0.0)
-            elif event == start_gw and info.get("ep_next") is not None:
-                # FPL ep_next is already a single-event estimate (including doubles).
-                event_points.append(round(to_float(info["ep_next"]), 2))
-            else:
-                event_points.append(round(sum(
-                    ppg * (1 + (3 - to_float(difficulty, 3)) * 0.08)
-                    for difficulty in difficulties), 2))
+                continue
+            per_match = max(0.0, min(12.0, intercept + slope * to_float(model_score)))
+            event_points.append(round(per_match * match_count, 2))
+        info["model_scores_by_gw"] = event_model_scores
         info["projection_gws"] = event_ids
         info["horizon_points"] = event_points
         info["five_gw_points"] = round(sum(event_points), 2)
+    return calibrations
 
 
 def resolve_current_gw(events: list) -> int:

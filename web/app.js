@@ -59,13 +59,16 @@ function transferProjectionSummary(pkg) {
       : null;
   }).filter(Boolean).join("，");
   const samples = Number(pkg.calibration_samples) || 0;
+  const pointCalibration = pkg.point_calibration || {};
+  const pointSampleCount = Object.values(pointCalibration)
+    .reduce((total, row) => total + (Number(row.samples) || 0), 0);
   const avgBefore = pkg.per_gw_average_before;
   const avgAfter = pkg.per_gw_average_after;
   const average = avgBefore != null && avgAfter != null
     ? `；单轮平均 ${fmtNum(avgBefore)}→${fmtNum(avgAfter)} 分`
     : "";
   const hitThreshold = Number(pkg.minimum_hit_return_multiple) || 2;
-  return `；首发11人+队长未来5轮合计 ${fmtNum(pkg.five_gw_before)}→${fmtNum(pkg.five_gw_after)} 分${average}，扣分后5轮净增 ${fmtNum(pkg.five_gw_net_gain)} 分${byRound ? `（${byRound}）` : ""}；每笔 hit 要求未来5轮至少增 ${fmtNum(4 * hitThreshold)} 分；历史校准样本 ${samples} 组`;
+  return `；首发11人+队长未来5轮合计 ${fmtNum(pkg.five_gw_before)}→${fmtNum(pkg.five_gw_after)} 分${average}，扣分后5轮净增 ${fmtNum(pkg.five_gw_net_gain)} 分${byRound ? `（${byRound}）` : ""}；每笔 hit 要求未来5轮至少增 ${fmtNum(4 * hitThreshold)} 分；积分映射样本 ${fmtNum(pointSampleCount)} 人，转会复盘样本 ${samples} 组`;
 }
 
 /** 北京时间（Asia/Shanghai）格式化；无效输入原样返回 */
@@ -544,7 +547,7 @@ function renderThisWeek(state, entry) {
               <span class="x-out">${esc(o.name || "?")}</span>
               <span class="x-arrow">→</span>
               <span class="x-in">${esc(i.name || "?")}</span>
-              <span class="muted x-meta">${esc(o.pos || "-")} £${o.price ?? "-"}m → ${esc(i.pos || "-")} £${i.price ?? "-"}m${o.five_gw_points != null && i.five_gw_points != null ? ` · 5轮 ${fmtNum(o.five_gw_points)}→${fmtNum(i.five_gw_points)}分` : ""}</span>
+              <span class="muted x-meta">${esc(o.pos || "-")} £${o.price ?? "-"}m → ${esc(i.pos || "-")} £${i.price ?? "-"}m${o.five_gw_points != null && i.five_gw_points != null ? ` · 球员模型五轮估分 ${fmtNum(o.five_gw_points)}→${fmtNum(i.five_gw_points)}分` : ""}</span>
             </div>
             <div class="xfer-reason muted">${t.hit_cost ? `扣 ${t.hit_cost} 分 · ` : ""}${esc(t.reason || "")}</div>
           </div>`;
@@ -617,7 +620,7 @@ function playerCard(p, capId, viceId, benchNo, flags) {
     : "本轮暂无赛程";
   const bars =
     metricBar("Form", bd.form, "近期状态 Form%") +
-    metricBar("Official xP", bd.projection, "FPL 官方 ep_next 预期得分归一化（官方进球预测缺失时使用）") +
+    metricBar("Model Projection", bd.projection, "自有模型采用的进攻潜力特征；不直接读取 FPL 官方 ep_next") +
     metricBar("Fixture", bd.fixture, "赛程友好度 Fixture% · 越高越友好") +
     metricBar("TSB", typeof p.selected_by === "number" ? p.selected_by : null, "持有率 TSB%");
   return `<div class="player-card">

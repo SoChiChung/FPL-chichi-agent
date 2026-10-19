@@ -21,6 +21,7 @@ Phase 2（docs/decide.md v1.1）：
 """
 import sys
 import time
+import copy
 
 from brain import api, captain_score, chips, config, context, data_store
 from brain import history_writer, lineup_score, market, squad_builder, strategy_config, transfer
@@ -141,7 +142,6 @@ def main():
     weights = strategy_config.get_weights(cfg, gw)
 
     players_map = context.build_player_map(bootstrap)
-    context.project_five_gw_points(players_map, fixtures, bootstrap.get("teams") or [], target_gw)
     market_scores = market.compute_market_scores(players_map, weights)
 
     # ---- 基础阵容：当前/最近可用 picks；完全找不到则 establish ----
@@ -169,7 +169,6 @@ def main():
 
     # ---- Phase 2 评分输入：官方 form 全员池 + 15 人近 3 轮实际分 ----
     form_by_id = {int(e["id"]): e.get("form", "0") for e in bootstrap["elements"]}
-    projection_by_id = {int(e["id"]): e.get("ep_next") for e in bootstrap["elements"]}
     recent_points, recent_rounds, summary_failures = _fetch_recent_points(squad, events)
     if summary_failures:
         names = ", ".join(str(n) for n, _ in summary_failures)
@@ -197,17 +196,38 @@ def main():
             "topic": "score_source",
             "detail": f"FPL Joe GW{target_gw} Fixture 无比赛数据，已回退官方 FDR",
         })
-    if (team_data.get("neutral") or {}).get("projection") and any(
-            value is not None for value in projection_by_id.values()):
-        team_data.setdefault("sources", {})["projection"] = "official_player_ep_next_fallback"
-        team_data.setdefault("notes", []).append({
-            "topic": "score_source",
-            "detail": f"FPL Joe GW{target_gw} Goal Potential 无预测值，已回退 FPL 官方球员 ep_next",
-        })
+    # Turn our own lineup model scores into expected FPL-point units. Historical
+    # points_per_game is only the observed calibration label; official ep_next is unused.
+    model_cfg = copy.deepcopy(engine_cfg)
+    for key in ("attack_weights", "attack_potential_weights"):
+        model_cfg.setdefault(key, {})["streak"] = 0.0
+    model_scores_by_gw = {}
+    model_pool = [
+        {**info, "id": pid, "market_score": market_scores.get(pid, 0.0)}
+        for pid, info in players_map.items()
+    ]
+    for event in range(target_gw, target_gw + 5):
+        score_data = team_data if event == target_gw else fpl_joe.read_target_gw(event, team_abbr_by_id)
+        if event != target_gw:
+            event_fallback = context.official_fixture_fallback(
+                fixtures, bootstrap.get("teams") or [], event)
+            for abbr, values in event_fallback["teams"].items():
+                existing = score_data.setdefault("teams", {}).setdefault(abbr, {})
+                if values.get("fixture") is not None and existing.get("fixture") is None:
+                    existing["fixture"] = values["fixture"]
+                    score_data.setdefault("neutral", {})["fixture"] = False
+        scored_pool = [dict(p) for p in model_pool]
+        scored_pool, _ = lineup_score.score_squad(
+            scored_pool, score_data, form_by_id, {}, model_cfg, {})
+        model_scores_by_gw[event] = {
+            p["id"]: p["lineup_score"] for p in scored_pool
+        }
+    point_calibration = context.project_five_gw_points(
+        players_map, model_scores_by_gw, fixtures, target_gw)
 
     # ---- Phase 2 决策：本轮评分 → 全局最优首发 → 爆发队长 ----
     squad, score_notes = lineup_score.score_squad(
-        squad, team_data, form_by_id, recent_points, engine_cfg, projection_by_id)
+        squad, team_data, form_by_id, recent_points, engine_cfg, {})
     for p in squad:
         forecast = players_map.get(p.get("id"), {})
         p["five_gw_points"] = forecast.get("five_gw_points", 0.0)
@@ -263,6 +283,7 @@ def main():
     # 预算口径汇总（state.bank 为 £m；包内所有转会 100% 预算可行）
     transfer_package = transfer.summarize_package(state["bank"], suggestions, transfer_evaluation)
     transfer_package["calibration_samples"] = calibration["samples"]
+    transfer_package["point_calibration"] = point_calibration
 
     # ---- 转会后阵容快照（suggested_squad）：应用全部建议转会后的完整 15 人 ----
     # in 球员不在 state.team 内、且缺 score_breakdown 等完整字段，前端无法独立
@@ -270,7 +291,7 @@ def main():
     # 无建议转会时不写该字段（前端隐藏切换入口）。
     suggested_squad = _build_suggested_squad(
         squad, suggestions, players_map, market_scores, team_data,
-        form_by_id, recent_points, engine_cfg, projection_by_id,
+        form_by_id, recent_points, engine_cfg, {},
         official_fixtures["by_team_id"])
 
     decision = {
@@ -308,6 +329,7 @@ def main():
         "target_gw": target_gw,
         "recent_rounds": recent_rounds,
         "score_source": team_data["sources"],
+        "point_calibration": point_calibration,
         "warnings": [n["detail"] for n in notes
                      if n.get("topic") in ("data_missing", "score_source")],
     }
