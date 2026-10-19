@@ -467,7 +467,7 @@ def summarize_package(bank, suggestions: list, evaluation_meta=None) -> dict:
         "five_gw_net_gain": round(to_float(meta.get("calibrated_gain", five_gw_after - five_gw_before)) - hit_cost, 2),
         "per_gw_average_before": round(average_before, 2) if average_before is not None else None,
         "per_gw_average_after": round(average_after, 2) if average_after is not None else None,
-        "per_gw_average_net_gain": round(to_float(meta.get("calibrated_gain", five_gw_after - five_gw_before)) / round_count, 2) if round_count else None,
+        "per_gw_average_net_gain": round((to_float(meta.get("calibrated_gain", five_gw_after - five_gw_before)) - hit_cost) / round_count, 2) if round_count else None,
         "hit_cost": hit_cost,
         "projection_before": before,
         "projection_after": after,
