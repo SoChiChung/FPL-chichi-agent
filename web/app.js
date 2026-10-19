@@ -597,7 +597,7 @@ function playerCard(p, capId, viceId, benchNo, flags) {
     : "本轮暂无赛程";
   const bars =
     metricBar("Form", bd.form, "近期状态 Form%") +
-    metricBar("Goal Pot.", bd.projection, "进球预测 Goal Potential%") +
+    metricBar("Official xP", bd.projection, "FPL 官方 ep_next 预期得分归一化（官方进球预测缺失时使用）") +
     metricBar("Fixture", bd.fixture, "赛程友好度 Fixture% · 越高越友好") +
     metricBar("TSB", typeof p.selected_by === "number" ? p.selected_by : null, "持有率 TSB%");
   return `<div class="player-card">

@@ -84,7 +84,7 @@ def streak_score(points, min_point: float, streak_map: dict) -> float:
 
 
 def score_squad(squad, team_data: dict, form_by_id: dict, recent_points: dict,
-                cfg: dict):
+                cfg: dict, projection_by_id: dict = None):
     """给 15 人打本轮分并挂 score_breakdown / lineup_score。
 
     原地为 squad 球员行补字段，返回 (squad, notes)。
@@ -97,6 +97,9 @@ def score_squad(squad, team_data: dict, form_by_id: dict, recent_points: dict,
     neutral = team_data.get("neutral") or {}
     teams = team_data.get("teams") or {}
     neutral_score = to_float(cfg.get("fallback_neutral_score"), 50.0)
+    projection_by_id = projection_by_id or {}
+    projection_values = [to_float(v) for v in projection_by_id.values() if v is not None]
+    projection_lo, projection_hi = _minmax(projection_values)
 
     # 球队级三项原始值 → League-wide 分数表（fixture 先取负）
     raw = {"projection": {}, "clean_sheet": {}, "fixture": {}}
@@ -126,7 +129,9 @@ def score_squad(squad, team_data: dict, form_by_id: dict, recent_points: dict,
 
         for key in ("projection", "clean_sheet", "fixture"):
             if neutral.get(key):
-                parts[key] = neutral_score
+                official_xp = projection_by_id.get(p.get("id")) if key == "projection" else None
+                parts[key] = (_norm(to_float(official_xp), projection_lo, projection_hi)
+                              if official_xp is not None else neutral_score)
                 continue
             score_map = league[key]
             has_raw = (teams.get(abbr) or {}).get(key) is not None

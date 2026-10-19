@@ -49,7 +49,8 @@ def _transfer_notes(suggestions: list, t_notes: list, ts: dict) -> list:
 
 def _build_suggested_squad(squad: list, suggestions: list, players_map: dict,
                            market_scores: dict, team_data: dict, form_by_id: dict,
-                           recent_points: dict, engine_cfg: dict):
+                           recent_points: dict, engine_cfg: dict,
+                           projection_by_id: dict, fixtures_by_team_id: dict):
     """应用全部建议转会后的 15 人完整快照（供前端「转会后阵容」视图）。
 
     - 底 = 决策用基础 squad；逐笔 out→in 原位替换，保留出场槽位
@@ -76,9 +77,10 @@ def _build_suggested_squad(squad: list, suggestions: list, players_map: dict,
             "multiplier": slot["multiplier"],
             "is_captain": slot["is_captain"],
             "is_vice_captain": slot["is_vice_captain"],
+            "fixtures": fixtures_by_team_id.get(base.get("team_id"), []),
         }
         lineup_score.score_squad([incoming], team_data, form_by_id,
-                                 recent_points, engine_cfg)
+                                 recent_points, engine_cfg, projection_by_id)
         pool[idx] = incoming
     return pool
 
@@ -161,6 +163,7 @@ def main():
 
     # ---- Phase 2 评分输入：官方 form 全员池 + 15 人近 3 轮实际分 ----
     form_by_id = {int(e["id"]): e.get("form", "0") for e in bootstrap["elements"]}
+    projection_by_id = {int(e["id"]): e.get("ep_next") for e in bootstrap["elements"]}
     recent_points, recent_rounds, summary_failures = _fetch_recent_points(squad, events)
     if summary_failures:
         names = ", ".join(str(n) for n, _ in summary_failures)
@@ -188,10 +191,17 @@ def main():
             "topic": "score_source",
             "detail": f"FPL Joe GW{target_gw} Fixture 无比赛数据，已回退官方 FDR",
         })
+    if (team_data.get("neutral") or {}).get("projection") and any(
+            value is not None for value in projection_by_id.values()):
+        team_data.setdefault("sources", {})["projection"] = "official_player_ep_next_fallback"
+        team_data.setdefault("notes", []).append({
+            "topic": "score_source",
+            "detail": f"FPL Joe GW{target_gw} Goal Potential 无预测值，已回退 FPL 官方球员 ep_next",
+        })
 
     # ---- Phase 2 决策：本轮评分 → 全局最优首发 → 爆发队长 ----
     squad, score_notes = lineup_score.score_squad(
-        squad, team_data, form_by_id, recent_points, engine_cfg)
+        squad, team_data, form_by_id, recent_points, engine_cfg, projection_by_id)
     for p in squad:
         p["five_gw_points"] = players_map.get(p.get("id"), {}).get("five_gw_points", 0.0)
         p["fixtures"] = official_fixtures["by_team_id"].get(
@@ -245,7 +255,8 @@ def main():
     # 无建议转会时不写该字段（前端隐藏切换入口）。
     suggested_squad = _build_suggested_squad(
         squad, suggestions, players_map, market_scores, team_data,
-        form_by_id, recent_points, engine_cfg)
+        form_by_id, recent_points, engine_cfg, projection_by_id,
+        official_fixtures["by_team_id"])
 
     decision = {
         "formation": formation,

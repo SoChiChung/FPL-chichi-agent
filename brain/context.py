@@ -36,6 +36,7 @@ def build_player_map(bootstrap: dict) -> dict:
             "transfers_in_event": p.get("transfers_in_event", 0),
             "transfers_out_event": p.get("transfers_out_event", 0),
             "points_per_game": to_float(p.get("points_per_game")),
+            "ep_next": p.get("ep_next"),
         }
     return players
 
