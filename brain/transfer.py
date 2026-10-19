@@ -13,20 +13,21 @@
   - 包级预算校验（用户验收公式）：
         required_money = Σ(in.price)   ≤   available_money = bank + Σ(out.price)
     预算不足的整包直接丢弃；引擎只输出 100% 真实可执行的方案。
-  - 目标函数（字典序）：(已覆盖强制出售人数, 包总 Transfer Gain)，
-    Transfer Gain = Σ(in.market_score − out.market_score)。
+  - 目标函数：未来 5 轮首发 11 人（含队长加倍）的 FPL 预估积分，扣除每笔 hit 4 分后最大化；
+    不计替补积分。
   - bank 单位：与 state.bank 一致为百万（£m）浮点（如 2.0 = £2.0m），
     与球员 price 同单位。调用方（context.build_state）负责 /10 归一。
 
-只使用免费转会；allow_hits=false 时绝不建议超过可用免费转会数。
+allow_hits=true 时最多评估配置允许的 hit 数，只在扣除 4 分后仍有净收益时推荐。
 """
 from collections import Counter
 
 from brain.market import to_float
 from brain.strategy import FreeTransferProvider
 
-# 每个候选 out 保留的换入候选数（按 market_score 降序取前 N，控制搜索规模）
-IN_CANDIDATES_CAP = 8
+# 限制候选包搜索规模；进球员按未来积分增益排序，每个出球员保留前 4 名。
+PACKAGE_OUT_CANDIDATES_CAP = 8
+PACKAGE_IN_CANDIDATES_CAP = 4
 EPS = 1e-9
 POSITIONS = ("GKP", "DEF", "MID", "FWD")
 
@@ -93,6 +94,51 @@ def _money(x) -> float:
     return round(to_float(x), 1)
 
 
+def _xi_projection(squad):
+    """Best legal FPL XI by projected points, including captain's extra multiplier."""
+    by_pos = {pos: [p for p in squad if p.get("pos") == pos] for pos in POSITIONS}
+    if len(by_pos["GKP"]) < 1:
+        return None
+    best = None
+    for d in range(3, 6):
+        for m in range(2, 6):
+            for f in range(1, 4):
+                if d + m + f != 10 or len(by_pos["DEF"]) < d or len(by_pos["MID"]) < m or len(by_pos["FWD"]) < f:
+                    continue
+                picked = [sorted(by_pos[pos], key=lambda p: -to_float(p.get("horizon_points", [0])[0] if p.get("horizon_points") else 0))[:n]
+                          for pos, n in (("DEF", d), ("MID", m), ("FWD", f))]
+                gk = sorted(by_pos["GKP"], key=lambda p: -to_float(p.get("horizon_points", [0])[0] if p.get("horizon_points") else 0))[:1]
+                xi = gk + sum(picked, [])
+                score = sum(to_float(p.get("horizon_points", [0])[0] if p.get("horizon_points") else 0) for p in xi)
+                key = (score, tuple(-int(p.get("id") or 0) for p in xi))
+                if best is None or key > best[0]:
+                    best = (key, xi)
+    if best is None:
+        return None
+    xi = best[1]
+    captain = max(xi, key=lambda p: to_float(p.get("horizon_points", [0])[0] if p.get("horizon_points") else 0))
+    return {"points": round(best[0][0] + to_float(captain.get("horizon_points", [0])[0] if captain.get("horizon_points") else 0), 2),
+            "xi": [p.get("id") for p in xi], "captain": captain.get("id")}
+
+
+def project_squad_horizon(squad):
+    """Project legal starting XI + captain over each event in the horizon."""
+    gws = next((p.get("projection_gws") for p in squad if p.get("projection_gws")), [])
+    rounds = []
+    for i, gw in enumerate(gws):
+        indexed = []
+        for p in squad:
+            copy = dict(p)
+            values = p.get("horizon_points") or []
+            copy["horizon_points"] = [values[i] if i < len(values) else 0]
+            indexed.append(copy)
+        row = _xi_projection(indexed)
+        if row is None:
+            return None
+        rounds.append({"gw": gw, **row})
+    return {"rounds": rounds, "points": round(sum(r["points"] for r in rounds), 2)} if rounds else None
+
+
 def _sell_reason(player: dict, injury_threshold: float):
     """返回 (reason, forced)。forced=True 表示伤病/状态等必须优先处理的换出。
 
@@ -107,18 +153,18 @@ def _sell_reason(player: dict, injury_threshold: float):
 
 
 def _best_package(outs: list, limit: int, bank: float, max_per_team: int,
-                  squad_team_count: Counter, with_budget: bool, free_limit=None):
-    """DFS 搜索字典序最优转会包。
+                  squad_team_count: Counter, with_budget: bool, free_limit=None,
+                  base_squad=None, base_projection=None, gain_multiplier=1.0):
+    """DFS 搜索预计首发积分净收益最高的转会包。
 
-    目标 key = (covered_forced, gain, in_sum)（covered_forced 优先，
-    其次总增益，同增益更省钱的包更优）。
+    整队首发投影可用时按整队未来积分变化排序；否则用候选球员积分变化。
     约束：out/in 互斥、同队 ≤ 3、笔数 ≤ limit；with_budget=True 时额外要求
         Σ(in.price) ≤ bank + Σ(out.price)
     （对应 FPL“先卖后买”批量执行：卖出即时回血，总价合法即可真实完成）。
 
     outs: [{"player", "reason", "forced", "best_gain", "cands"}]，cands 为
     [(in_score, pid, info, gain), ...] 按 in_score 降序。
-    返回 {"chosen": [pair...], "covered", "gain", "in_sum", "out_sum"} 或 None。
+    返回 {"chosen": [pair...], "covered", "gain", "net_gain", "in_sum", "out_sum"} 或 None。
     pair: {"out": player, "in": info(不含 id), "pid", "gain", "forced", "in_score"}。
     """
     n = len(outs)
@@ -152,27 +198,38 @@ def _best_package(outs: list, limit: int, bank: float, max_per_team: int,
             return None
         covered = sum(1 for p in chosen if p["forced"])
         gain = round(sum(p["gain"] for p in chosen), 2)
+        before = base_projection if base_squad is not None else None
+        after_squad = [p for p in base_squad if p.get("id") not in {x["out"].get("id") for x in chosen}] if base_squad is not None else None
+        if after_squad is not None:
+            after_squad.extend({**pair["in"], "id": pair["pid"]} for pair in chosen)
+        after = project_squad_horizon(after_squad) if after_squad is not None else None
+        if before and after:
+            gain = round(after["points"] - before["points"], 2)
         hits = max(0, len(chosen) - (free_limit if free_limit is not None else limit))
-        net_gain = round(gain - hits * 4, 2)
+        net_gain = round(gain * gain_multiplier - hits * 4, 2)
         return {"chosen": list(chosen), "covered": covered, "gain": gain,
                 "hits": hits, "net_gain": net_gain,
-                "in_sum": in_sum, "out_sum": out_sum}
+                "in_sum": in_sum, "out_sum": out_sum,
+                "projection_before": before, "projection_after": after}
 
     def dfs(i, chosen, taken_in, covered, gain):
         nonlocal best
         if i >= n or len(chosen) >= limit:
             leaf = _validate(chosen)
             if leaf is not None:
-                key = (leaf["covered"], leaf["net_gain"], leaf["gain"], leaf["in_sum"])
+                key = (leaf["net_gain"], leaf["gain"], -leaf["in_sum"])
                 if best is None or key > best[0]:
                     best = (key, leaf)
             return
         if best is not None:
             # 乐观上界仍无法超过已知最优 → 剪枝（不会漏解）
-            ceil_cov = covered + suffix_forced[i]
-            ceil_gain = gain + suffix_gain[i]
-            best_cov, best_gain = best[0][0], best[0][1]
-            if ceil_cov < best_cov or (ceil_cov == best_cov and ceil_gain <= best_gain):
+            if base_squad is not None:
+                # XI/captain gains are non-additive; keep this bounded search unpruned.
+                ceil_gain = float("inf")
+            else:
+                ceil_gain = gain + suffix_gain[i]
+            best_gain = best[0][1]
+            if ceil_gain <= best_gain:
                 return
         out_info = outs[i]
         # 尝试换入候选（分高者先，先逼近高增益上界）
@@ -193,7 +250,8 @@ def _best_package(outs: list, limit: int, bank: float, max_per_team: int,
     return best[1] if best else None
 
 
-def evaluate_transfers(squad, players_map, market_scores, cfg, bank, transfer_status):
+def evaluate_transfers(squad, players_map, market_scores, cfg, bank, transfer_status,
+                       gain_multiplier=1.0, evaluation_meta=None):
     """返回 (suggestions, notes)。
 
     transfer_status: {"status": "unlimited"|"limited", "free_transfers": int|None}。
@@ -226,6 +284,14 @@ def evaluate_transfers(squad, players_map, market_scores, cfg, bank, transfer_st
     squad_ids = {p["id"] for p in squad}
     squad_team_count = Counter(str(p.get("team")) for p in squad)
 
+    base_projection = project_squad_horizon(squad)
+    if evaluation_meta is not None and base_projection:
+        evaluation_meta.update({"projection_before": base_projection,
+                                "projection_after": base_projection,
+                                "predicted_gain": 0.0,
+                                "gain_multiplier": gain_multiplier,
+                                "calibrated_gain": 0.0,
+                                "hit_cost": 0})
     # 每位置换入池（不含队内球员），按 market_score 降序
     ranked = sorted(market_scores.items(), key=lambda kv: (-to_float(kv[1]), kv[0]))
     pools = {}
@@ -262,7 +328,7 @@ def evaluate_transfers(squad, players_map, market_scores, cfg, bank, transfer_st
                               "detail": f"{reason}，但未找到市场分更高的同位置替代者，暂不换出"})
             continue
         cands.sort(key=lambda c: (-c[3], c[1]))
-        cands = cands[:IN_CANDIDATES_CAP]
+        cands = cands[:PACKAGE_IN_CANDIDATES_CAP]
         best_gain = cands[0][3]
         if not reason:
             has_projection = bool(p.get("five_gw_points") or any(
@@ -283,10 +349,14 @@ def evaluate_transfers(squad, players_map, market_scores, cfg, bank, transfer_st
 
     # 强制出售（伤病/状态）优先；同类按潜在增益降序，保证确定性
     outs.sort(key=lambda o: (not o["forced"], -o["best_gain"], o["player"].get("id", 0)))
+    outs = outs[:PACKAGE_OUT_CANDIDATES_CAP]
 
     # ---- 2) 包搜索（含包级预算校验）----
     best = _best_package(outs, limit, bank, max_per_team, squad_team_count,
-                         with_budget=True, free_limit=free if not unlimited else limit)
+                         with_budget=True, free_limit=free if not unlimited else limit,
+                         base_squad=squad if base_projection else None,
+                         base_projection=base_projection,
+                         gain_multiplier=gain_multiplier)
     if best is None or not best["chosen"]:
         # 无预算可行的整包 → 生成“差多少钱”的可调试说明，绝不输出买不起的方案
         best_any = _best_package(outs, limit, bank, max_per_team, squad_team_count,
@@ -305,6 +375,17 @@ def evaluate_transfers(squad, players_map, market_scores, cfg, bank, transfer_st
                           "detail": "未能生成满足位置/同队/预算约束的转会组合"})
         return suggestions, notes
 
+    if best["net_gain"] <= EPS:
+        notes.append({"topic": "no_transfer", "detail":
+                      f"按首发 11 人及队长计算，未来 5 轮预计净增 {best['net_gain']:.2f} 分（已扣除 {best['hits'] * 4} 分 hit），不值得转会"})
+        return suggestions, notes
+    if evaluation_meta is not None:
+        evaluation_meta.update({"projection_before": best.get("projection_before"),
+                                "projection_after": best.get("projection_after"),
+                                "predicted_gain": best["gain"],
+                                "gain_multiplier": gain_multiplier,
+                                "calibrated_gain": round(best["gain"] * gain_multiplier, 2),
+                                "hit_cost": best["hits"] * 4})
     # ---- 3) 输出最优包 ----
     reason_by_out = {o["player"].get("id"): o["reason"] for o in outs}
     for pair in best["chosen"]:
@@ -336,31 +417,40 @@ def evaluate_transfers(squad, players_map, market_scores, cfg, bank, transfer_st
     return suggestions, notes
 
 
-def summarize_package(bank, suggestions: list) -> dict:
+def summarize_package(bank, suggestions: list, evaluation_meta=None) -> dict:
     """由建议列表汇总转账包的预算口径（state/history 落盘用）。
 
     - budget_before：转会前 Bank（£m）
     - transfer_cost：净花费 = Σ(in) − Σ(out)（≥0 表示支出）
     - budget_after：按建议执行后的 Bank = budget_before − transfer_cost
-    - gain：包总 Transfer Gain = Σ market_gap
+    - gain：转会前后未来首发 11 人（含队长加倍）的预计 FPL 积分差
     空建议时全 0 字段，budget_after = budget_before。
     """
     bank = _money(bank)
+    meta = evaluation_meta or {}
     out_sum = round(sum(_money(s["out"].get("price")) for s in suggestions), 1)
     in_sum = round(sum(_money(s["in"].get("price")) for s in suggestions), 1)
-    gain = round(sum(to_float(s.get("market_gap")) for s in suggestions), 2)
+    gain = round(to_float(meta.get("predicted_gain", sum(
+        to_float(s.get("market_gap")) for s in suggestions))), 2)
     five_gw_before = round(sum(to_float(s.get("out", {}).get("five_gw_points"))
                                for s in suggestions), 2)
     five_gw_after = round(sum(to_float(s.get("in", {}).get("five_gw_points"))
                               for s in suggestions), 2)
     hit_cost = sum(to_float(s.get("hit_cost")) for s in suggestions)
     cost = round(in_sum - out_sum, 1)
+    before = meta.get("projection_before") or {}
+    after = meta.get("projection_after") or {}
     return {
         "gain": gain,
-        "five_gw_before": five_gw_before,
-        "five_gw_after": five_gw_after,
-        "five_gw_net_gain": round(five_gw_after - five_gw_before - hit_cost, 2),
+        "five_gw_before": before.get("points", five_gw_before),
+        "five_gw_after": after.get("points", five_gw_after),
+        "five_gw_net_gain": round(to_float(meta.get("calibrated_gain", five_gw_after - five_gw_before)) - hit_cost, 2),
         "hit_cost": hit_cost,
+        "projection_before": before,
+        "projection_after": after,
+        "gain_multiplier": meta.get("gain_multiplier", 1.0),
+        "calibration_samples": 0,
+        "projection_method": "目标轮使用 FPL 官方 ep_next，后续按 points_per_game 和官方赛程难度估算；每轮按合法首发 11 人计算并给队长加倍，不计替补",
         "out_count": len(suggestions),
         "total_out_price": out_sum,
         "total_in_price": in_sum,
@@ -368,5 +458,5 @@ def summarize_package(bank, suggestions: list) -> dict:
         "transfer_cost": cost,
         "budget_after": round(bank - cost, 1),
         "feasible": True,
-        "score_base": "market_score",
+        "score_base": "fpl_starting_xi_points_with_captain",
     }

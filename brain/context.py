@@ -70,21 +70,35 @@ def official_fixture_fallback(fixtures: list, teams: list, gw: int) -> dict:
 
 
 def project_five_gw_points(players: dict, fixtures: list, teams: list, start_gw: int) -> None:
-    """Attach a transparent five-GW points estimate using PPG and official fixtures/FDR."""
+    """Attach five-GW estimates in FPL-point units: official ep_next first, then PPG/FDR."""
     horizon = {}
     for fixture in fixtures or []:
         event = fixture.get("event")
         if event is None or not start_gw <= event < start_gw + 5:
             continue
-        horizon.setdefault(fixture.get("team_h"), []).append(fixture.get("team_h_difficulty"))
-        horizon.setdefault(fixture.get("team_a"), []).append(fixture.get("team_a_difficulty"))
+        horizon.setdefault((fixture.get("team_h"), event), []).append(
+            fixture.get("team_h_difficulty"))
+        horizon.setdefault((fixture.get("team_a"), event), []).append(
+            fixture.get("team_a_difficulty"))
     for info in players.values():
         team_id = info.get("team_id")
-        difficulties = horizon.get(team_id, [])
         ppg = to_float(info.get("points_per_game"))
-        info["five_gw_points"] = round(sum(
-            ppg * (1 + (3 - to_float(difficulty, 3)) * 0.08)
-            for difficulty in difficulties), 2)
+        event_points = []
+        event_ids = list(range(start_gw, start_gw + 5))
+        for event in event_ids:
+            difficulties = horizon.get((team_id, event), [])
+            if not difficulties:
+                event_points.append(0.0)
+            elif event == start_gw and info.get("ep_next") is not None:
+                # FPL ep_next is already a single-event estimate (including doubles).
+                event_points.append(round(to_float(info["ep_next"]), 2))
+            else:
+                event_points.append(round(sum(
+                    ppg * (1 + (3 - to_float(difficulty, 3)) * 0.08)
+                    for difficulty in difficulties), 2))
+        info["projection_gws"] = event_ids
+        info["horizon_points"] = event_points
+        info["five_gw_points"] = round(sum(event_points), 2)
 
 
 def resolve_current_gw(events: list) -> int:

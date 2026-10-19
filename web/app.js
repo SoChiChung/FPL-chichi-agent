@@ -48,6 +48,20 @@ function fmtMoney(m) {
   return `£${(Number(m) || 0).toFixed(1)}m`;
 }
 
+function transferProjectionSummary(pkg) {
+  if (!pkg || pkg.five_gw_before == null) return "";
+  const before = pkg.projection_before?.rounds || [];
+  const after = pkg.projection_after?.rounds || [];
+  const byRound = after.map((row, index) => {
+    const previous = before[index];
+    return previous && previous.gw === row.gw
+      ? `GW${row.gw} ${fmtNum(previous.points)}→${fmtNum(row.points)}`
+      : null;
+  }).filter(Boolean).join("，");
+  const samples = Number(pkg.calibration_samples) || 0;
+  return `；首发11人+队长未来5轮预计 ${fmtNum(pkg.five_gw_before)}→${fmtNum(pkg.five_gw_after)} 分，扣分后净增 ${fmtNum(pkg.five_gw_net_gain)} 分${byRound ? `（${byRound}）` : ""}；历史校准样本 ${samples} 组`;
+}
+
 /** 北京时间（Asia/Shanghai）格式化；无效输入原样返回 */
 function fmtTime(iso) {
   if (!iso) return "-";
@@ -532,7 +546,7 @@ function renderThisWeek(state, entry) {
         .join("") + `</div>`;
     const pkg = d.transfer_package || {};
     if (pkg.budget_before != null) {
-      html += `<p class="muted xfer-summary">预算校验：净花费 ${fmtMoney(pkg.transfer_cost)}（卖出回血 ${fmtMoney(pkg.total_out_price)}，买入 ${fmtMoney(pkg.total_in_price)}），转会后 Bank ${fmtBank(pkg.budget_after)}${pkg.five_gw_before != null ? `；换出球员未来5轮 ${fmtNum(pkg.five_gw_before)} 分 → 换入 ${fmtNum(pkg.five_gw_after)} 分，扣分后净增 ${fmtNum(pkg.five_gw_net_gain)} 分` : ""}</p>`;
+      html += `<p class="muted xfer-summary">预算校验：净花费 ${fmtMoney(pkg.transfer_cost)}（卖出回血 ${fmtMoney(pkg.total_out_price)}，买入 ${fmtMoney(pkg.total_in_price)}），转会后 Bank ${fmtBank(pkg.budget_after)}${transferProjectionSummary(pkg)}</p>`;
     }
     // CTA：跳到 ③ 阵容区并切「转会后」视图（design-ia-ux.md §4.2）
     html += `<div class="tw-cta-row">
@@ -902,7 +916,7 @@ function renderHistoryAccordion(state, rows) {
     const pkgH = (d.transfer_package) || {};
     let budgetHtml = "";
     if (transfers.length && pkgH.budget_before != null) {
-      budgetHtml = `<p class="muted xfer-summary">预算：Bank ${fmtBank(pkgH.budget_before)} → 转会后 ${fmtBank(pkgH.budget_after)}（净花费 ${fmtMoney(pkgH.transfer_cost)}）${pkgH.five_gw_before != null ? `；换出球员未来5轮 ${fmtNum(pkgH.five_gw_before)} 分 → 换入 ${fmtNum(pkgH.five_gw_after)} 分，扣分后净增 ${fmtNum(pkgH.five_gw_net_gain)} 分` : ""}</p>`;
+      budgetHtml = `<p class="muted xfer-summary">预算：Bank ${fmtBank(pkgH.budget_before)} → 转会后 ${fmtBank(pkgH.budget_after)}（净花费 ${fmtMoney(pkgH.transfer_cost)}）${transferProjectionSummary(pkgH)}</p>`;
     } else if (r.budget_before != null) {
       budgetHtml = `<p class="muted xfer-summary">预算：Bank ${fmtBank(r.budget_before)}${r.transfer_cost != null ? `，净花费 ${fmtMoney(r.transfer_cost)} → 转会后 ${fmtBank(r.budget_after)}` : ""}</p>`;
     }

@@ -39,7 +39,13 @@ def _transfer_notes(suggestions: list, t_notes: list, ts: dict) -> list:
         if ts["status"] == "unlimited":
             lines.append(f"本轮建议 {len(suggestions)} 笔转会（新账号，次数暂不受限）")
         else:
-            lines.append(f"本轮建议 {len(suggestions)} 笔免费转会")
+            hit_count = sum(1 for s in suggestions if to_float(s.get("hit_cost")) > 0)
+            free_count = len(suggestions) - hit_count
+            label = f"{free_count} 笔免费转会"
+            if hit_count:
+                hit_points = sum(to_float(s.get("hit_cost")) for s in suggestions)
+                label += f" + {hit_count} 笔扣分转会（扣 {hit_points:.0f} 分）"
+            lines.append(f"本轮建议 {label}")
     for n in t_notes:
         if n.get("topic") == "no_transfer":
             player = n.get("player")
@@ -203,7 +209,10 @@ def main():
     squad, score_notes = lineup_score.score_squad(
         squad, team_data, form_by_id, recent_points, engine_cfg, projection_by_id)
     for p in squad:
-        p["five_gw_points"] = players_map.get(p.get("id"), {}).get("five_gw_points", 0.0)
+        forecast = players_map.get(p.get("id"), {})
+        p["five_gw_points"] = forecast.get("five_gw_points", 0.0)
+        p["horizon_points"] = forecast.get("horizon_points", [])
+        p["projection_gws"] = forecast.get("projection_gws", [])
         p["fixtures"] = official_fixtures["by_team_id"].get(
             team_id_by_abbr.get(p.get("team")), [])
     formation, starting_xi, bench = lineup_score.select_starting_xi(squad, engine_cfg)
@@ -241,13 +250,19 @@ def main():
         notes.append({"topic": "transfer_status",
                       "detail": f"已检测到已完结轮次转会历史，按免费转会数限制建议（{ts['free_transfers']} 次）"})
 
+    history_for_learning, _ = history_writer.init_history_for_account(
+        data_store.load_json(config.HISTORY_FILE, None), config.TEAM_ID, config.SEASON)
+    calibration = history_writer.learned_transfer_calibration(history_for_learning)
+    transfer_evaluation = {}
     suggestions, t_notes = transfer.evaluate_transfers(
-        squad, players_map, market_scores, cfg, state["bank"], ts)
+        squad, players_map, market_scores, cfg, state["bank"], ts,
+        gain_multiplier=calibration["multiplier"], evaluation_meta=transfer_evaluation)
     notes.extend(t_notes)
     notes.extend(ext_notes)
 
     # 预算口径汇总（state.bank 为 £m；包内所有转会 100% 预算可行）
-    transfer_package = transfer.summarize_package(state["bank"], suggestions)
+    transfer_package = transfer.summarize_package(state["bank"], suggestions, transfer_evaluation)
+    transfer_package["calibration_samples"] = calibration["samples"]
 
     # ---- 转会后阵容快照（suggested_squad）：应用全部建议转会后的完整 15 人 ----
     # in 球员不在 state.team 内、且缺 score_breakdown 等完整字段，前端无法独立
@@ -301,7 +316,7 @@ def main():
 
     data_store.validate_state(state)
     history, replaced = history_writer.init_history_for_account(
-        data_store.load_json(config.HISTORY_FILE, None), config.TEAM_ID, config.SEASON)
+        history_for_learning, config.TEAM_ID, config.SEASON)
     if replaced:
         notes.append({"topic": "warning",
                       "detail": "history.json 属于其他账号，已从空历史开始当前账号"})
@@ -317,6 +332,14 @@ def main():
     history_writer.backfill_actual_transfers(
         history, actual_transfers, bootstrap.get("elements") or [],
         entry_history.get("current") or [])
+    pending_ids = history_writer.pending_recommended_outcome_ids(history, events)
+    actual_points = {}
+    for element_id in pending_ids:
+        try:
+            actual_points[element_id] = api.points_by_round(api.get_element_summary(element_id))
+        except api.FplApiError as exc:
+            print(f"[brain] warning: 推荐转会复盘暂缺球员 {element_id}: {exc}")
+    history_writer.backfill_recommended_transfer_outcomes(history, actual_points, events)
     data_store.validate_history(history)
     data_store.save_json(config.STATE_FILE, state)
     data_store.save_json(config.HISTORY_FILE, history)

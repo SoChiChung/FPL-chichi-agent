@@ -179,3 +179,76 @@ def backfill_actual_transfers(history: dict, transfers: list, elements: list,
             updated += 1
     history["history"].sort(key=lambda h: h.get("gw", 0))
     return updated
+
+
+def _transfer_packages(history):
+    for entry in history.get("history", []):
+        decision = entry.get("decision") or {}
+        package = decision.get("transfer_package") or {}
+        if package.get("projection_before", {}).get("rounds") and package.get("projection_after", {}).get("rounds"):
+            yield entry, package
+
+
+def pending_recommended_outcome_ids(history: dict, events: list) -> set:
+    """IDs needed to settle stored recommendation forecasts whose horizon finished."""
+    finished = {e.get("id") for e in events or [] if e.get("finished")}
+    needed = set()
+    for entry, package in _transfer_packages(history):
+        if package.get("recommended_outcome"):
+            continue
+        before = package["projection_before"]["rounds"]
+        after = package["projection_after"]["rounds"]
+        if not before or not all(r.get("gw") in finished for r in before):
+            continue
+        for row in before + after:
+            needed.update(pid for pid in row.get("xi", []) if pid is not None)
+            if row.get("captain") is not None:
+                needed.add(row["captain"])
+    return needed
+
+
+def backfill_recommended_transfer_outcomes(history: dict, points_by_id: dict, events: list) -> int:
+    """Compare the saved final recommendation's projected XI with official FPL points."""
+    finished = {e.get("id") for e in events or [] if e.get("finished")}
+    updated = 0
+    for entry, package in _transfer_packages(history):
+        if package.get("recommended_outcome"):
+            continue
+        before, after = package["projection_before"]["rounds"], package["projection_after"]["rounds"]
+        if not before or not all(r.get("gw") in finished for r in before):
+            continue
+        if any(pid not in points_by_id for row in before + after
+               for pid in list(row.get("xi", [])) + ([row["captain"]] if row.get("captain") is not None else [])):
+            continue
+        def actual(rows):
+            total = 0
+            for row in rows:
+                gw = row["gw"]
+                total += sum((points_by_id.get(pid) or {}).get(gw, 0) for pid in row.get("xi", []))
+                captain = row.get("captain")
+                if captain is not None:
+                    total += (points_by_id.get(captain) or {}).get(gw, 0)
+            return total
+        package["recommended_outcome"] = {
+            "before_points": actual(before),
+            "after_points": actual(after),
+            "actual_gain": actual(after) - actual(before),
+            "settled_gws": [r["gw"] for r in before],
+        }
+        updated += 1
+    return updated
+
+
+def learned_transfer_calibration(history: dict) -> dict:
+    """Conservative online calibration from settled final recommendations (>=3 samples)."""
+    ratios = []
+    for _, package in _transfer_packages(history):
+        outcome = package.get("recommended_outcome") or {}
+        predicted = package.get("five_gw_after", 0) - package.get("five_gw_before", 0)
+        actual = outcome.get("actual_gain")
+        if actual is not None and predicted > 0:
+            ratios.append(max(0.5, min(1.25, actual / predicted)))
+    if len(ratios) < 3:
+        return {"multiplier": 1.0, "samples": len(ratios)}
+    return {"multiplier": round(max(0.5, min(1.25, sum(ratios) / len(ratios))), 3),
+            "samples": len(ratios)}
