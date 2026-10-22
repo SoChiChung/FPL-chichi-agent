@@ -49,7 +49,15 @@ class HistoryFreeTransferProvider(FreeTransferProvider):
 
     def get_free_transfers(self, entry_id=None):
         carried = 0
-        for row in self.rows:
+        for index, row in enumerate(self.rows):
+            # Accounts created after GW1 do not earn a carried transfer for
+            # the period before their first recorded event. Treat the first
+            # history row as the account's starting point, then accrue from
+            # the following GW. This matches a team first entered in GW3:
+            # GW4 starts with one free transfer, not two.
+            if index == 0:
+                carried = 0
+                continue
             free = min(self.max_free, 1 + carried)
             used = max(0, int(row.get("event_transfers", 0)))
             carried = max(0, free - used)

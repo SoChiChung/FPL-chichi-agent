@@ -649,15 +649,10 @@ function _resolveInitialView() {
 }
 _resolveInitialView();
 
-/* ---- 「转会后阵容」推导（v1.4）
- * 目标：点「查看转会后阵容」时，不只是把新队员塞进阵容，而是——
- *  1) 从 AI 决策同一套首发/替补序列（decision.starting_xi / decision.bench）出发，
- *     把每笔转会 out→in 原位替换 → 得到完整 11 首发 + 4 替补（与后端
- *     _build_suggested_squad 的「保留出场槽位」语义一致）；
- *  2) 队长/副队长沿用 AI 决策 C/V（与 ① 本周动态同口径）；若 AI 队长恰好被转出，
- *     则按 captain_scores 从新首发里顶替选人；
- *  3) state.suggested_squad 降级为「入队球员卡面数据」字典（快照缺失也能渲染）。
- * 这样「转会后视图」不再出现 C 徽章与决策队长打架的问题。
+/* ---- 「转会后阵容」推导
+ * Prefer the backend's complete optimized post-transfer snapshot so its XI,
+ * bench and captain agree with the package projection. Legacy states without
+ * that snapshot retain the old slot-replacement fallback below.
  */
 
 function transferMaps(state) {
@@ -714,8 +709,9 @@ function buildSuggestedPlan(state) {
   const teamById = new Map(team.map((p) => [p.id, p]));
   const snapById = new Map(snap.map((p) => [p.id, p]));
 
-  // 兜底：当前队缺失但后端快照完整 → 直接按快照标志渲染（保底可见）
-  if (!team.length && snap.length >= 15) {
+  // The backend optimizes the full squad after applying the package. Use that
+  // exact layout whenever available; do not reapply the old XI slots here.
+  if (snap.length >= 15) {
     const xi = snap.filter((p) => p.starting);
     const bench = snap.filter((p) => !p.starting);
     const cap = snap.find((p) => p.is_captain) || {};

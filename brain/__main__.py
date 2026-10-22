@@ -60,8 +60,8 @@ def _build_suggested_squad(squad: list, suggestions: list, players_map: dict,
                            projection_by_id: dict, fixtures_by_team_id: dict):
     """应用全部建议转会后的 15 人完整快照（供前端「转会后阵容」视图）。
 
-    - 底 = 决策用基础 squad；逐笔 out→in 原位替换，保留出场槽位
-      （starting / multiplier / C / VC）——阵型与 XI 结构不因替换而变。
+    - 底 = 决策用基础 squad；逐笔 out→in 替换后，重新优化首发、替补和 C/V，
+      与转会包未来积分评估使用同一套阵容优化逻辑。
     - in 球员从全池 players_map 取基础档案，再经 score_squad 单点补全
       score_breakdown / lineup_score（recent_points 缺该球员 → streak 按 0 降级）。
     - 任何一笔无法解析（out 不在阵 / in 不在全池）→ 返回 None（保守不落盘，
@@ -76,19 +76,35 @@ def _build_suggested_squad(squad: list, suggestions: list, players_map: dict,
         base = players_map.get(in_id)
         if idx is None or base is None:
             return None
-        slot = pool[idx]
         incoming = {
             **base, "id": in_id,
             "market_score": market_scores.get(in_id, 0.0),
-            "starting": slot["starting"],
-            "multiplier": slot["multiplier"],
-            "is_captain": slot["is_captain"],
-            "is_vice_captain": slot["is_vice_captain"],
+            "starting": False,
+            "multiplier": 1,
+            "is_captain": False,
+            "is_vice_captain": False,
             "fixtures": fixtures_by_team_id.get(base.get("team_id"), []),
         }
         lineup_score.score_squad([incoming], team_data, form_by_id,
                                  recent_points, engine_cfg, projection_by_id)
         pool[idx] = incoming
+
+    # Rebuild the post-transfer XI from the full squad. Keeping the outgoing
+    # player's old slot can put a high-value signing such as Haaland on bench.
+    for player in pool:
+        player.update(starting=False, multiplier=1, is_captain=False,
+                      is_vice_captain=False)
+    _, starting_xi, bench = lineup_score.select_starting_xi(pool, engine_cfg)
+    captain, vice = captain_score.Phase2CaptainSelector(engine_cfg).select(starting_xi)
+    for player in starting_xi:
+        player["starting"] = True
+    for player in bench:
+        player["starting"] = False
+    if captain:
+        captain["is_captain"] = True
+        captain["multiplier"] = 2
+    if vice:
+        vice["is_vice_captain"] = True
     return pool
 
 
