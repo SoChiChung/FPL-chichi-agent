@@ -489,7 +489,7 @@ function renderThisWeek(state, entry) {
     d.transfer_status === "unlimited"
       ? "转会次数暂不受限（新账号）"
       : typeof d.free_transfers === "number"
-        ? `可用免费转会 ${d.free_transfers} 次`
+        ? `可用免费转会额度 ${d.free_transfers} 次`
         : "";
 
   // GW 徽章 + 三态标签（design-ia-ux.md §2.3 / §3.2）
@@ -517,6 +517,8 @@ function renderThisWeek(state, entry) {
     <p class="muted disclaimer">以下为 AI 建议，不自动提交到 FPL。</p>`;
 
   const transfers = Array.isArray(d.recommended_transfers) ? d.recommended_transfers : [];
+  const hitCount = transfers.filter((t) => Number(t.hit_cost) > 0).length;
+  const freeCount = transfers.length - hitCount;
   const chipPlan = d.chip_plan || {};
   const chipRec = d.recommended_chip || null;
   const chipLabels = { wildcard: "Wildcard", free_hit: "Free Hit", bench_boost: "Bench Boost", triple_captain: "Triple Captain" };
@@ -549,10 +551,12 @@ function renderThisWeek(state, entry) {
               <span class="x-in">${esc(i.name || "?")}</span>
               <span class="muted x-meta">${esc(o.pos || "-")} £${o.price ?? "-"}m → ${esc(i.pos || "-")} £${i.price ?? "-"}m${o.five_gw_points != null && i.five_gw_points != null ? ` · 球员模型五轮估分 ${fmtNum(o.five_gw_points)}→${fmtNum(i.five_gw_points)}分` : ""}</span>
             </div>
-            <div class="xfer-reason muted">${t.hit_cost ? `扣 ${t.hit_cost} 分 · ` : ""}${esc(t.reason || "")}</div>
+            <div class="xfer-reason muted"><b class="${t.hit_cost ? "hit-label" : "free-label"}">${t.hit_cost ? `扣分转会（−${fmtNum(t.hit_cost)} 分）` : "免费转会"}</b>${t.reason ? ` · ${esc(t.reason)}` : ""}</div>
           </div>`;
         })
         .join("") + `</div>`;
+    const hitPoints = transfers.reduce((sum, t) => sum + (Number(t.hit_cost) || 0), 0);
+    html += `<p class="muted xfer-summary">本轮建议 ${freeCount} 笔免费转会${hitCount ? ` + ${hitCount} 笔扣分转会（共扣 ${fmtNum(hitPoints)} 分）` : ""}</p>`;
     const pkg = d.transfer_package || {};
     if (pkg.budget_before != null) {
       html += `<p class="muted xfer-summary">预算校验：净花费 ${fmtMoney(pkg.transfer_cost)}（卖出回血 ${fmtMoney(pkg.total_out_price)}，买入 ${fmtMoney(pkg.total_in_price)}），转会后 Bank ${fmtBank(pkg.budget_after)}${transferProjectionSummary(pkg)}</p>`;
@@ -915,7 +919,7 @@ function renderHistoryAccordion(state, rows) {
                 <span class="x-out">${esc(o.name || "?")}</span>
                 <span class="x-arrow">→</span>
                 <span class="x-in">${esc(i.name || "?")}</span>
-              <span class="muted xfer-reason-inline">${actualTransfers === null ? esc(t.hit_cost ? `扣 ${t.hit_cost} 分 · ${t.reason || "AI 建议"}` : (t.reason || "AI 建议")) : "实际转会"}</span>
+              <span class="muted xfer-reason-inline">${actualTransfers === null ? `<b class="${t.hit_cost ? "hit-label" : "free-label"}">${t.hit_cost ? `扣分转会（−${fmtNum(t.hit_cost)} 分）` : "免费转会"}</b> · ${esc(t.reason || "AI 建议")}` : "实际转会"}</span>
               </div>`;
           })
           .join("")

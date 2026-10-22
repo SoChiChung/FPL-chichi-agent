@@ -301,6 +301,8 @@ b, strong { font-weight: 700; }
 }
 .x-meta { font-size: 0.76rem; font-variant-numeric: tabular-nums; }
 .xfer-reason { margin-top: 5px; font-size: 0.8rem; }
+.free-label { color: var(--success, #27864a); }
+.hit-label { color: var(--danger, #b42318); }
 .no-xfer {
   margin-top: 4px;
   background: #fff9e6;
