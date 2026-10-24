@@ -1862,7 +1862,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-10-20T19:52:34Z",
-      "updated_at": "2026-10-24T13:09:20Z",
+      "updated_at": "2026-10-24T16:48:55Z",
       "decision": {
         "formation": "343",
         "captain": {
@@ -1899,12 +1899,12 @@
             "name": "Henderson"
           },
           {
-            "id": 427,
-            "name": "Mbeumo"
-          },
-          {
             "id": 40,
             "name": "Rogers"
+          },
+          {
+            "id": 427,
+            "name": "Mbeumo"
           },
           {
             "id": 411,
@@ -1951,20 +1951,20 @@
               "name": "Evanilson",
               "pos": "FWD",
               "price": 6.2,
-              "market_score": 18.6,
-              "five_gw_points": 26.57
+              "market_score": 14.73,
+              "five_gw_points": 25.49
             },
             "in": {
               "id": 166,
               "name": "N.Jackson",
               "pos": "FWD",
               "price": 6.6,
-              "market_score": 22.47,
-              "five_gw_points": 31.23
+              "market_score": 24.08,
+              "five_gw_points": 30.83
             },
-            "market_gap": 4.66,
+            "market_gap": 5.34,
             "hit_cost": 0,
-            "reason": "未来 5 轮预计增加 4.66 分"
+            "reason": "未来 5 轮预计增加 5.34 分"
           },
           {
             "out": {
@@ -1972,20 +1972,20 @@
               "name": "Mbeumo",
               "pos": "MID",
               "price": 7.9,
-              "market_score": 29.42,
-              "five_gw_points": 18.57
+              "market_score": 26.37,
+              "five_gw_points": 17.78
             },
             "in": {
               "id": 400,
               "name": "Doku",
               "pos": "MID",
               "price": 7.5,
-              "market_score": 15.18,
-              "five_gw_points": 19.51
+              "market_score": 12.01,
+              "five_gw_points": 18.59
             },
-            "market_gap": 0.94,
+            "market_gap": 0.81,
             "hit_cost": 0,
-            "reason": "未来 5 轮预计增加 1.37 分"
+            "reason": "未来 5 轮预计增加 1.47 分"
           }
         ],
         "chip_plan": {
@@ -2008,7 +2008,7 @@
           "chip_already_used_this_gw": false,
           "current_recommendation": {
             "chip": "free_hit",
-            "score": 416.59,
+            "score": 410.59,
             "reason": "本轮有 10 名球员赛程偏弱（0 人空赛、10 人困难赛程），Free Hit 可替换冲击更高上限",
             "name": "Free Hit"
           },
@@ -2055,7 +2055,7 @@
               {
                 "gw": 9,
                 "players": 10,
-                "strength": 416.59,
+                "strength": 410.59,
                 "reasons": {
                   "blank": 0,
                   "difficult": 10
@@ -2064,32 +2064,32 @@
             ]
           },
           "signals": {
-            "bench_score": 158.47,
-            "captain_score": 63.11,
+            "bench_score": 154.91,
+            "captain_score": 63.08,
             "captain_fixture_count": 1,
             "captain_fixture_difficulty": 2.0
           }
         },
         "recommended_chip": {
           "chip": "free_hit",
-          "score": 416.59,
+          "score": 410.59,
           "reason": "本轮有 10 名球员赛程偏弱（0 人空赛、10 人困难赛程），Free Hit 可替换冲击更高上限",
           "name": "Free Hit"
         },
         "transfer_package": {
-          "gain": 6.0,
-          "five_gw_before": 278.55,
-          "five_gw_after": 284.55,
-          "five_gw_net_gain": 6.0,
-          "per_gw_average_before": 55.71,
-          "per_gw_average_after": 56.91,
-          "per_gw_average_net_gain": 1.2,
+          "gain": 6.52,
+          "five_gw_before": 270.66,
+          "five_gw_after": 277.18,
+          "five_gw_net_gain": 6.52,
+          "per_gw_average_before": 54.13,
+          "per_gw_average_after": 55.44,
+          "per_gw_average_net_gain": 1.3,
           "hit_cost": 0.0,
           "projection_before": {
             "rounds": [
               {
                 "gw": 9,
-                "points": 54.04,
+                "points": 52.55,
                 "xi": [
                   1,
                   259,
@@ -2097,8 +2097,8 @@
                   8,
                   53,
                   101,
-                  427,
                   40,
+                  427,
                   411,
                   165,
                   79
@@ -2107,15 +2107,15 @@
               },
               {
                 "gw": 10,
-                "points": 56.36,
+                "points": 54.82,
                 "xi": [
                   1,
                   8,
                   4,
                   115,
                   101,
-                  427,
                   40,
+                  427,
                   124,
                   411,
                   165,
@@ -2125,7 +2125,7 @@
               },
               {
                 "gw": 11,
-                "points": 57.15,
+                "points": 55.55,
                 "xi": [
                   109,
                   115,
@@ -2143,7 +2143,7 @@
               },
               {
                 "gw": 12,
-                "points": 53.95,
+                "points": 52.34,
                 "xi": [
                   109,
                   115,
@@ -2151,8 +2151,8 @@
                   259,
                   53,
                   101,
-                  427,
                   40,
+                  427,
                   411,
                   165,
                   79
@@ -2161,7 +2161,7 @@
               },
               {
                 "gw": 13,
-                "points": 57.05,
+                "points": 55.4,
                 "xi": [
                   1,
                   8,
@@ -2178,13 +2178,13 @@
                 "captain": 411
               }
             ],
-            "points": 278.55
+            "points": 270.66
           },
           "projection_after": {
             "rounds": [
               {
                 "gw": 9,
-                "points": 55.99,
+                "points": 54.59,
                 "xi": [
                   1,
                   259,
@@ -2202,7 +2202,7 @@
               },
               {
                 "gw": 10,
-                "points": 56.44,
+                "points": 55.0,
                 "xi": [
                   1,
                   8,
@@ -2220,7 +2220,7 @@
               },
               {
                 "gw": 11,
-                "points": 58.72,
+                "points": 57.19,
                 "xi": [
                   109,
                   115,
@@ -2238,7 +2238,7 @@
               },
               {
                 "gw": 12,
-                "points": 55.32,
+                "points": 53.85,
                 "xi": [
                   109,
                   115,
@@ -2256,7 +2256,7 @@
               },
               {
                 "gw": 13,
-                "points": 58.08,
+                "points": 56.55,
                 "xi": [
                   1,
                   8,
@@ -2273,7 +2273,7 @@
                 "captain": 411
               }
             ],
-            "points": 284.55
+            "points": 277.18
           },
           "gain_multiplier": 1.0,
           "minimum_hit_return_multiple": 2.0,
@@ -2290,24 +2290,24 @@
           "score_base": "fpl_starting_xi_points_with_captain",
           "point_calibration": {
             "GKP": {
-              "intercept": 2.739,
+              "intercept": 2.7448,
               "slope": 0.01,
               "samples": 24
             },
             "DEF": {
-              "intercept": 2.5715,
+              "intercept": 2.5406,
               "slope": 0.01,
-              "samples": 126
+              "samples": 128
             },
             "MID": {
-              "intercept": 0.6267,
-              "slope": 0.0656,
-              "samples": 155
+              "intercept": 0.7845,
+              "slope": 0.0603,
+              "samples": 157
             },
             "FWD": {
-              "intercept": -1.8179,
-              "slope": 0.144,
-              "samples": 34
+              "intercept": -1.8105,
+              "slope": 0.1439,
+              "samples": 35
             }
           }
         },
@@ -2462,12 +2462,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 343，Total Lineup Score 549.78（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 343，Total Lineup Score 539.69（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Diop",
-          "detail": "爆发视角 Captain Score 63.11（首发 11 人中最高；本轮 Lineup Score 55.02）"
+          "detail": "爆发视角 Captain Score 63.08（首发 11 人中最高；本轮 Lineup Score 54.41）"
         },
         {
           "topic": "chip",
@@ -2481,22 +2481,22 @@
         {
           "topic": "transfer_out",
           "player": "Evanilson",
-          "detail": "未来 5 轮预计增加 4.66 分"
+          "detail": "未来 5 轮预计增加 5.34 分"
         },
         {
           "topic": "transfer_in",
           "player": "N.Jackson",
-          "detail": "未来 5 轮预估收益更高（Market Score 22.47），满足预算与同队约束"
+          "detail": "未来 5 轮预估收益更高（Market Score 24.08），满足预算与同队约束"
         },
         {
           "topic": "transfer_out",
           "player": "Mbeumo",
-          "detail": "未来 5 轮预计增加 1.37 分"
+          "detail": "未来 5 轮预计增加 1.47 分"
         },
         {
           "topic": "transfer_in",
           "player": "Doku",
-          "detail": "未来 5 轮预估收益更高（Market Score 15.18），满足预算与同队约束"
+          "detail": "未来 5 轮预估收益更高（Market Score 12.01），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -2504,11 +2504,11 @@
         }
       ],
       "metrics": {
-        "team_market_score": 584.36,
-        "captain_market_score": 19.1,
-        "formation_market_score": 430.01,
-        "team_lineup_score": 549.78,
-        "captain_score": 63.11
+        "team_market_score": 535.8,
+        "captain_market_score": 16.2,
+        "formation_market_score": 393.15,
+        "team_lineup_score": 539.69,
+        "captain_score": 63.08
       },
       "budget_before": 0.0,
       "budget_after": 0.0,
