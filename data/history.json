@@ -1862,7 +1862,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-10-20T19:52:34Z",
-      "updated_at": "2026-10-25T00:03:09Z",
+      "updated_at": "2026-10-25T05:06:12Z",
       "decision": {
         "formation": "343",
         "captain": {
@@ -1951,20 +1951,20 @@
               "name": "Evanilson",
               "pos": "FWD",
               "price": 6.2,
-              "market_score": 13.36,
-              "five_gw_points": 25.36
+              "market_score": 13.33,
+              "five_gw_points": 25.37
             },
             "in": {
               "id": 166,
               "name": "N.Jackson",
               "pos": "FWD",
               "price": 6.7,
-              "market_score": 24.8,
-              "five_gw_points": 30.91
+              "market_score": 24.88,
+              "five_gw_points": 30.95
             },
-            "market_gap": 5.55,
+            "market_gap": 5.58,
             "hit_cost": 0,
-            "reason": "未来 5 轮预计增加 5.55 分"
+            "reason": "未来 5 轮预计增加 5.58 分"
           },
           {
             "out": {
@@ -1972,7 +1972,7 @@
               "name": "Rogers",
               "pos": "MID",
               "price": 8.0,
-              "market_score": 48.12,
+              "market_score": 48.01,
               "five_gw_points": 18.95
             },
             "in": {
@@ -1980,7 +1980,7 @@
               "name": "Neto",
               "pos": "MID",
               "price": 6.6,
-              "market_score": 10.35,
+              "market_score": 10.29,
               "five_gw_points": 20.14
             },
             "market_gap": 1.19,
@@ -2008,7 +2008,7 @@
           "chip_already_used_this_gw": false,
           "current_recommendation": {
             "chip": "free_hit",
-            "score": 410.73,
+            "score": 410.53,
             "reason": "本轮有 10 名球员赛程偏弱（0 人空赛、10 人困难赛程），Free Hit 可替换冲击更高上限",
             "name": "Free Hit"
           },
@@ -2055,7 +2055,7 @@
               {
                 "gw": 9,
                 "players": 10,
-                "strength": 410.73,
+                "strength": 410.53,
                 "reasons": {
                   "blank": 0,
                   "difficult": 10
@@ -2064,7 +2064,7 @@
             ]
           },
           "signals": {
-            "bench_score": 154.72,
+            "bench_score": 154.73,
             "captain_score": 63.11,
             "captain_fixture_count": 1,
             "captain_fixture_difficulty": 2.0
@@ -2072,15 +2072,15 @@
         },
         "recommended_chip": {
           "chip": "free_hit",
-          "score": 410.73,
+          "score": 410.53,
           "reason": "本轮有 10 名球员赛程偏弱（0 人空赛、10 人困难赛程），Free Hit 可替换冲击更高上限",
           "name": "Free Hit"
         },
         "transfer_package": {
-          "gain": 6.74,
-          "five_gw_before": 269.84,
-          "five_gw_after": 276.58,
-          "five_gw_net_gain": 6.74,
+          "gain": 6.77,
+          "five_gw_before": 269.85,
+          "five_gw_after": 276.62,
+          "five_gw_net_gain": 6.77,
           "per_gw_average_before": 53.97,
           "per_gw_average_after": 55.32,
           "per_gw_average_net_gain": 1.35,
@@ -2089,7 +2089,7 @@
             "rounds": [
               {
                 "gw": 9,
-                "points": 52.4,
+                "points": 52.41,
                 "xi": [
                   1,
                   259,
@@ -2107,7 +2107,7 @@
               },
               {
                 "gw": 10,
-                "points": 54.61,
+                "points": 54.63,
                 "xi": [
                   1,
                   8,
@@ -2125,7 +2125,7 @@
               },
               {
                 "gw": 11,
-                "points": 55.37,
+                "points": 55.35,
                 "xi": [
                   109,
                   115,
@@ -2143,7 +2143,7 @@
               },
               {
                 "gw": 12,
-                "points": 52.25,
+                "points": 52.23,
                 "xi": [
                   109,
                   115,
@@ -2161,7 +2161,7 @@
               },
               {
                 "gw": 13,
-                "points": 55.21,
+                "points": 55.23,
                 "xi": [
                   1,
                   259,
@@ -2178,13 +2178,13 @@
                 "captain": 411
               }
             ],
-            "points": 269.84
+            "points": 269.85
           },
           "projection_after": {
             "rounds": [
               {
                 "gw": 9,
-                "points": 54.21,
+                "points": 54.23,
                 "xi": [
                   1,
                   259,
@@ -2202,7 +2202,7 @@
               },
               {
                 "gw": 10,
-                "points": 55.04,
+                "points": 55.05,
                 "xi": [
                   1,
                   8,
@@ -2220,7 +2220,7 @@
               },
               {
                 "gw": 11,
-                "points": 56.72,
+                "points": 56.71,
                 "xi": [
                   109,
                   115,
@@ -2238,7 +2238,7 @@
               },
               {
                 "gw": 12,
-                "points": 54.06,
+                "points": 54.05,
                 "xi": [
                   109,
                   115,
@@ -2256,7 +2256,7 @@
               },
               {
                 "gw": 13,
-                "points": 56.55,
+                "points": 56.58,
                 "xi": [
                   1,
                   259,
@@ -2273,7 +2273,7 @@
                 "captain": 411
               }
             ],
-            "points": 276.58
+            "points": 276.62
           },
           "gain_multiplier": 1.0,
           "minimum_hit_return_multiple": 2.0,
@@ -2290,22 +2290,22 @@
           "score_base": "fpl_starting_xi_points_with_captain",
           "point_calibration": {
             "GKP": {
-              "intercept": 2.6832,
+              "intercept": 2.6833,
               "slope": 0.01,
               "samples": 25
             },
             "DEF": {
-              "intercept": 2.5658,
+              "intercept": 2.5659,
               "slope": 0.01,
               "samples": 128
             },
             "MID": {
-              "intercept": 0.7712,
+              "intercept": 0.7716,
               "slope": 0.061,
               "samples": 158
             },
             "FWD": {
-              "intercept": -1.6506,
+              "intercept": -1.648,
               "slope": 0.1388,
               "samples": 35
             }
@@ -2462,12 +2462,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 343，Total Lineup Score 541.19（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 343，Total Lineup Score 540.91（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Diop",
-          "detail": "爆发视角 Captain Score 63.11（首发 11 人中最高；本轮 Lineup Score 54.14）"
+          "detail": "爆发视角 Captain Score 63.11（首发 11 人中最高；本轮 Lineup Score 54.12）"
         },
         {
           "topic": "chip",
@@ -2486,12 +2486,12 @@
         {
           "topic": "transfer_out",
           "player": "Evanilson",
-          "detail": "未来 5 轮预计增加 5.55 分"
+          "detail": "未来 5 轮预计增加 5.58 分"
         },
         {
           "topic": "transfer_in",
           "player": "N.Jackson",
-          "detail": "未来 5 轮预估收益更高（Market Score 24.80），满足预算与同队约束"
+          "detail": "未来 5 轮预估收益更高（Market Score 24.88），满足预算与同队约束"
         },
         {
           "topic": "transfer_out",
@@ -2501,7 +2501,7 @@
         {
           "topic": "transfer_in",
           "player": "Neto",
-          "detail": "未来 5 轮预估收益更高（Market Score 10.35），满足预算与同队约束"
+          "detail": "未来 5 轮预估收益更高（Market Score 10.29），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -2509,10 +2509,10 @@
         }
       ],
       "metrics": {
-        "team_market_score": 508.57,
-        "captain_market_score": 14.74,
-        "formation_market_score": 371.21,
-        "team_lineup_score": 541.19,
+        "team_market_score": 507.33,
+        "captain_market_score": 14.6,
+        "formation_market_score": 369.85,
+        "team_lineup_score": 540.91,
         "captain_score": 63.11
       },
       "budget_before": 0.0,
