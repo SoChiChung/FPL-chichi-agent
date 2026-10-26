@@ -1862,7 +1862,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-10-20T19:52:34Z",
-      "updated_at": "2026-10-25T23:02:41Z",
+      "updated_at": "2026-10-26T01:29:48Z",
       "decision": {
         "formation": "343",
         "captain": {
@@ -1951,18 +1951,18 @@
               "name": "João Pedro",
               "pos": "FWD",
               "price": 7.9,
-              "market_score": 57.6,
-              "five_gw_points": 26.94
+              "market_score": 57.52,
+              "five_gw_points": 26.91
             },
             "in": {
               "id": 166,
               "name": "N.Jackson",
               "pos": "FWD",
               "price": 6.7,
-              "market_score": 26.0,
+              "market_score": 26.08,
               "five_gw_points": 30.89
             },
-            "market_gap": 3.95,
+            "market_gap": 3.98,
             "hit_cost": 0,
             "reason": "状态 d 非 available"
           },
@@ -1972,7 +1972,7 @@
               "name": "Groß",
               "pos": "MID",
               "price": 6.2,
-              "market_score": 45.28,
+              "market_score": 45.34,
               "five_gw_points": 17.52
             },
             "in": {
@@ -1980,7 +1980,7 @@
               "name": "Tavernier",
               "pos": "MID",
               "price": 6.3,
-              "market_score": 30.96,
+              "market_score": 31.43,
               "five_gw_points": 20.38
             },
             "market_gap": 2.86,
@@ -2008,7 +2008,7 @@
           "chip_already_used_this_gw": false,
           "current_recommendation": {
             "chip": "free_hit",
-            "score": 411.75,
+            "score": 411.88,
             "reason": "本轮有 10 名球员赛程偏弱（0 人空赛、10 人困难赛程），Free Hit 可替换冲击更高上限",
             "name": "Free Hit"
           },
@@ -2055,7 +2055,7 @@
               {
                 "gw": 9,
                 "players": 10,
-                "strength": 411.75,
+                "strength": 411.88,
                 "reasons": {
                   "blank": 0,
                   "difficult": 10
@@ -2064,7 +2064,7 @@
             ]
           },
           "signals": {
-            "bench_score": 154.97,
+            "bench_score": 155.07,
             "captain_score": 63.11,
             "captain_fixture_count": 1,
             "captain_fixture_difficulty": 2.0
@@ -2072,18 +2072,18 @@
         },
         "recommended_chip": {
           "chip": "free_hit",
-          "score": 411.75,
+          "score": 411.88,
           "reason": "本轮有 10 名球员赛程偏弱（0 人空赛、10 人困难赛程），Free Hit 可替换冲击更高上限",
           "name": "Free Hit"
         },
         "transfer_package": {
-          "gain": 6.27,
-          "five_gw_before": 272.53,
-          "five_gw_after": 278.8,
-          "five_gw_net_gain": 6.27,
-          "per_gw_average_before": 54.51,
+          "gain": 6.3,
+          "five_gw_before": 272.52,
+          "five_gw_after": 278.82,
+          "five_gw_net_gain": 6.3,
+          "per_gw_average_before": 54.5,
           "per_gw_average_after": 55.76,
-          "per_gw_average_net_gain": 1.25,
+          "per_gw_average_net_gain": 1.26,
           "hit_cost": 0.0,
           "projection_before": {
             "rounds": [
@@ -2107,7 +2107,7 @@
               },
               {
                 "gw": 10,
-                "points": 55.22,
+                "points": 55.21,
                 "xi": [
                   1,
                   8,
@@ -2125,7 +2125,7 @@
               },
               {
                 "gw": 11,
-                "points": 55.86,
+                "points": 55.85,
                 "xi": [
                   109,
                   115,
@@ -2143,7 +2143,7 @@
               },
               {
                 "gw": 12,
-                "points": 52.7,
+                "points": 52.71,
                 "xi": [
                   109,
                   115,
@@ -2178,7 +2178,7 @@
                 "captain": 411
               }
             ],
-            "points": 272.53
+            "points": 272.52
           },
           "projection_after": {
             "rounds": [
@@ -2238,7 +2238,7 @@
               },
               {
                 "gw": 12,
-                "points": 54.22,
+                "points": 54.24,
                 "xi": [
                   109,
                   115,
@@ -2273,7 +2273,7 @@
                 "captain": 411
               }
             ],
-            "points": 278.8
+            "points": 278.82
           },
           "gain_multiplier": 1.0,
           "minimum_hit_return_multiple": 2.0,
@@ -2290,22 +2290,22 @@
           "score_base": "fpl_starting_xi_points_with_captain",
           "point_calibration": {
             "GKP": {
-              "intercept": 2.7426,
+              "intercept": 2.7424,
               "slope": 0.01,
               "samples": 25
             },
             "DEF": {
-              "intercept": 2.5821,
+              "intercept": 2.5819,
               "slope": 0.01,
               "samples": 132
             },
             "MID": {
-              "intercept": 0.8424,
+              "intercept": 0.8416,
               "slope": 0.057,
               "samples": 163
             },
             "FWD": {
-              "intercept": -2.1098,
+              "intercept": -2.1116,
               "slope": 0.1462,
               "samples": 35
             }
@@ -2462,12 +2462,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 343，Total Lineup Score 549.1（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 343，Total Lineup Score 549.29（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Diop",
-          "detail": "爆发视角 Captain Score 63.11（首发 11 人中最高；本轮 Lineup Score 54.17）"
+          "detail": "爆发视角 Captain Score 63.11（首发 11 人中最高；本轮 Lineup Score 54.19）"
         },
         {
           "topic": "chip",
@@ -2486,7 +2486,7 @@
         {
           "topic": "transfer_in",
           "player": "N.Jackson",
-          "detail": "未来 5 轮预估收益更高（Market Score 26.00），满足预算与同队约束"
+          "detail": "未来 5 轮预估收益更高（Market Score 26.08），满足预算与同队约束"
         },
         {
           "topic": "transfer_out",
@@ -2496,7 +2496,7 @@
         {
           "topic": "transfer_in",
           "player": "Tavernier",
-          "detail": "未来 5 轮预估收益更高（Market Score 30.96），满足预算与同队约束"
+          "detail": "未来 5 轮预估收益更高（Market Score 31.43），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -2504,10 +2504,10 @@
         }
       ],
       "metrics": {
-        "team_market_score": 506.06,
-        "captain_market_score": 14.87,
-        "formation_market_score": 366.43,
-        "team_lineup_score": 549.1,
+        "team_market_score": 507.39,
+        "captain_market_score": 14.96,
+        "formation_market_score": 367.4,
+        "team_lineup_score": 549.29,
         "captain_score": 63.11
       },
       "budget_before": 0.0,
