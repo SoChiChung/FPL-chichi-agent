@@ -108,6 +108,51 @@ def _build_suggested_squad(squad: list, suggestions: list, players_map: dict,
     return pool
 
 
+def _build_free_hit_squad(players_map: dict, target_scores: dict, cfg: dict,
+                          budget: float, team_data: dict, form_by_id: dict,
+                          engine_cfg: dict, score_cfg: dict,
+                          fixtures_by_team_id: dict):
+    """Build and optimize a legal one-week Free Hit squad within the real budget."""
+    build_cfg = copy.deepcopy(cfg)
+    build_cfg["budget"] = max(0.0, to_float(budget))
+    pool, warnings = squad_builder.build_squad(players_map, target_scores, build_cfg)
+    if warnings or len(pool) != int(build_cfg.get("squad_size", 15)):
+        return None
+    total_cost = sum(to_float(p.get("price")) for p in pool)
+    if total_cost > build_cfg["budget"] + 1e-9:
+        return None
+
+    team_id_by_abbr = {p.get("team"): p.get("team_id") for p in players_map.values()}
+    for player in pool:
+        original = players_map.get(player["id"], {})
+        player["team_id"] = original.get("team_id")
+        player["horizon_points"] = original.get("horizon_points", [])
+        player["five_gw_points"] = original.get("five_gw_points", 0.0)
+        player["fixtures"] = fixtures_by_team_id.get(
+            team_id_by_abbr.get(player.get("team")), [])
+    lineup_score.score_squad(pool, team_data, form_by_id, {}, score_cfg, {})
+    formation, starting_xi, bench = lineup_score.select_starting_xi(pool, engine_cfg)
+    captain, vice = captain_score.Phase2CaptainSelector(engine_cfg).select(starting_xi)
+    for player in pool:
+        player.update(starting=False, multiplier=1, is_captain=False,
+                      is_vice_captain=False, bench_priority=None)
+    for player in starting_xi:
+        player["starting"] = True
+    for player in bench:
+        player["starting"] = False
+        if player.get("pos") == "GKP":
+            player["bench_priority"] = 1
+    outfield_bench = [p for p in bench if p.get("pos") != "GKP"]
+    for priority, player in enumerate(outfield_bench, start=2):
+        player["bench_priority"] = priority
+    if captain:
+        captain["is_captain"] = True
+        captain["multiplier"] = 2
+    if vice:
+        vice["is_vice_captain"] = True
+    return {"formation": formation, "squad": pool}
+
+
 def _fetch_recent_points(squad: list, events: list):
     """拉 15 人 element-summary，返回 (recent_points, recent_rounds, failures)。
 
@@ -271,14 +316,31 @@ def main():
     chip_plan = chips.evaluate(squad, cap, entry_history, events, fixtures,
                                bootstrap.get("teams", []), target_gw, chip_cfg)
     active_chip = chip_plan.get("current_recommendation")
+    free_hit_squad_plan = None
+    if active_chip and active_chip.get("chip") == "free_hit":
+        free_hit_budget = state["bank"] + sum(
+            to_float(p.get("selling_price", p.get("price"))) for p in squad)
+        free_hit_squad_plan = _build_free_hit_squad(
+            players_map, model_scores_by_gw.get(target_gw, {}), cfg,
+            free_hit_budget, team_data, form_by_id, engine_cfg, model_cfg,
+            official_fixtures["by_team_id"])
+        if free_hit_squad_plan is None:
+            notes.append({"topic": "warning",
+                          "detail": "Free Hit 已建议，但当前预算与球员数据不足以生成完整合法的 15 人临时阵容"})
+        else:
+            notes.append({"topic": "free_hit_squad",
+                          "detail": f"已生成 GW{target_gw} Free Hit 临时阵容（阵型 {free_hit_squad_plan['formation']}）"})
     if active_chip:
         notes.append({"topic": "chip", "chip": active_chip["chip"],
                       "detail": f"建议本轮使用 {active_chip['name']}：{active_chip['reason']}"})
     else:
         notes.append({"topic": "chip", "detail": "本轮暂不建议开卡；筹码计划已结合未来赛程保留更优窗口"})
 
+    # Transfer allowance belongs to the GW we are making a recommendation for.
+    # If the next deadline is GW9 while GW8 is the active event, include GW8's
+    # completed transfer and hit record when calculating the GW9 free transfer.
     ts = transfer.resolve_transfer_status(
-        entry_history, gw, cfg.get("max_free_transfers", 5), establish=(picks is None))
+        entry_history, target_gw, cfg.get("max_free_transfers", 5), establish=(picks is None))
     if ts["status"] == "unlimited":
         notes.append({"topic": "transfer_status",
                       "detail": "新账号场景：无已完结轮次转会历史，转会次数暂不受限"})
@@ -290,9 +352,16 @@ def main():
         data_store.load_json(config.HISTORY_FILE, None), config.TEAM_ID, config.SEASON)
     calibration = history_writer.learned_transfer_calibration(history_for_learning)
     transfer_evaluation = {}
-    suggestions, t_notes = transfer.evaluate_transfers(
-        squad, players_map, market_scores, cfg, state["bank"], ts,
-        gain_multiplier=calibration["multiplier"], evaluation_meta=transfer_evaluation)
+    if active_chip and active_chip.get("chip") == "free_hit":
+        # A Free Hit squad reverts after this GW, so a persistent transfer
+        # package would conflict with the chip recommendation.
+        suggestions = []
+        t_notes = [{"topic": "no_transfer",
+                    "detail": "本轮建议使用 Free Hit；临时阵容将在本轮后恢复，因此不叠加永久转会建议"}]
+    else:
+        suggestions, t_notes = transfer.evaluate_transfers(
+            squad, players_map, market_scores, cfg, state["bank"], ts,
+            gain_multiplier=calibration["multiplier"], evaluation_meta=transfer_evaluation)
     notes.extend(t_notes)
     notes.extend(ext_notes)
 
@@ -322,6 +391,8 @@ def main():
         "recommended_transfers": suggestions,
         "chip_plan": chip_plan,
         "recommended_chip": active_chip,
+        "free_hit_formation": free_hit_squad_plan["formation"] if free_hit_squad_plan else None,
+        "free_hit_squad": free_hit_squad_plan["squad"] if free_hit_squad_plan else [],
         "transfer_package": transfer_package,
         "transfer_notes": _transfer_notes(suggestions, t_notes, ts),
     }

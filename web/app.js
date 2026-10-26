@@ -384,7 +384,19 @@ function renderProfile(state, rows) {
 
 function statItems(state, rows) {
   const gwRank = lastSettledGwRank(rows);
-  return [
+  const league = state.gameweek3_league;
+  const items = [];
+  if (league && league.rank != null) {
+    const members = league.rank_count != null
+      ? `共 ${fmtNumber(league.rank_count, "points")} 支队伍`
+      : "Gameweek 3 联赛";
+    items.push({
+      label: "Gameweek 3 联赛排名",
+      value: fmtNumber(league.rank, "rank"),
+      note: members,
+    });
+  }
+  items.push(
     { label: "Overall Rank", value: fmtNumber(state.rank, "rank"), note: "" },
     {
       label: "Gameweek Rank",
@@ -392,7 +404,8 @@ function statItems(state, rows) {
       note: gwRank ? `最近已结算 GW${gwRank.gw}` : "暂无已结算轮次",
     },
     { label: "Total Points", value: fmtNumber(state.points, "points"), note: "" },
-  ];
+  );
+  return items;
 }
 
 function renderRecords(state, rows) {
@@ -524,6 +537,9 @@ function renderThisWeek(state, entry) {
   const chipLabels = { wildcard: "Wildcard", free_hit: "Free Hit", bench_boost: "Bench Boost", triple_captain: "Triple Captain" };
   if (chipRec) {
     html += `<div class="chip-recommendation"><strong>🎟️ 本轮建议开 ${esc(chipRec.name || chipLabels[chipRec.chip] || "Chip")}</strong><span>${esc(chipRec.reason || "")}</span></div>`;
+    if (chipRec.chip === "free_hit" && Array.isArray(d.free_hit_squad) && d.free_hit_squad.length === 15) {
+      html += `<div class="tw-cta-row"><button type="button" class="leaf-btn" data-goto-fh>查看 Free Hit 推荐阵容</button></div>`;
+    }
     if (chipRec.follow_up_plan) {
       const fp = chipRec.follow_up_plan;
       html += `<div class="chip-followup"><b>Wildcard 后续排期</b><span>Free Hit：${fp.free_hit_gw ? `GW${fp.free_hit_gw}` : "等空赛/弱赛程"}</span><span>Triple Captain：${fp.triple_captain_gw ? `GW${fp.triple_captain_gw}` : "等双赛队长"}</span><span>Bench Boost：${fp.bench_boost_gw ? `GW${fp.bench_boost_gw}` : "Wildcard 后评估替补席"}</span><small>${esc(fp.note || "")}</small></div>`;
@@ -637,14 +653,18 @@ function playerCard(p, capId, viceId, benchNo, flags) {
     </div>`;
 }
 
-/** 阵容视图：cur = 当前阵容（state.team + decision 布局）；sug = 转会后阵容 */
+/** 阵容视图：cur = 当前阵容；sug = 转会后阵容；fh = Free Hit 临时阵容 */
 let squadView = "cur";
+let squadViewTouched = false;
 
 /** URL 参数可指定初始视图（?view=sug 用于直达/分享转会后阵容） */
 function _resolveInitialView() {
   try {
     const v = new URLSearchParams(location.search).get("view");
-    if (v === "sug" || v === "cur") squadView = v;
+    if (v === "sug" || v === "cur" || v === "fh") {
+      squadView = v;
+      squadViewTouched = true;
+    }
   } catch (_) {}
 }
 _resolveInitialView();
@@ -667,10 +687,14 @@ function transferMaps(state) {
 function squadViewEnabled(state) {
   if (!state) return false;
   const { rec } = transferMaps(state);
-  if (!rec.length) return false; // 无建议转会 → 「转会后」无意义
+  const d = state.decision || {};
+  const hasTransfers = rec.length > 0;
+  const hasFreeHit = d.recommended_chip && d.recommended_chip.chip === "free_hit" &&
+    Array.isArray(d.free_hit_squad) && d.free_hit_squad.length === 15;
+  if (!hasTransfers && !hasFreeHit) return false;
   const teamOk = Array.isArray(state.team) && state.team.length > 0;
   const snapOk = Array.isArray(state.suggested_squad) && state.suggested_squad.length > 0;
-  return teamOk || snapOk;
+  return hasFreeHit || teamOk || snapOk;
 }
 
 /** AI 决策 C/V 仍首发 → 沿用（与 ① 本周动态同口径）；否则按 captain_scores 在首发里顶替 */
@@ -773,6 +797,19 @@ function renderSquadToggle(state) {
   const toggle = $("#squad-toggle");
   if (!toggle) return;
   toggle.hidden = !squadViewEnabled(state);
+  const d = state && state.decision || {};
+  const transferButton = toggle.querySelector('[data-v="sug"]');
+  const freeHitButton = toggle.querySelector('[data-v="fh"]');
+  const hasTransfers = transferMaps(state).rec.length > 0;
+  if (transferButton) transferButton.hidden = !hasTransfers;
+  if (!hasTransfers && squadView === "sug") squadView = "cur";
+  if (freeHitButton) {
+    const hasFreeHit = d.recommended_chip && d.recommended_chip.chip === "free_hit" &&
+      Array.isArray(d.free_hit_squad) && d.free_hit_squad.length === 15;
+    freeHitButton.hidden = !hasFreeHit;
+    if (!hasFreeHit && squadView === "fh") squadView = "cur";
+    if (hasFreeHit && !squadViewTouched) squadView = "fh";
+  }
   toggle.querySelectorAll(".seg-btn").forEach((b) => {
     b.classList.toggle("active", b.dataset.v === squadView);
   });
@@ -780,11 +817,20 @@ function renderSquadToggle(state) {
 
 function renderTeam(state) {
   const { rec, outIds, inIds } = transferMaps(state);
-  const isSug = squadView === "sug" && squadViewEnabled(state);
+  const isSug = squadView === "sug" && rec.length > 0 && squadViewEnabled(state);
+  const d = state.decision || {};
+  const isFH = squadView === "fh" && squadViewEnabled(state) &&
+    Array.isArray(d.free_hit_squad) && d.free_hit_squad.length === 15;
 
-  // 转会后视图：从 AI 决策首发/替补序列推导完整阵容 + 队长（v1.4，见 buildSuggestedPlan）
+  // Free Hit view: use the complete temporary squad generated by the model.
   let xi, bench, capId, viceId;
-  if (isSug) {
+  if (isFH) {
+    const pool = d.free_hit_squad;
+    xi = pool.filter((p) => p.starting);
+    bench = pool.filter((p) => !p.starting);
+    capId = (pool.find((p) => p.is_captain) || {}).id;
+    viceId = (pool.find((p) => p.is_vice_captain) || {}).id;
+  } else if (isSug) {
     const plan = buildSuggestedPlan(state);
     if (plan) { xi = plan.xi; bench = plan.bench; capId = plan.capId; viceId = plan.viceId; }
   }
@@ -797,17 +843,21 @@ function renderTeam(state) {
   }
 
   // diff 角标数据：cur 视图高亮「拟转出」，sug 视图高亮「新入」
-  const flags = { sug: isSug, inIds, outIds };
+  const flags = { sug: isSug || isFH, inIds, outIds };
 
-  const formation = fmtFormation((state.decision && state.decision.formation) || state.formation);
-  $("#formation-line").textContent = isSug
-    ? `阵型 ${formation} · 转会后首发 ${xi.length} 人 / 替补 ${bench.length} 人`
-    : `阵型 ${formation} · 首发 ${xi.length} 人 / 替补 ${bench.length} 人`;
+  const formation = fmtFormation((isFH ? d.free_hit_formation : d.formation) || state.formation);
+  $("#formation-line").textContent = isFH
+    ? `阵型 ${formation} · Free Hit 临时阵容：首发 ${xi.length} 人 / 替补 ${bench.length} 人`
+    : isSug
+      ? `阵型 ${formation} · 转会后首发 ${xi.length} 人 / 替补 ${bench.length} 人`
+      : `阵型 ${formation} · 首发 ${xi.length} 人 / 替补 ${bench.length} 人`;
 
   // 转会后摘要（视图注记，非转会时不显示）
   const noteEl = $("#squad-note");
   if (noteEl) {
-    const parts = rec
+    const parts = isFH
+      ? "Free Hit 临时阵容，本轮结束后恢复原阵容"
+      : rec
       .map((t) => `${esc((t.out || {}).name || "?")} → ${esc((t.in || {}).name || "?")}`)
       .join("；");
     noteEl.textContent = parts ? `按 AI 建议（${rec.length} 笔）：${parts}` : "";
@@ -828,10 +878,12 @@ function renderTeam(state) {
     .join("");
   $("#team-xi").innerHTML = rows;
 
-  const benchOrder = [
-    ...bench.filter((p) => p.pos === "GKP"),
-    ...bench.filter((p) => p.pos !== "GKP"),
-  ];
+  const benchOrder = isFH
+    ? bench.slice().sort((a, b) => (a.bench_priority ?? 99) - (b.bench_priority ?? 99))
+    : [
+      ...bench.filter((p) => p.pos === "GKP"),
+      ...bench.filter((p) => p.pos !== "GKP"),
+    ];
   $("#team-bench").innerHTML = benchOrder
     .map((p, idx) => playerCard(p, capId, viceId, idx + 1, flags))
     .join("");
@@ -1176,6 +1228,7 @@ function bindSquadToggle(state) {
     const btn = e.target.closest(".seg-btn");
     if (!btn) return;
     squadView = btn.dataset.v;
+    squadViewTouched = true;
     renderSquadToggle(state);
     renderTeam(state);
   });
@@ -1188,10 +1241,12 @@ function bindThisWeekCta(state) {
   if (!sec || sec.dataset.ctaBound) return;
   sec.dataset.ctaBound = "1";
   sec.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-goto-sug]");
-    if (!btn) return;
+    const fhBtn = e.target.closest("[data-goto-fh]");
+    const transferBtn = e.target.closest("[data-goto-sug]");
+    if (!fhBtn && !transferBtn) return;
     if (!squadViewEnabled(state)) return;
-    squadView = "sug";
+    squadView = fhBtn ? "fh" : "sug";
+    squadViewTouched = true;
     renderSquadToggle(state);
     renderTeam(state);
     const target = document.getElementById("sec-squad");

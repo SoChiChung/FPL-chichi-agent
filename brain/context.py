@@ -204,6 +204,13 @@ def build_state(
             "is_captain": bool(pk.get("is_captain")),
             "is_vice_captain": bool(pk.get("is_vice_captain")),
         }
+        # FPL gives the exact sell price in tenths of a million. Keep it in
+        # £m so a temporary Free Hit squad can respect the manager's real
+        # available budget, including price rises and falls.
+        if pk.get("selling_price") is not None:
+            player["selling_price"] = round(to_float(pk["selling_price"]) / 10.0, 1)
+        if pk.get("purchase_price") is not None:
+            player["purchase_price"] = round(to_float(pk["purchase_price"]) / 10.0, 1)
         if market_scores:
             player["market_score"] = market_scores.get(pk["element"], 0.0)
         team.append(player)
@@ -221,6 +228,11 @@ def build_state(
                 raw_bank = row.get("bank", raw_bank)
     bank = round(to_float(raw_bank) / 10.0, 1)
 
+    gameweek3_league = next((league for league in
+                             ((entry.get("leagues") or {}).get("classic") or [])
+                             if str(league.get("name", "")).strip().casefold() == "gameweek 3"
+                             or league.get("short_name") == "event-3"), None)
+
     return {
         "season": config.SEASON,
         "current_gw": gw,
@@ -228,6 +240,12 @@ def build_state(
         # 前端据此显示「待结算」，而不是把缺失值 or 成 0 误导为真实 0。
         "points": entry.get("summary_overall_points"),
         "rank": entry.get("summary_overall_rank"),
+        "gameweek3_league": ({
+            "id": gameweek3_league.get("id"),
+            "name": gameweek3_league.get("name", "Gameweek 3"),
+            "rank": gameweek3_league.get("entry_rank"),
+            "rank_count": gameweek3_league.get("rank_count"),
+        } if gameweek3_league else None),
         # bank 单位 = 百万（£m），与球员 price 一致；2.0 表示 £2.0m
         "bank": bank,
         "manager_name": (entry.get("name") or "").strip(),
