@@ -2327,7 +2327,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-10-26T19:50:45Z",
-      "updated_at": "2026-10-26T23:36:57Z",
+      "updated_at": "2026-10-27T04:05:53Z",
       "decision": {
         "formation": "343",
         "captain": {
@@ -2430,7 +2430,7 @@
           "chip_already_used_this_gw": false,
           "current_recommendation": {
             "chip": "free_hit",
-            "score": 412.56,
+            "score": 412.55,
             "reason": "本轮有 10 名球员赛程偏弱（0 人空赛、10 人困难赛程），Free Hit 可替换冲击更高上限",
             "name": "Free Hit"
           },
@@ -2477,7 +2477,7 @@
               {
                 "gw": 9,
                 "players": 10,
-                "strength": 412.56,
+                "strength": 412.55,
                 "reasons": {
                   "blank": 0,
                   "difficult": 10
@@ -2494,7 +2494,7 @@
         },
         "recommended_chip": {
           "chip": "free_hit",
-          "score": 412.56,
+          "score": 412.55,
           "reason": "本轮有 10 名球员赛程偏弱（0 人空赛、10 人困难赛程），Free Hit 可替换冲击更高上限",
           "name": "Free Hit"
         },
@@ -2534,12 +2534,12 @@
               "samples": 132
             },
             "MID": {
-              "intercept": 0.8365,
+              "intercept": 0.8369,
               "slope": 0.0569,
               "samples": 163
             },
             "FWD": {
-              "intercept": -2.1245,
+              "intercept": -2.1242,
               "slope": 0.146,
               "samples": 35
             }
@@ -2696,7 +2696,7 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 343，Total Lineup Score 550.26（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 343，Total Lineup Score 550.25（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
@@ -2726,10 +2726,10 @@
         }
       ],
       "metrics": {
-        "team_market_score": 514.79,
+        "team_market_score": 514.75,
         "captain_market_score": 15.54,
-        "formation_market_score": 372.27,
-        "team_lineup_score": 550.26,
+        "formation_market_score": 372.26,
+        "team_lineup_score": 550.25,
         "captain_score": 63.11
       },
       "budget_before": 0.0,
