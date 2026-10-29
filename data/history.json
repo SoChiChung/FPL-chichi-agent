@@ -2327,7 +2327,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-10-26T19:50:45Z",
-      "updated_at": "2026-10-28T21:50:33Z",
+      "updated_at": "2026-10-29T01:37:01Z",
       "decision": {
         "formation": "343",
         "captain": {
@@ -2430,7 +2430,7 @@
           "chip_already_used_this_gw": false,
           "current_recommendation": {
             "chip": "free_hit",
-            "score": 416.82,
+            "score": 416.86,
             "reason": "本轮有 10 名球员赛程偏弱（0 人空赛、10 人困难赛程），Free Hit 可替换冲击更高上限",
             "name": "Free Hit"
           },
@@ -2477,7 +2477,7 @@
               {
                 "gw": 9,
                 "players": 10,
-                "strength": 416.82,
+                "strength": 416.86,
                 "reasons": {
                   "blank": 0,
                   "difficult": 10
@@ -2486,7 +2486,7 @@
             ]
           },
           "signals": {
-            "bench_score": 137.26,
+            "bench_score": 137.31,
             "captain_score": 63.11,
             "captain_fixture_count": 1,
             "captain_fixture_difficulty": 2.0
@@ -2494,7 +2494,7 @@
         },
         "recommended_chip": {
           "chip": "free_hit",
-          "score": 416.82,
+          "score": 416.86,
           "reason": "本轮有 10 名球员赛程偏弱（0 人空赛、10 人困难赛程），Free Hit 可替换冲击更高上限",
           "name": "Free Hit"
         },
@@ -2524,23 +2524,23 @@
           "score_base": "fpl_starting_xi_points_with_captain",
           "point_calibration": {
             "GKP": {
-              "intercept": 2.7343,
+              "intercept": 2.7342,
               "slope": 0.01,
               "samples": 25
             },
             "DEF": {
-              "intercept": 2.5739,
+              "intercept": 2.5737,
               "slope": 0.01,
               "samples": 132
             },
             "MID": {
-              "intercept": 0.7875,
+              "intercept": 0.7865,
               "slope": 0.0572,
               "samples": 163
             },
             "FWD": {
-              "intercept": -2.185,
-              "slope": 0.145,
+              "intercept": -2.1832,
+              "slope": 0.1449,
               "samples": 35
             }
           }
@@ -2696,12 +2696,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 343，Total Lineup Score 555.86（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 343，Total Lineup Score 555.99（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "Diop",
-          "detail": "爆发视角 Captain Score 63.11（首发 11 人中最高；本轮 Lineup Score 55.0）"
+          "detail": "爆发视角 Captain Score 63.11（首发 11 人中最高；本轮 Lineup Score 55.02）"
         },
         {
           "topic": "free_hit_squad",
@@ -2726,10 +2726,10 @@
         }
       ],
       "metrics": {
-        "team_market_score": 553.4,
-        "captain_market_score": 19.04,
-        "formation_market_score": 400.43,
-        "team_lineup_score": 555.86,
+        "team_market_score": 554.02,
+        "captain_market_score": 19.1,
+        "formation_market_score": 400.82,
+        "team_lineup_score": 555.99,
         "captain_score": 63.11
       },
       "budget_before": 0.0,
