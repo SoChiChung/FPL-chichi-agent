@@ -2327,7 +2327,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-10-26T19:50:45Z",
-      "updated_at": "2026-10-30T18:45:08Z",
+      "updated_at": "2026-10-30T22:49:36Z",
       "decision": {
         "formation": "442",
         "captain": {
@@ -2430,8 +2430,8 @@
           "chip_already_used_this_gw": false,
           "current_recommendation": {
             "chip": "free_hit",
-            "score": 4.04,
-            "reason": "本轮有 10 名球员赛程偏弱；Free Hit 相较当前阵容预计净增 4.04 分，数据可信度调整后 4.04 分，达到 4.00 分门槛；后续暂未发现更强的 Free Hit 候选轮",
+            "score": 4.03,
+            "reason": "本轮有 10 名球员赛程偏弱；Free Hit 相较当前阵容预计净增 4.03 分，数据可信度调整后 4.03 分，达到 4.00 分门槛；后续暂未发现更强的 Free Hit 候选轮",
             "name": "Free Hit"
           },
           "planning_horizon": 2,
@@ -2477,7 +2477,7 @@
               {
                 "gw": 9,
                 "players": 10,
-                "strength": 285.84,
+                "strength": 287.06,
                 "reasons": {
                   "blank": 0,
                   "difficult": 10
@@ -2486,20 +2486,20 @@
             ]
           },
           "signals": {
-            "bench_score": 66.28,
-            "captain_score": 89.25,
+            "bench_score": 66.16,
+            "captain_score": 89.26,
             "captain_fixture_count": 1,
             "captain_fixture_difficulty": 3.0,
-            "free_hit_net_gain": 4.04,
-            "free_hit_risk_adjusted_gain": 4.04,
+            "free_hit_net_gain": 4.03,
+            "free_hit_risk_adjusted_gain": 4.03,
             "free_hit_required_gain": 4.0,
             "free_hit_confidence": 1.0
           }
         },
         "recommended_chip": {
           "chip": "free_hit",
-          "score": 4.04,
-          "reason": "本轮有 10 名球员赛程偏弱；Free Hit 相较当前阵容预计净增 4.04 分，数据可信度调整后 4.04 分，达到 4.00 分门槛；后续暂未发现更强的 Free Hit 候选轮",
+          "score": 4.03,
+          "reason": "本轮有 10 名球员赛程偏弱；Free Hit 相较当前阵容预计净增 4.03 分，数据可信度调整后 4.03 分，达到 4.00 分门槛；后续暂未发现更强的 Free Hit 候选轮",
           "name": "Free Hit"
         },
         "transfer_package": {
@@ -2528,23 +2528,23 @@
           "score_base": "fpl_starting_xi_points_with_captain",
           "point_calibration": {
             "GKP": {
-              "intercept": 2.7399,
+              "intercept": 2.7404,
               "slope": 0.01,
               "samples": 25
             },
             "DEF": {
-              "intercept": 2.5971,
+              "intercept": 2.5968,
               "slope": 0.01,
               "samples": 132
             },
             "MID": {
-              "intercept": 1.7472,
-              "slope": 0.0347,
+              "intercept": 1.736,
+              "slope": 0.0351,
               "samples": 163
             },
             "FWD": {
-              "intercept": 0.7074,
-              "slope": 0.0785,
+              "intercept": 0.7115,
+              "slope": 0.0786,
               "samples": 35
             }
           }
@@ -2690,26 +2690,26 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 442，Total Lineup Score 497.05（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 442，Total Lineup Score 498.65（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "base_captain",
           "player": "Haaland",
-          "detail": "爆发视角 Captain Score 89.25（首发 11 人中最高；本轮 Lineup Score 79.51）"
+          "detail": "爆发视角 Captain Score 89.26（首发 11 人中最高；本轮 Lineup Score 79.54）"
         },
         {
           "topic": "free_hit_captain",
           "player": "Van Hecke",
-          "detail": "Captain Score 92.29；按 Free Hit 临时阵容重新计算"
+          "detail": "Captain Score 92.19；按 Free Hit 临时阵容重新计算"
         },
         {
           "topic": "free_hit_squad",
-          "detail": "GW9 Free Hit 临时阵容为 523，相较原阵容预计净增 4.04 分；首发对阵后卫冲突 0 组"
+          "detail": "GW9 Free Hit 临时阵容为 523，相较原阵容预计净增 4.03 分；首发对阵后卫冲突 0 组"
         },
         {
           "topic": "chip",
           "chip": "free_hit",
-          "detail": "建议本轮使用 Free Hit：本轮有 10 名球员赛程偏弱；Free Hit 相较当前阵容预计净增 4.04 分，数据可信度调整后 4.04 分，达到 4.00 分门槛；后续暂未发现更强的 Free Hit 候选轮"
+          "detail": "建议本轮使用 Free Hit：本轮有 10 名球员赛程偏弱；Free Hit 相较当前阵容预计净增 4.03 分，数据可信度调整后 4.03 分，达到 4.00 分门槛；后续暂未发现更强的 Free Hit 候选轮"
         },
         {
           "topic": "transfer_status",
@@ -2725,11 +2725,11 @@
         }
       ],
       "metrics": {
-        "team_market_score": 557.81,
-        "captain_market_score": 75.08,
-        "formation_market_score": 390.86,
-        "team_lineup_score": 497.05,
-        "captain_score": 89.25
+        "team_market_score": 557.6,
+        "captain_market_score": 75.22,
+        "formation_market_score": 392.3,
+        "team_lineup_score": 498.65,
+        "captain_score": 89.26
       },
       "budget_before": 0.0,
       "budget_after": 0.0,
