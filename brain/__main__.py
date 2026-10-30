@@ -24,7 +24,7 @@ import time
 import copy
 
 from brain import api, captain_score, chips, config, context, data_store
-from brain import history_writer, lineup_score, market, squad_builder, strategy_config, transfer
+from brain import history_writer, lineup_score, live, market, squad_builder, strategy_config, transfer
 from brain.external import fpl_joe
 from brain.market import to_float
 
@@ -111,11 +111,20 @@ def _build_suggested_squad(squad: list, suggestions: list, players_map: dict,
 def _build_free_hit_squad(players_map: dict, target_scores: dict, cfg: dict,
                           budget: float, team_data: dict, form_by_id: dict,
                           engine_cfg: dict, score_cfg: dict,
-                          fixtures_by_team_id: dict):
+                          fixtures_by_team_id: dict, market_scores: dict,
+                          point_calibration: dict,
+                          team_matches_played_by_team: dict):
     """Build and optimize a legal one-week Free Hit squad within the real budget."""
     build_cfg = copy.deepcopy(cfg)
     build_cfg["budget"] = max(0.0, to_float(budget))
-    pool, warnings = squad_builder.build_squad(players_map, target_scores, build_cfg)
+    chip_cfg = cfg.get("chip_strategy") or {}
+    pool, warnings, selection_meta = squad_builder.build_free_hit_squad(
+        players_map, target_scores, market_scores, build_cfg, build_cfg["budget"],
+        fixtures_by_team_id, point_calibration, team_data=team_data,
+        team_matches_played_by_team=team_matches_played_by_team,
+        conflict_penalty=chip_cfg.get("free_hit_opponent_defender_penalty", 0.75),
+        beam_width=chip_cfg.get("free_hit_beam_width", 512),
+        fpljoe_reference_weight=chip_cfg.get("free_hit_fpljoe_reference_weight", 0.5))
     if warnings or len(pool) != int(build_cfg.get("squad_size", 15)):
         return None
     total_cost = sum(to_float(p.get("price")) for p in pool)
@@ -131,6 +140,7 @@ def _build_free_hit_squad(players_map: dict, target_scores: dict, cfg: dict,
         player["fixtures"] = fixtures_by_team_id.get(
             team_id_by_abbr.get(player.get("team")), [])
     lineup_score.score_squad(pool, team_data, form_by_id, {}, score_cfg, {})
+    squad_builder.apply_start_probability(pool)
     formation, starting_xi, bench = lineup_score.select_starting_xi(pool, engine_cfg)
     captain, vice = captain_score.Phase2CaptainSelector(engine_cfg).select(starting_xi)
     for player in pool:
@@ -150,7 +160,44 @@ def _build_free_hit_squad(players_map: dict, target_scores: dict, cfg: dict,
         captain["multiplier"] = 2
     if vice:
         vice["is_vice_captain"] = True
-    return {"formation": formation, "squad": pool}
+    starting_points = sum(to_float(p.get("projected_points")) for p in starting_xi)
+    bench_points = sum(to_float(p.get("projected_points")) for p in bench)
+    captain_points = to_float(captain.get("projected_points")) if captain else 0.0
+    defender_pairs = _opposing_defender_pairs(starting_xi)
+    conflict_penalty = to_float(
+        chip_cfg.get("free_hit_opponent_defender_penalty"), 0.75)
+    value = (starting_points + captain_points + 0.25 * bench_points -
+             conflict_penalty * defender_pairs)
+    return {
+        "formation": formation,
+        "squad": pool,
+        "projected_points": round(starting_points + captain_points, 2),
+        "projected_value": round(value, 2),
+        "opposing_defender_pairs": defender_pairs,
+        "selection_meta": selection_meta,
+    }
+
+
+def _opposing_defender_pairs(players: list) -> int:
+    """Count starting defenders whose teams meet in the same GW fixture."""
+    defenders = [p for p in players if p.get("pos") == "DEF"]
+    pairs = 0
+    for index, player in enumerate(defenders):
+        opponents = {f.get("opponent") for f in player.get("fixtures") or []}
+        for other in defenders[index + 1:]:
+            other_opponents = {f.get("opponent") for f in other.get("fixtures") or []}
+            if other.get("team") in opponents or player.get("team") in other_opponents:
+                pairs += 1
+    return pairs
+
+
+def _projected_plan_value(starting_xi: list, bench: list, captain: dict,
+                          conflict_penalty: float) -> float:
+    starters = sum(to_float(p.get("projected_points")) for p in starting_xi)
+    bench_points = sum(to_float(p.get("projected_points")) for p in bench)
+    captain_points = to_float(captain.get("projected_points")) if captain else 0.0
+    return (starters + captain_points + 0.25 * bench_points -
+            to_float(conflict_penalty) * _opposing_defender_pairs(starting_xi))
 
 
 def _fetch_recent_points(squad: list, events: list):
@@ -189,6 +236,15 @@ def main():
     events = bootstrap["events"]
     gw = context.resolve_current_gw(events)
     target_gw = context.resolve_target_gw(events)
+    team_matches_played_by_team = {}
+    for fixture in fixtures:
+        event_id = fixture.get("event")
+        if event_id is None or event_id >= target_gw or not fixture.get("started"):
+            continue
+        for team_id in (fixture.get("team_h"), fixture.get("team_a")):
+            if team_id is not None:
+                team_matches_played_by_team[team_id] = (
+                    team_matches_played_by_team.get(team_id, 0) + 1)
 
     # 外部预测源：FPL Joe（仅刷新数据；目标 GW 起算窗口，见 decide.md §2.2）
     ext_notes = []
@@ -204,6 +260,9 @@ def main():
 
     players_map = context.build_player_map(bootstrap)
     market_scores = market.compute_market_scores(players_map, weights)
+    previous_state = data_store.load_json(config.STATE_FILE, {}) or {}
+    previous_live = (previous_state.get("live_gameweek")
+                     if previous_state.get("manager_id") == config.TEAM_ID else None)
 
     # ---- 基础阵容：当前/最近可用 picks；完全找不到则 establish ----
     picks, picks_gw = api.find_latest_picks(config.TEAM_ID, gw)
@@ -228,6 +287,12 @@ def main():
         state = context.build_state(bootstrap, entry, entry_history, {}, gw, market_scores)
         state["team"] = squad
 
+    current_event = next((event for event in events if event.get("id") == gw), None)
+    live_snapshot = live.snapshot(
+        gw, current_event, fixtures, entry_history, picks, picks_gw,
+        config.TEAM_ID, previous=previous_live)
+    state["live_gameweek"] = live_snapshot
+
     # ---- Phase 2 评分输入：官方 form 全员池 + 15 人近 3 轮实际分 ----
     form_by_id = {int(e["id"]): e.get("form", "0") for e in bootstrap["elements"]}
     recent_points, recent_rounds, summary_failures = _fetch_recent_points(squad, events)
@@ -242,8 +307,7 @@ def main():
     team_data = fpl_joe.read_target_gw(target_gw, team_abbr_by_id)
     official_fixtures = context.official_fixture_fallback(
         fixtures, bootstrap.get("teams") or [], target_gw)
-    # FPL Joe currently can return fresh metadata with an empty fixture payload.
-    # Use the official FDR in that case so Fixture does not collapse to 0 for everyone.
+    # Keep FPL Joe difficulty primary; only use official FDR when a team row is missing.
     used_official_fdr = False
     for abbr, values in official_fixtures["teams"].items():
         existing = team_data.setdefault("teams", {}).setdefault(abbr, {})
@@ -294,8 +358,15 @@ def main():
         p["five_gw_points"] = forecast.get("five_gw_points", 0.0)
         p["horizon_points"] = forecast.get("horizon_points", [])
         p["projection_gws"] = forecast.get("projection_gws", [])
+        p["projected_points"] = squad_builder.expected_points(
+            forecast, model_scores_by_gw.get(target_gw, {}).get(p.get("id"), 0.0),
+            point_calibration,
+            team_matches_played_by_team.get(forecast.get("team_id"), 0))
+        p["starting_probability"] = squad_builder.starting_probability(
+            forecast, team_matches_played_by_team.get(forecast.get("team_id"), 0))
         p["fixtures"] = official_fixtures["by_team_id"].get(
             team_id_by_abbr.get(p.get("team")), [])
+    squad_builder.apply_start_probability(squad)
     formation, starting_xi, bench = lineup_score.select_starting_xi(squad, engine_cfg)
     captain = captain_score.Phase2CaptainSelector(engine_cfg)
     cap, vice = captain.select(starting_xi)
@@ -317,24 +388,84 @@ def main():
                                bootstrap.get("teams", []), target_gw, chip_cfg)
     active_chip = chip_plan.get("current_recommendation")
     free_hit_squad_plan = None
-    if active_chip and active_chip.get("chip") == "free_hit":
+    free_hit_rejected_detail = None
+    free_hit_available = (
+        chip_plan.get("available", {}).get("free_hit", False) and
+        not chip_plan.get("chip_already_used_this_gw", False)
+    )
+    if free_hit_available:
         free_hit_budget = state["bank"] + sum(
             to_float(p.get("selling_price", p.get("price"))) for p in squad)
         free_hit_squad_plan = _build_free_hit_squad(
             players_map, model_scores_by_gw.get(target_gw, {}), cfg,
             free_hit_budget, team_data, form_by_id, engine_cfg, model_cfg,
-            official_fixtures["by_team_id"])
+            official_fixtures["by_team_id"], market_scores, point_calibration,
+            team_matches_played_by_team)
         if free_hit_squad_plan is None:
-            notes.append({"topic": "warning",
-                          "detail": "Free Hit 已建议，但当前预算与球员数据不足以生成完整合法的 15 人临时阵容"})
+            if active_chip and active_chip.get("chip") == "free_hit":
+                notes.append({"topic": "warning",
+                              "detail": "Free Hit 候选阵容因预算或球员数据不足而无法生成"})
+            chip_plan = chips.evaluate(
+                squad, cap, entry_history, events, fixtures,
+                bootstrap.get("teams", []), target_gw, chip_cfg,
+                free_hit_assessed=True)
+            active_chip = chip_plan.get("current_recommendation")
         else:
-            notes.append({"topic": "free_hit_squad",
-                          "detail": f"已生成 GW{target_gw} Free Hit 临时阵容（阵型 {free_hit_squad_plan['formation']}）"})
+            conflict_penalty = to_float(
+                (cfg.get("chip_strategy") or {}).get(
+                    "free_hit_opponent_defender_penalty"), 0.75)
+            baseline_value = _projected_plan_value(
+                starting_xi, bench, cap, conflict_penalty)
+            free_hit_net_gain = free_hit_squad_plan["projected_value"] - baseline_value
+            neutral = team_data.get("neutral") or {}
+            missing_core_inputs = sum(
+                1 for key in ("projection", "clean_sheet") if neutral.get(key))
+            free_hit_confidence = max(0.55, 1.0 - 0.2 * missing_core_inputs)
+            chip_plan = chips.evaluate(
+                squad, cap, entry_history, events, fixtures,
+                bootstrap.get("teams", []), target_gw, chip_cfg,
+                free_hit_net_gain=free_hit_net_gain,
+                free_hit_confidence=free_hit_confidence,
+                free_hit_assessed=True)
+            active_chip = chip_plan.get("current_recommendation")
+            if active_chip and active_chip.get("chip") == "free_hit":
+                base_captain_note = next(
+                    (note for note in notes if note.get("topic") == "captain"), None)
+                if base_captain_note:
+                    base_captain_note["topic"] = "base_captain"
+                free_hit_captain = next(
+                    (player for player in free_hit_squad_plan["squad"]
+                     if player.get("is_captain")), None)
+                if free_hit_captain:
+                    notes.append({
+                        "topic": "free_hit_captain",
+                        "player": free_hit_captain.get("name", "?"),
+                        "detail": (f"Captain Score {free_hit_captain.get('captain_score', 0):.2f}；"
+                                   "按 Free Hit 临时阵容重新计算"),
+                    })
+                notes.append({"topic": "free_hit_squad",
+                              "detail": (f"GW{target_gw} Free Hit 临时阵容为 {free_hit_squad_plan['formation']}，"
+                                         f"相较原阵容预计净增 {free_hit_net_gain:.2f} 分；"
+                                         f"首发对阵后卫冲突 {free_hit_squad_plan['opposing_defender_pairs']} 组")})
+            elif any(window.get("gw") == target_gw for window in
+                     chip_plan.get("windows", {}).get("blank_gameweeks", [])):
+                required = to_float(
+                    chip_plan.get("signals", {}).get("free_hit_required_gain"))
+                adjusted = to_float(
+                    chip_plan.get("signals", {}).get("free_hit_risk_adjusted_gain"))
+                free_hit_rejected_detail = (
+                    f"Free Hit 暂不建议：模型净增经数据可信度调整后为 "
+                    f"{adjusted:.2f} 分，低于 {required:.2f} 分门槛")
+                free_hit_squad_plan = None
     if active_chip:
         notes.append({"topic": "chip", "chip": active_chip["chip"],
                       "detail": f"建议本轮使用 {active_chip['name']}：{active_chip['reason']}"})
+        if free_hit_rejected_detail:
+            notes.append({"topic": "chip", "detail": free_hit_rejected_detail})
     else:
-        notes.append({"topic": "chip", "detail": "本轮暂不建议开卡；筹码计划已结合未来赛程保留更优窗口"})
+        notes.append({"topic": "chip",
+                      "detail": free_hit_rejected_detail or
+                      "本轮暂不建议开卡；筹码计划已结合未来赛程保留更优窗口"})
 
     # Transfer allowance belongs to the GW we are making a recommendation for.
     # If the next deadline is GW9 while GW8 is the active event, include GW8's
@@ -430,7 +561,8 @@ def main():
         notes.append({"topic": "warning",
                       "detail": "history.json 属于其他账号，已从空历史开始当前账号"})
     history_writer.upsert_decision(history, gw, decision, notes, metrics,
-                                   strategy_config.snapshot(cfg, weights, engine_cfg))
+                                   strategy_config.snapshot(cfg, weights, engine_cfg),
+                                   live_result=live_snapshot)
     # 结算回填：GW 已 finished 的官方数据（points/rank/overall_rank）补写 history
     filled = history_writer.backfill_settlement(history,
                                                 entry_history.get("current") or [],

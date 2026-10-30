@@ -33,7 +33,7 @@ def _summary(player: dict) -> dict:
 
 
 def upsert_decision(history: dict, gw: int, decision: dict, notes: list, metrics: dict,
-                    strategy_snapshot: dict) -> None:
+                    strategy_snapshot: dict, live_result: dict = None) -> None:
     """把本轮决策写入 history（同一 GW 幂等覆盖，不重复追加）。
 
     decision.transfer_package（预算口径）除写入 decision 外，还会把
@@ -69,6 +69,10 @@ def upsert_decision(history: dict, gw: int, decision: dict, notes: list, metrics
     }
     entry["notes"] = notes
     entry["metrics"] = metrics
+    if live_result and live_result.get("gw") == gw:
+        entry["live"] = live_result
+    else:
+        entry.pop("live", None)
     pkg = decision.get("transfer_package")
     if isinstance(pkg, dict):
         for key in ("budget_before", "budget_after", "transfer_cost"):

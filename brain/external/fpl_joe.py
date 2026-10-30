@@ -106,7 +106,11 @@ def _market_map(raw: dict) -> dict:
 
 def _metadata(raw: dict, start_gw: int, end_gw: int, retrieved_at: str, warnings: list,
               ttl_hours: int = 6, max_age_hours: int = 48) -> dict:
-    periods = sorted(int(k) for k in (raw.get("projectionsByPeriod") or {}) if str(k).isdigit())
+    market_periods = raw.get("availablePeriods")
+    if market_periods is None:
+        market_periods = [int(k) for k in (raw.get("projectionsByPeriod") or {})
+                          if str(k).isdigit()]
+    periods = sorted({int(p) for p in market_periods if str(p).isdigit()})
     supp = raw.get("supplementalProjections") or {}
     elevenify_periods = sorted(int(p) for p in supp.get("periods") or [])
     return {
@@ -136,13 +140,24 @@ def normalize(raw: dict, start_gw: int, end_gw: int, retrieved_at: str,
     warnings = []
     market = _market_map(raw)
     elevenify = _elevenify_map(raw)
-    skeleton = (raw.get("supplementalProjections") or {}).get("fixtures") or []
+    supplemental = raw.get("supplementalProjections") or {}
+    skeleton = supplemental.get("fixtures") or raw.get("fixtures") or []
+    if not skeleton:
+        # Current FPL Joe responses put the fixture skeleton inside each
+        # projectionsByPeriod row; older responses used supplementalProjections.
+        unique = {}
+        for period in (raw.get("projectionsByPeriod") or {}).values():
+            for fixture in period.get("fixtures") or []:
+                key = fixture.get("fixtureId")
+                if key is not None:
+                    unique[key] = fixture
+        skeleton = list(unique.values())
 
     cs_fixtures, goals_fixtures, diff_fixtures = [], [], []
     cs_teams, goals_teams, diff_teams = [], [], []
 
     for sf in skeleton:
-        gw = sf.get("periodNumber")
+        gw = sf.get("periodNumber", sf.get("gw"))
         if not gw or not (start_gw <= int(gw) <= end_gw):
             continue
         mf = market.get(sf.get("fixtureId")) or {}

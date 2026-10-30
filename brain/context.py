@@ -32,6 +32,9 @@ def build_player_map(bootstrap: dict) -> dict:
             "form": p.get("form", "0"),
             "total_points": p.get("total_points", 0),
             "minutes": p.get("minutes", 0),
+            "starts": p.get("starts"),
+            "expected_goals": (to_float(p.get("expected_goals"))
+                               if p.get("expected_goals") is not None else None),
             "status": p.get("status", ""),
             "chance_of_playing_next_round": p.get("chance_of_playing_next_round"),
             "transfers_in_event": p.get("transfers_in_event", 0),

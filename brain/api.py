@@ -78,6 +78,34 @@ def get_fixtures() -> list:
     return _fetch("/fixtures/")
 
 
+def get_event_live(event_id: int) -> dict:
+    """全体球员的本轮实时分数与比赛统计。"""
+    return _fetch(f"/event/{event_id}/live/")
+
+
+def get_live_rank_estimate(team_id: int) -> dict:
+    """读取 LiveFPL 的公开动态单轮排名估算（失败时由调用方降级处理）。"""
+    url = f"https://www.livefpl.net/livefplapi/{int(team_id)}"
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": config.USER_AGENT,
+            "Accept": "application/json",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=min(config.REQUEST_TIMEOUT, 15)) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        raise FplApiError(f"动态排名估算请求失败 (HTTP {exc.code})", status=exc.code)
+    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError,
+            UnicodeDecodeError) as exc:
+        raise FplApiError(f"动态排名估算请求失败 ({exc})")
+    if not isinstance(data, dict):
+        raise FplApiError("动态排名估算返回格式异常")
+    return data
+
+
 def get_entry(team_id: int) -> dict:
     """队伍概况：总积分 / 总排名。"""
     return _fetch(f"/entry/{team_id}/")

@@ -53,7 +53,9 @@ def _fixture_summary(fixtures: list, team_ids: dict, start_gw: int, horizon: int
 
 
 def evaluate(squad: list, captain: dict, entry_history: dict, events: list,
-             fixtures: list, teams: list, target_gw: int, cfg: dict) -> dict:
+             fixtures: list, teams: list, target_gw: int, cfg: dict,
+             free_hit_net_gain: float = None, free_hit_confidence: float = 1.0,
+             free_hit_assessed: bool = False) -> dict:
     """Return chip availability, current recommendation and rest-of-season plan."""
     chip_cfg = cfg.get("chip_strategy") or {}
     horizon = max(1, int(chip_cfg.get("planning_horizon", 8)))
@@ -114,10 +116,34 @@ def evaluate(squad: list, captain: dict, entry_history: dict, events: list,
     if not used_this_gw and availability["triple_captain"] and cap_count >= 2 and cap_value >= tc_threshold:
         recommendations.append({"chip": "triple_captain", "score": round(cap_value, 2), "reason": f"队长所在球队本轮双赛，Captain Score {cap_value:.1f}"})
     weak_window = next((item for item in blanks if item["gw"] == target_gw), None)
+    min_free_hit_gain = to_float(chip_cfg.get("free_hit_min_net_gain"), 4.0)
+    future_premium = to_float(chip_cfg.get("free_hit_future_window_premium"), 2.0)
+    uncertainty_margin = to_float(chip_cfg.get("free_hit_uncertainty_margin"), 3.0)
+    confidence = max(0.0, min(1.0, to_float(free_hit_confidence, 1.0)))
+    risk_adjusted_gain = (to_float(free_hit_net_gain) -
+                          (1.0 - confidence) * uncertainty_margin
+                          if free_hit_net_gain is not None else None)
+    stronger_future_window = bool(
+        weak_window and any(item["gw"] > target_gw and
+                            item["strength"] > weak_window["strength"]
+                            for item in blanks))
+    required_free_hit_gain = min_free_hit_gain + (
+        future_premium if stronger_future_window else 0.0)
     if not used_this_gw and availability["free_hit"] and weak_window:
         reasons = weak_window["reasons"]
-        recommendations.append({"chip": "free_hit", "score": round(weak_window["strength"], 2),
-                                "reason": f"本轮有 {weak_window['players']} 名球员赛程偏弱（{reasons['blank']} 人空赛、{reasons['difficult']} 人困难赛程），Free Hit 可替换冲击更高上限"})
+        if not free_hit_assessed:
+            recommendations.append({
+                "chip": "free_hit", "score": round(weak_window["strength"], 2),
+                "reason": f"本轮有 {weak_window['players']} 名球员赛程偏弱（{reasons['blank']} 人空赛、{reasons['difficult']} 人困难赛程），正在评估 Free Hit 整队收益"})
+        elif (risk_adjusted_gain is not None and
+              risk_adjusted_gain >= required_free_hit_gain):
+            future_note = ("；后续暂未发现更强的 Free Hit 候选轮"
+                           if not stronger_future_window
+                           else "；后续有更强候选轮，本轮收益仍达到保留门槛")
+            recommendations.append({
+                "chip": "free_hit", "score": round(risk_adjusted_gain, 2),
+                "reason": (f"本轮有 {weak_window['players']} 名球员赛程偏弱；Free Hit 相较当前阵容预计净增 {to_float(free_hit_net_gain):.2f} 分，"
+                           f"数据可信度调整后 {risk_adjusted_gain:.2f} 分，达到 {required_free_hit_gain:.2f} 分门槛{future_note}")})
     if not used_this_gw and availability["wildcard"]:
         if weak_count >= int(chip_cfg.get("wildcard_weak_squad_threshold", 5)):
             recommendations.append({"chip": "wildcard", "score": float(weak_count), "reason": f"阵容中有 {weak_count} 名伤停或出场存疑球员"})
@@ -140,9 +166,15 @@ def evaluate(squad: list, captain: dict, entry_history: dict, events: list,
         fallback_order = chip_cfg.get("guarantee_priority", ["wildcard", "free_hit", "triple_captain", "bench_boost"])
         fallback_scores = {"wildcard": float(weak_count), "free_hit": 0.0,
                            "triple_captain": cap_value, "bench_boost": bench_value}
+        fallback_chips = [
+            chip for chip in available_chips
+            if not (chip == "free_hit" and free_hit_assessed and
+                    (risk_adjusted_gain is None or
+                     risk_adjusted_gain < required_free_hit_gain))
+        ]
         # Use the strongest scheduled opportunity when present; otherwise select the least
         # conditional chip as deadline approaches. This is a safety net, not an early trigger.
-        candidate = next((chip for chip in fallback_order if chip in available_chips), None)
+        candidate = next((chip for chip in fallback_order if chip in fallback_chips), None)
         if candidate:
             reason = (f"上半程只剩 {remaining_gws} 轮、仍有 {len(available_chips)} 张筹码可用；"
                       "进入保底排程，避免筹码过期。请在本轮候选中使用。")
@@ -249,5 +281,11 @@ def evaluate(squad: list, captain: dict, entry_history: dict, events: list,
                               ["wildcard", "free_hit", "triple_captain", "bench_boost"].index(item["chip"]) ))],
         "windows": {"double_gameweeks": doubles, "blank_gameweeks": blanks},
         "signals": {"bench_score": round(bench_value, 2), "captain_score": round(cap_value, 2),
-                    "captain_fixture_count": cap_count, "captain_fixture_difficulty": round(cap_fixture_diff, 2)},
+                    "captain_fixture_count": cap_count, "captain_fixture_difficulty": round(cap_fixture_diff, 2),
+                    "free_hit_net_gain": (round(to_float(free_hit_net_gain), 2)
+                                           if free_hit_net_gain is not None else None),
+                    "free_hit_risk_adjusted_gain": (round(risk_adjusted_gain, 2)
+                                                    if risk_adjusted_gain is not None else None),
+                    "free_hit_required_gain": round(required_free_hit_gain, 2),
+                    "free_hit_confidence": round(confidence, 2)},
     }

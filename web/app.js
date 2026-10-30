@@ -204,9 +204,9 @@ function riskLevel(s) {
 /* notes 折叠区 topic：不进正文，收进「更多细节」（design.md §5.1.4） */
 const NOTE_FOLD = new Set(["external_source", "score_source", "data_missing", "warning"]);
 /* 单条 notes 优先级（转会类单独配对处理，恒排最前） */
-const NOTE_ORDER = { chip: 1, captain: 2, transfer_hit: 3, no_transfer: 4, lineup: 5, transfer_status: 6, squad_source: 7 };
+const NOTE_ORDER = { chip: 1, free_hit_captain: 2, captain: 3, base_captain: 4, transfer_hit: 5, no_transfer: 6, lineup: 7, transfer_status: 8, squad_source: 9 };
 const TOPIC_TAG = {
-  transfer_out: "转会", transfer_in: "转会", transfer_hit: "扣分转会", captain: "队长", no_transfer: "转会判断",
+  transfer_out: "转会", transfer_in: "转会", transfer_hit: "扣分转会", captain: "队长", base_captain: "原阵容队长", free_hit_captain: "Free Hit 队长", no_transfer: "转会判断",
   chip: "开卡策略", lineup: "阵容", transfer_status: "转会额度", squad_source: "阵容来源",
   external_source: "数据更新", score_source: "数据源", data_missing: "数据缺失", warning: "告警",
 };
@@ -227,6 +227,20 @@ function historyRowsAsc(json) {
 function curEntry(state, rows) {
   if (!rows.length) return null;
   return rows.find((r) => r.gw === state.current_gw) || rows[rows.length - 1];
+}
+
+function liveResult(entry) {
+  const live = entry && entry.live;
+  return live && live.status === "live" && live.gw === entry.gw ? live : null;
+}
+
+function liveRankLabel(live) {
+  if (!live || live.rank == null) return "动态排名估算暂不可用";
+  return live.rank_source === "fpl_provisional" ? "FPL 当前排名" : "动态排名估算";
+}
+
+function liveRankUpdatedAt(live) {
+  return fmtTime((live && live.rank_checked_at) || (live && live.updated_at));
 }
 
 /** 最新一份 strategy_snapshot（从最新条目向上找第一个携带者） */
@@ -270,6 +284,10 @@ function noteBodyText(n) {
       return d ? `转入 ${n.player || "?"}：${d}` : `转入 ${n.player || "?"}`;
     case "captain":
       return `队长 ${n.player || "?"}：${d}`;
+    case "base_captain":
+      return `原阵容队长 ${n.player || "?"}：${d}`;
+    case "free_hit_captain":
+      return `Free Hit 队长 ${n.player || "?"}：${d}`;
     case "chip":
       return d;
     case "no_transfer": {
@@ -383,17 +401,20 @@ function renderProfile(state, rows) {
 /* ---------------- Sidebar：当前战绩 ---------------- */
 
 function statItems(state, rows) {
-  const gwRank = lastSettledGwRank(rows);
+  const current = curEntry(state, rows);
+  const live = liveResult(current);
+  const gwRank = current && current.rank != null
+    ? { gw: current.gw, rank: current.rank, dynamic: false }
+    : (live && live.rank != null
+      ? { gw: current.gw, rank: live.rank, dynamic: true }
+      : lastSettledGwRank(rows));
   const league = state.gameweek3_league;
   const items = [];
   if (league && league.rank != null) {
-    const members = league.rank_count != null
-      ? `共 ${fmtNumber(league.rank_count, "points")} 支队伍`
-      : "Gameweek 3 联赛";
     items.push({
       label: "Gameweek 3 联赛排名",
       value: fmtNumber(league.rank, "rank"),
-      note: members,
+      note: "",
     });
   }
   items.push(
@@ -401,7 +422,9 @@ function statItems(state, rows) {
     {
       label: "Gameweek Rank",
       value: gwRank ? fmtNumber(gwRank.rank, "rank") : nullText("rank"),
-      note: gwRank ? `最近已结算 GW${gwRank.gw}` : "暂无已结算轮次",
+      note: gwRank
+        ? (gwRank.dynamic ? `动态估算 GW${gwRank.gw}` : `GW${gwRank.gw}`)
+        : "暂无已结算轮次",
     },
     { label: "Total Points", value: fmtNumber(state.points, "points"), note: "" },
   );
@@ -456,8 +479,13 @@ function renderRecentThought(entry) {
 
 function renderSummaryCards(state, rows) {
   const entry = curEntry(state, rows);
-  const curPoints = entry ? entry.points : null;
-  const curRank = entry ? entry.rank : null;
+  const live = liveResult(entry);
+  const curPoints = entry && entry.points != null
+    ? entry.points
+    : (live ? live.points : null);
+  const curRank = entry && entry.rank != null
+    ? entry.rank
+    : (live ? live.rank : null);
   const settled = lastSettledInfo(rows);
   const refNote = settled
     ? `最近已结算 GW${settled.gw}`
@@ -471,13 +499,17 @@ function renderSummaryCards(state, rows) {
       label: "GW Points",
       value: accText(curPoints, "points"),
       cls: "",
-      note: curPoints == null && refNote ? `${refNote}：${refDetail || "—"}` : refNote,
+      note: live && entry.points == null && live.points != null
+        ? `动态积分 · 更新 ${fmtTime(live.updated_at)}`
+        : (curPoints == null && refNote ? `${refNote}：${refDetail || "—"}` : refNote),
     },
     {
       label: "GW Rank",
       value: accText(curRank, "rank"),
       cls: "",
-      note: curRank == null && refNote ? `参照 GW${settled.gw} 单轮排名` : (curRank != null ? `GW${entry && entry.gw}` : ""),
+      note: live && entry.rank == null
+        ? `${liveRankLabel(live)} · 查询 ${liveRankUpdatedAt(live)}`
+        : (curRank == null && refNote ? `参照 GW${settled.gw} 单轮排名` : (curRank != null ? `GW${entry && entry.gw}` : "")),
     },
     { label: "Total Points", value: fmtNumber(state.points, "points"), cls: "", note: "赛季累计" },
     { label: "Bank", value: fmtBank(state.bank), cls: "", note: "可用资金" },
@@ -496,8 +528,17 @@ function renderSummaryCards(state, rows) {
 
 function renderThisWeek(state, entry) {
   const d = state.decision || {};
-  const capName = (d.captain && d.captain.name) || "-";
-  const viceName = (d.vice && d.vice.name) || "-";
+  const chipPlan = d.chip_plan || {};
+  const chipRec = d.recommended_chip || null;
+  const freeHitSquad = Array.isArray(d.free_hit_squad) ? d.free_hit_squad : [];
+  const freeHitCaptain = freeHitSquad.find((p) => p.is_captain);
+  const freeHitVice = freeHitSquad.find((p) => p.is_vice_captain);
+  const showFreeHitCaptain = chipRec && chipRec.chip === "free_hit" && freeHitCaptain;
+  const baseCapName = (d.captain && d.captain.name) || "-";
+  const capName = showFreeHitCaptain ? freeHitCaptain.name : baseCapName;
+  const viceName = showFreeHitCaptain
+    ? ((freeHitVice && freeHitVice.name) || "-")
+    : ((d.vice && d.vice.name) || "-");
   const ftText =
     d.transfer_status === "unlimited"
       ? "转会次数暂不受限（新账号）"
@@ -522,8 +563,8 @@ function renderThisWeek(state, entry) {
     : "";
 
   let html = gwLine + ddlHtml + `<div class="tw-meta">
-      <span class="tw-item">阵型 <b>${esc(fmtFormation(d.formation || state.formation))}</b></span>
-      <span class="tw-item">队长 <b class="txt-cap">C ${esc(capName)}</b></span>
+      <span class="tw-item">阵型 <b>${esc(fmtFormation((showFreeHitCaptain && d.free_hit_formation) || d.formation || state.formation))}</b></span>
+      <span class="tw-item">${showFreeHitCaptain ? "Free Hit 队长" : "队长"} <b class="txt-cap">C ${esc(capName)}</b>${showFreeHitCaptain && baseCapName !== capName ? ` <small>原阵容 C ${esc(baseCapName)}</small>` : ""}</span>
       <span class="tw-item">副队长 <b class="txt-vice">V ${esc(viceName)}</b></span>
       ${ftText ? `<span class="tw-item muted">${esc(ftText)}</span>` : ""}
     </div>
@@ -532,8 +573,6 @@ function renderThisWeek(state, entry) {
   const transfers = Array.isArray(d.recommended_transfers) ? d.recommended_transfers : [];
   const hitCount = transfers.filter((t) => Number(t.hit_cost) > 0).length;
   const freeCount = transfers.length - hitCount;
-  const chipPlan = d.chip_plan || {};
-  const chipRec = d.recommended_chip || null;
   const chipLabels = { wildcard: "Wildcard", free_hit: "Free Hit", bench_boost: "Bench Boost", triple_captain: "Triple Captain" };
   if (chipRec) {
     html += `<div class="chip-recommendation"><strong>🎟️ 本轮建议开 ${esc(chipRec.name || chipLabels[chipRec.chip] || "Chip")}</strong><span>${esc(chipRec.reason || "")}</span></div>`;
@@ -635,12 +674,30 @@ function playerCard(p, capId, viceId, benchNo, flags) {
   }
   const bd = p.score_breakdown || {};
   const no = benchNo != null ? `<span class="bench-no">${benchNo}</span>` : "";
+  const startBar = metricBar(
+    "本赛季首发率参考",
+    typeof p.starting_probability === "number" ? p.starting_probability * 100 : null,
+    "根据球员本赛季首发次数与球队已赛场次平滑估算；样本不足时不作判断",
+  );
+  const roleReferenceBar = typeof p.fpljoe_reference_probability === "number"
+    ? metricBar(
+      p.fpljoe_reference_label || "FPL Joe 参考",
+      p.fpljoe_reference_probability * 100,
+      p.fpljoe_reference_label && p.fpljoe_reference_label.includes("零封")
+        ? `FPL Joe 球队零封概率 ${Math.round(p.fpljoe_reference_probability * 100)}%`
+        : (p.fpljoe_reference_label && p.fpljoe_reference_label.includes("个人")
+          ? `FPL Joe 球队 xG 按球员本赛季 xG 占比分配，个人单场 xG≈${Number(p.fpljoe_reference_value || 0).toFixed(2)}`
+          : `FPL Joe 球队预期进球 xG=${p.fpljoe_reference_value ?? "—"}；按泊松分布估算至少进 1 球概率`),
+    )
+    : "";
   const fixtureText = Array.isArray(p.fixtures) && p.fixtures.length
     ? p.fixtures.map((f) => `${f.opponent || "?"} (${f.venue || "?"})`).join(" · ")
     : "本轮暂无赛程";
   const bars =
     metricBar("Form", bd.form, "近期状态 Form%") +
     metricBar("Model Projection", bd.projection, "自有模型采用的进攻潜力特征；不直接读取 FPL 官方 ep_next") +
+    startBar +
+    roleReferenceBar +
     metricBar("Fixture", bd.fixture, "赛程友好度 Fixture% · 越高越友好") +
     metricBar("TSB", typeof p.selected_by === "number" ? p.selected_by : null, "持有率 TSB%");
   return `<div class="player-card">
@@ -953,6 +1010,7 @@ function renderHistoryAccordion(state, rows) {
   }
   const html = [...vis].reverse().map((r) => {
     const settled = historySettled(r);
+    const live = liveResult(r);
     const d = r.decision || {};
     const dt = decisionTimes(r);
     const transfers = Array.isArray(d.recommended_transfers) ? d.recommended_transfers : [];
@@ -993,7 +1051,11 @@ function renderHistoryAccordion(state, rows) {
       ? `<span class="acc-kv">积分 <b>${accText(r.points, "points")}</b></span>
          <span class="acc-kv">当轮排名 <b>${accText(r.rank, "rank")}</b></span>
          <span class="acc-kv">总排名 <b>${accText(r.overall_rank, "rank")}</b></span>`
-      : `<span class="acc-state gw-state st-live">本轮进行中</span>`;
+      : live
+        ? `<span class="acc-kv">动态积分 <b>${accText(live.points, "points")}</b></span>
+           <span class="acc-kv">${liveRankLabel(live)} <b>${accText(live.rank, "rank")}</b></span>
+           <span class="acc-state gw-state st-live">本轮进行中</span>`
+        : `<span class="acc-state gw-state st-live">本轮进行中</span>`;
 
     // 展开区「比赛结果」：已结算 → 数值；进行中 → 说明行（不写「待结算」占位）
     const resultHtml = settled
@@ -1002,6 +1064,12 @@ function renderHistoryAccordion(state, rows) {
           <div><dt>Gameweek Rank</dt><dd>${accText(r.rank, "rank")}</dd></div>
           <div><dt>Overall Rank</dt><dd>${accText(r.overall_rank, "rank")}</dd></div>
         </dl>`
+      : live
+        ? `<dl class="kv-list">
+            <div><dt>动态积分</dt><dd>${accText(live.points, "points")}</dd></div>
+            <div><dt>${liveRankLabel(live)}</dt><dd>${accText(live.rank, "rank")}</dd></div>
+            <div><dt>最近更新</dt><dd>${fmtTime(live.updated_at)}</dd></div>
+          </dl>`
       : `<p class="muted">本轮比赛进行中 / 尚未开赛，结束并结算后自动回填积分与排名。</p>`;
 
     return `<details class="acc">
@@ -1072,7 +1140,8 @@ function drawTrend(rows, meta) {
   if (!n) return '<p class="muted">暂无历史数据。</p>';
 
   const vals = rows.map((r) => {
-    const v = r[meta.key];
+    const live = liveResult(r);
+    const v = r[meta.key] != null ? r[meta.key] : (live ? live[meta.key] : null);
     return v == null ? null : Number(v);
   });
   const valid = vals.filter((v) => v != null);
