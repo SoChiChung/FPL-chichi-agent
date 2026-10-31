@@ -144,7 +144,7 @@ data/
 
 ### 3.5 新鲜度与更新节奏（了解即可）
 
-仓库 Actions 每 10 分钟自触发一次闸门（`brain/scheduler.py`，只读 state.json 不请求 FPL）：距 deadline >24h 每天北京时间 09:00 全量更新；24h 内每小时；≤1h 每 10 分钟。每次引擎运行都会刷新官方数据 + 重抓 FPL Joe（失败保留上一份有效数据）。
+仓库 Actions 每天北京时间 17:00 至次日 04:00 每小时触发一次闸门（`brain/scheduler.py`，只读 state.json 不请求 FPL），有无未来 deadline 都按每小时计算。每次引擎运行都会刷新官方数据 + 重抓 FPL Joe（失败保留上一份有效数据）。
 
 ---
 

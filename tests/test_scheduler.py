@@ -46,39 +46,39 @@ class TestStateFallbacks(unittest.TestCase):
         self.assertTrue(scheduler.decide(bad, T).due)
 
 
-class TestEvery30Min(unittest.TestCase):
-    """赛季中（有 deadline）：统一每 30 分钟，不再按 deadline 远近分档。"""
+class TestEveryHour(unittest.TestCase):
+    """赛季中（有 deadline）：统一每小时，不再按 deadline 远近分档。"""
 
-    def test_not_due_within_30min(self):
-        for delta in [timedelta(minutes=0), timedelta(minutes=29)]:
+    def test_not_due_within_1h(self):
+        for delta in [timedelta(minutes=0), timedelta(minutes=59)]:
             state = mk_state(T - delta, FAR)
             self.assertFalse(scheduler.decide(state, T).due)
 
-    def test_due_after_30min(self):
-        state = mk_state(T - timedelta(minutes=31), FAR)
+    def test_due_after_1h(self):
+        state = mk_state(T - timedelta(minutes=61), FAR)
         d = scheduler.decide(state, T)
         self.assertTrue(d.due)
-        self.assertEqual(d.reason, "every_30min")
+        self.assertEqual(d.reason, "every_hour")
 
     def test_same_cadence_regardless_of_deadline_distance(self):
-        # deadline 前 10 分钟、前 12 小时、已过 5 分钟，节奏都应一致（统一 30min）
+        # deadline 前 10 分钟、前 12 小时、已过 5 分钟，节奏都应一致（统一 1h）
         now = T
         for deadline in [now + timedelta(minutes=10),
                          now + timedelta(hours=12),
                          now - timedelta(minutes=5)]:
             self.assertFalse(scheduler.decide(
-                mk_state(now - timedelta(minutes=29), deadline), now).due)
+                mk_state(now - timedelta(minutes=59), deadline), now).due)
             self.assertTrue(scheduler.decide(
-                mk_state(now - timedelta(minutes=31), deadline), now).due)
+                mk_state(now - timedelta(minutes=61), deadline), now).due)
 
 
 class TestNoDeadline(unittest.TestCase):
-    def test_off_season_probe(self):
-        state = mk_state(T - timedelta(hours=2), None)
+    def test_no_deadline_still_uses_hourly_cadence(self):
+        state = mk_state(T - timedelta(minutes=59), None)
         d = scheduler.decide(state, T)
         self.assertFalse(d.due)
-        self.assertEqual(d.reason, "probe")
-        d = scheduler.decide(state, T - timedelta(hours=2) + timedelta(hours=24))
+        self.assertEqual(d.reason, "every_hour")
+        d = scheduler.decide(state, T - timedelta(minutes=59) + timedelta(hours=1))
         self.assertTrue(d.due)
 
 

@@ -32,7 +32,8 @@
 ┌───────┴─────────┐         │   │                             │
 │  GitHub Actions │         │   │  brain/    Python 决策引擎   │
 │  update.yml     │─────────┘   │                             │
-│  (每10分钟自触发+闸门)  │──push───┐   └──────────────┬──────────────┘
+│ (北京时间17:00–04:00   │──push───┐   └──────────────┬──────────────┘
+│      每小时触发+闸门)  │         │                  │
 └─────────────────┘         │                  │ Git push
                             │                  ▼
                             │         ┌─────────────────────┐
@@ -43,7 +44,7 @@
 ```
 
 - **唯一数据源**：仓库里的 JSON 文件。AI 每次运行结果都以 commit 形式沉淀，Git 天然提供版本回滚。
-- **调度**：GitHub Actions 每 10 分钟自触发一次，先跑 Python 闸门 `brain/scheduler.py`（只读 `data/state.json`，不请求 FPL），按距下个 deadline 的距离分档决定是否真正唤醒"大脑"（brain）。档位：>24h → 每天北京 09:00；24h 内 → 每小时；1h 内 → 每 10 分钟；休赛期/无 deadline → 每 24h 探测，不空转。
+- **调度**：GitHub Actions 每天北京时间 17:00 至次日 04:00 每小时触发一次，先跑 Python 闸门 `brain/scheduler.py`（只读 `data/state.json`，不请求 FPL）。有无未来 deadline 都按小时计算。
 - **展示**：Vercel 托管纯静态前端，直接 fetch 仓库内的 JSON 渲染，无 API 服务器。
 
 ### 1.2 一轮（GW）的生命周期
@@ -232,7 +233,7 @@ Phase 0 约定：bootstrap/fixtures 原始数据只在内存处理，**不落盘
 ```yaml
 on:
   schedule:
-    - cron: "*/10 * * * *"   # 每 10 分钟自触发一次；是否真跑由闸门判定
+    - cron: "0 9-20 * * *"   # UTC 09:00–20:00 = 北京时间 17:00–次日 04:00
   workflow_dispatch:         # 手动触发 = 闸门强制 due，更新一次
 concurrency:
   group: update              # 防止并发运行互相覆盖
@@ -240,14 +241,11 @@ concurrency:
 
 流水线：checkout → `python -m brain.scheduler`（闸门：只读本地 `data/state.json`，不请求 FPL；永远以 0 退出，skip 是正常状态）→ 闸门输出 `due=yes` 才 `python -m brain` → 有变化才 commit + push（`GITHUB_TOKEN` 同仓库权限足够，以 bot 身份提交）。
 
-**档位规则**（scheduler.py 内置，全部锚定 `last_update`，Actions 触发抖动不会累积漂移）：
+**闸门规则**（scheduler.py 内置，锚定 `last_update`）：
 
-| 距下个 deadline | 节奏 |
+| 状态 | 节奏 |
 |---|---|
-| > 24h | 每天北京时间 09:00 更新一次 |
-| 1h ~ 24h | 每小时更新一次 |
-| ≤ 1h | 每 10 分钟更新一次 |
-| deadline 已过 / 无未来 deadline | 季末/休赛期收敛：每 24h 探测一次；引擎失败限流 30 分钟重试，不空转刷 FPL |
+| 所有情况 | 北京时间每天 17:00 至次日 04:00，每小时最多计算一次 |
 
 **防循环**：brain 的 push 只写 `data/**`，本工作流无 `on.push` 触发，不会自激。
 

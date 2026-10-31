@@ -14,7 +14,7 @@
 ## 架构
 
 ```
-GitHub Actions (每 10 分钟自触发 + Python 闸门) ──► brain/ (Python, 仅标准库) ──► data/*.json ──► Git push ──► Vercel 前端
+GitHub Actions (北京时间 17:00–04:00 每小时触发 + Python 闸门) ──► brain/ (Python, 仅标准库) ──► data/*.json ──► Git push ──► Vercel 前端
         ▲                                                                              │
         └──────────────────────── 读取 data/*.json（同源） ◄──────────────────────────┘
 ```
@@ -24,7 +24,7 @@ GitHub Actions (每 10 分钟自触发 + Python 闸门) ──► brain/ (Python
 ## 目录结构
 
 ```
-├── .github/workflows/update.yml   # 每 10 分钟自触发 → 闸门判断 → 引擎 + 自动提交
+├── .github/workflows/update.yml   # 每天北京时间 17:00–04:00 每小时触发 → 闸门判断 → 引擎 + 自动提交
 ├── docs/                          # 设计文档统一目录
 ├── brain/                         # Python 引擎（零依赖）
 │   ├── __main__.py                # 入口（决策管线编排）
@@ -106,9 +106,9 @@ https://fantasy.premierleague.com/entry/123456/event/1
 
 自动更新由 GitHub Actions 驱动，**不需要 Vercel 参与调度**。仓库需为 **GitHub 公开**（公开仓库的 Actions 定时任务免费且无限分钟；私有仓库有月度分钟配额限制）：
 
-- `update.yml` 每 10 分钟自触发一次，先运行只读 `data/state.json` 的 Python 闸门 `brain/scheduler.py`（不请求 FPL API）；
+- `update.yml` 每天北京时间 17:00 至次日 04:00 每小时触发一次，先运行只读 `data/state.json` 的 Python 闸门 `brain/scheduler.py`（不请求 FPL API）；
 - 闸门判定"该更新"才运行 `python -m brain` 并 push 数据，Vercel 随 push 自动重部署静态站；
-- 判定规则：距下个 deadline 超过 24 小时 → **每天北京时间 09:00 更新一次**；24 小时内 → 每小时一次；1 小时内 → 每 10 分钟一次；休赛期/无未来 deadline → 每 24 小时探测一次，不空转刷接口；
+- 闸门确保两次计算至少间隔 1 小时；有无未来 deadline 都遵循该时段的小时计算频率；
 - 也可在 Actions 页面手动触发（Workflow dispatch，强制更新一次）。
 
 > 注意：Actions 首次运行前请确认 `TEAM_ID` 已配置；未配置时运行会失败且不产生提交，这是预期行为。

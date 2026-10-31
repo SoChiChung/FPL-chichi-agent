@@ -9,7 +9,7 @@
 | Phase 0 骨架 | ✅ 完成（commit `e33529a`，已推送 GitHub `SoChiChung/FPL-chichi-agent`） |
 | 数据管线 | ✅ 拉取 bootstrap/fixtures/entry/history/picks → 生成 `state.json` / `history.json`，原始数据不落盘 |
 | 前端 | ✅ 纯静态中文界面（概览 / 阵容 / 历史表格） |
-| GitHub Actions | ✅ `update.yml` 每 10 分钟自触发 + `scheduler.py` 闸门分档（>24h 每天北京 09:00 / 24h 内每小时 / 1h 内每 10 分钟 / 休赛期 24h 探测）；手动触发 = 强制更新；**TEAM_ID 未配置时失败但不提交，属预期** |
+| GitHub Actions | ✅ `update.yml` 每天北京时间 17:00 至次日 04:00 每小时触发 + `scheduler.py` 闸门（有无 deadline 都至少间隔 1 小时）；手动触发 = 强制更新；**TEAM_ID 未配置时失败但不提交，属预期** |
 | Vercel | ✅ 已部署（纯静态托管，随 push 自动重部署；无需任何环境变量） |
 | 决策骨架 | ✅ 接口占位（`brain/strategy.py` + `config/strategy.json`），无业务逻辑 |
 | 决策设计 | ✅ [decision-engine.md](decision-engine.md) v2.0（Market Consensus Strategy）待确认 |

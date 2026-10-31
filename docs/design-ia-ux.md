@@ -57,7 +57,7 @@
 ```
 ┌────────────────────────── FPL AI Manager（单页 · 叙事型 Dashboard） ──────────────────────────┐
 │                                                                                               │
-│  Header    🧅 <AI 经理名> · Season 2026/27        [数据更新于 <last_update> · 每 30 分钟自动]    │
+│  Header    🧅 <AI 经理名> · Season 2026/27        [数据更新于 <last_update> · 17:00–04:00 每小时自动]    │
 │                                                                                               │
 │  ┌───────────── Sidebar 25%（sticky）───────────┐ ┌──────────────── Main 75% ─────────────────┐ │
 │  │  身份线「这个 AI 是谁」                        │ │  周历线 + 成长线「它这周 / 一路表现」          │ │
@@ -256,7 +256,7 @@ Header 名字/赛季 ─▶ Sidebar A Profile（风格·风险） ─▶ ① 本
 | 4 | ⑥ Tab 切换 | 换数据集与 Y 轴方向 | ⑥ |
 | 5 | ⑤ Accordion | 原生 `<details>`；默认开最近轮 | ⑤ |
 | 6 | Sidebar B GW Rank | 锚点至 ⑥ 并选对应 Tab | B→⑥ |
-| 7 | 刷新语义 | 页面无手动刷新按钮：静态站随 Actions 30 分钟自动出新快照；Header/Footer 展示 `last_update`，用户自行判断新鲜度 | 全局 |
+| 7 | 刷新语义 | 页面无手动刷新按钮：静态站随 Actions 在北京时间 17:00–次日 04:00 每小时更新快照；Header/Footer 展示 `last_update`，用户自行判断新鲜度 | 全局 |
 
 ### 4.3 状态与空态设计（UX 兜底）
 
@@ -420,7 +420,7 @@ Header 名字/赛季 ─▶ Sidebar A Profile（风格·风险） ─▶ ① 本
 
 | 增量 | 目的 | 备注 |
 |---|---|---|
-| `state.gw_meta[] = {gw, status, deadline, settled_at?}` | 前端免推导三态、避免"GW3/GW4 显示困惑"再次出现 | 后端由 events 派生，30 分钟节奏天然覆盖 |
+| `state.gw_meta[] = {gw, status, deadline, settled_at?}` | 前端免推导三态、避免"GW3/GW4 显示困惑"再次出现 | 后端由 events 派生，小时节奏持续覆盖 |
 | `notes[i].ts`（可选） | 单条 note 级时间 | 本期不需要，entry 级 `decided_at` 已满足 |
 
 ---
