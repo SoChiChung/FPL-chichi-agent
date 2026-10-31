@@ -116,7 +116,7 @@ def evaluate(squad: list, captain: dict, entry_history: dict, events: list,
     if not used_this_gw and availability["triple_captain"] and cap_count >= 2 and cap_value >= tc_threshold:
         recommendations.append({"chip": "triple_captain", "score": round(cap_value, 2), "reason": f"队长所在球队本轮双赛，Captain Score {cap_value:.1f}"})
     weak_window = next((item for item in blanks if item["gw"] == target_gw), None)
-    min_free_hit_gain = to_float(chip_cfg.get("free_hit_min_net_gain"), 4.0)
+    min_free_hit_gain = to_float(chip_cfg.get("free_hit_min_net_gain"), 8.0)
     future_premium = to_float(chip_cfg.get("free_hit_future_window_premium"), 2.0)
     uncertainty_margin = to_float(chip_cfg.get("free_hit_uncertainty_margin"), 3.0)
     confidence = max(0.0, min(1.0, to_float(free_hit_confidence, 1.0)))
