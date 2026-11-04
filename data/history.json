@@ -2961,7 +2961,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-11-03T16:56:45Z",
-      "updated_at": "2026-11-04T16:58:46Z",
+      "updated_at": "2026-11-04T22:31:52Z",
       "decision": {
         "formation": "433",
         "captain": {
@@ -3051,15 +3051,15 @@
               "pos": "MID",
               "price": 6.2,
               "market_score": 50.85,
-              "five_gw_points": 18.44
+              "five_gw_points": 18.42
             },
             "in": {
               "id": 68,
               "name": "Tavernier",
               "pos": "MID",
               "price": 6.6,
-              "market_score": 39.72,
-              "five_gw_points": 20.49
+              "market_score": 39.84,
+              "five_gw_points": 20.47
             },
             "market_gap": 2.05,
             "hit_cost": 0,
@@ -3126,24 +3126,24 @@
             "blank_gameweeks": []
           },
           "signals": {
-            "bench_score": 127.36,
+            "bench_score": 127.22,
             "captain_score": 97.59,
             "captain_fixture_count": 1,
             "captain_fixture_difficulty": 2.0,
-            "free_hit_net_gain": 0.53,
-            "free_hit_risk_adjusted_gain": 0.53,
+            "free_hit_net_gain": 0.52,
+            "free_hit_risk_adjusted_gain": 0.52,
             "free_hit_required_gain": 8.0,
             "free_hit_confidence": 1.0
           }
         },
         "recommended_chip": null,
         "transfer_package": {
-          "gain": 1.7,
-          "five_gw_before": 291.91,
-          "five_gw_after": 293.61,
-          "five_gw_net_gain": 1.7,
-          "per_gw_average_before": 58.38,
-          "per_gw_average_after": 58.72,
+          "gain": 1.71,
+          "five_gw_before": 291.93,
+          "five_gw_after": 293.64,
+          "five_gw_net_gain": 1.71,
+          "per_gw_average_before": 58.39,
+          "per_gw_average_after": 58.73,
           "per_gw_average_net_gain": 0.34,
           "hit_cost": 0.0,
           "projection_before": {
@@ -3168,7 +3168,7 @@
               },
               {
                 "gw": 11,
-                "points": 62.45,
+                "points": 62.52,
                 "xi": [
                   109,
                   115,
@@ -3204,7 +3204,7 @@
               },
               {
                 "gw": 13,
-                "points": 60.33,
+                "points": 60.31,
                 "xi": [
                   1,
                   391,
@@ -3222,7 +3222,7 @@
               },
               {
                 "gw": 14,
-                "points": 58.76,
+                "points": 58.73,
                 "xi": [
                   1,
                   8,
@@ -3239,7 +3239,7 @@
                 "captain": 79
               }
             ],
-            "points": 291.91
+            "points": 291.93
           },
           "projection_after": {
             "rounds": [
@@ -3263,7 +3263,7 @@
               },
               {
                 "gw": 11,
-                "points": 62.25,
+                "points": 62.32,
                 "xi": [
                   109,
                   115,
@@ -3281,7 +3281,7 @@
               },
               {
                 "gw": 12,
-                "points": 53.61,
+                "points": 53.62,
                 "xi": [
                   1,
                   115,
@@ -3299,7 +3299,7 @@
               },
               {
                 "gw": 13,
-                "points": 60.58,
+                "points": 60.56,
                 "xi": [
                   1,
                   391,
@@ -3317,7 +3317,7 @@
               },
               {
                 "gw": 14,
-                "points": 60.47,
+                "points": 60.44,
                 "xi": [
                   1,
                   8,
@@ -3334,7 +3334,7 @@
                 "captain": 79
               }
             ],
-            "points": 293.61
+            "points": 293.64
           },
           "gain_multiplier": 1.0,
           "minimum_hit_return_multiple": 2.0,
@@ -3351,23 +3351,23 @@
           "score_base": "fpl_starting_xi_points_with_captain",
           "point_calibration": {
             "GKP": {
-              "intercept": 1.9988,
+              "intercept": 2.0016,
               "slope": 0.0355,
               "samples": 25
             },
             "DEF": {
-              "intercept": 1.7398,
-              "slope": 0.0372,
+              "intercept": 1.7443,
+              "slope": 0.0371,
               "samples": 133
             },
             "MID": {
-              "intercept": 1.0741,
-              "slope": 0.0533,
+              "intercept": 1.075,
+              "slope": 0.0532,
               "samples": 168
             },
             "FWD": {
-              "intercept": 0.1286,
-              "slope": 0.0943,
+              "intercept": 0.1251,
+              "slope": 0.0944,
               "samples": 36
             }
           }
@@ -3513,7 +3513,7 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 433，Total Lineup Score 634.08（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 433，Total Lineup Score 634.07（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
@@ -3536,7 +3536,7 @@
         {
           "topic": "transfer_in",
           "player": "Tavernier",
-          "detail": "未来 5 轮预估收益更高（Market Score 39.72），满足预算与同队约束"
+          "detail": "未来 5 轮预估收益更高（Market Score 39.84），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -3544,10 +3544,10 @@
         }
       ],
       "metrics": {
-        "team_market_score": 592.77,
+        "team_market_score": 592.83,
         "captain_market_score": 33.75,
-        "formation_market_score": 505.91,
-        "team_lineup_score": 634.08,
+        "formation_market_score": 505.96,
+        "team_lineup_score": 634.07,
         "captain_score": 97.59
       },
       "budget_before": 0.8,
