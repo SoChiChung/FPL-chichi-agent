@@ -3595,7 +3595,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-11-09T19:40:24Z",
-      "updated_at": "2026-11-09T19:40:24Z",
+      "updated_at": "2026-11-10T02:37:45Z",
       "decision": {
         "formation": "433",
         "captain": {
@@ -3684,20 +3684,20 @@
               "name": "Rogers",
               "pos": "MID",
               "price": 8.2,
-              "market_score": 55.61,
-              "five_gw_points": 16.26
+              "market_score": 55.48,
+              "five_gw_points": 16.27
             },
             "in": {
               "id": 129,
               "name": "Ayari",
               "pos": "MID",
               "price": 5.5,
-              "market_score": 23.69,
+              "market_score": 23.6,
               "five_gw_points": 17.9
             },
-            "market_gap": 1.64,
+            "market_gap": 1.63,
             "hit_cost": 0,
-            "reason": "未来 5 轮预计增加 1.64 分"
+            "reason": "未来 5 轮预计增加 1.63 分"
           }
         ],
         "chip_plan": {
@@ -3720,8 +3720,8 @@
           "chip_already_used_this_gw": false,
           "current_recommendation": {
             "chip": "bench_boost",
-            "score": 160.15,
-            "reason": "替补四人合计预期评分 160.2，达到开卡阈值 145.0",
+            "score": 160.05,
+            "reason": "替补四人合计预期评分 160.1，达到开卡阈值 145.0",
             "name": "Bench Boost"
           },
           "planning_horizon": 2,
@@ -3765,36 +3765,36 @@
             "blank_gameweeks": []
           },
           "signals": {
-            "bench_score": 160.15,
+            "bench_score": 160.05,
             "captain_score": 91.22,
             "captain_fixture_count": 1,
             "captain_fixture_difficulty": 2.0,
-            "free_hit_net_gain": 3.7,
-            "free_hit_risk_adjusted_gain": 3.7,
+            "free_hit_net_gain": 3.72,
+            "free_hit_risk_adjusted_gain": 3.72,
             "free_hit_required_gain": 8.0,
             "free_hit_confidence": 1.0
           }
         },
         "recommended_chip": {
           "chip": "bench_boost",
-          "score": 160.15,
-          "reason": "替补四人合计预期评分 160.2，达到开卡阈值 145.0",
+          "score": 160.05,
+          "reason": "替补四人合计预期评分 160.1，达到开卡阈值 145.0",
           "name": "Bench Boost"
         },
         "transfer_package": {
-          "gain": 1.46,
-          "five_gw_before": 240.38,
-          "five_gw_after": 241.84,
-          "five_gw_net_gain": 1.46,
-          "per_gw_average_before": 48.08,
-          "per_gw_average_after": 48.37,
+          "gain": 1.45,
+          "five_gw_before": 240.34,
+          "five_gw_after": 241.79,
+          "five_gw_net_gain": 1.45,
+          "per_gw_average_before": 48.07,
+          "per_gw_average_after": 48.36,
           "per_gw_average_net_gain": 0.29,
           "hit_cost": 0.0,
           "projection_before": {
             "rounds": [
               {
                 "gw": 11,
-                "points": 49.36,
+                "points": 49.37,
                 "xi": [
                   109,
                   115,
@@ -3812,7 +3812,7 @@
               },
               {
                 "gw": 12,
-                "points": 45.29,
+                "points": 45.26,
                 "xi": [
                   109,
                   115,
@@ -3830,7 +3830,7 @@
               },
               {
                 "gw": 13,
-                "points": 48.81,
+                "points": 48.8,
                 "xi": [
                   1,
                   8,
@@ -3866,7 +3866,7 @@
               },
               {
                 "gw": 15,
-                "points": 46.88,
+                "points": 46.87,
                 "xi": [
                   1,
                   8,
@@ -3883,13 +3883,13 @@
                 "captain": 411
               }
             ],
-            "points": 240.38
+            "points": 240.34
           },
           "projection_after": {
             "rounds": [
               {
                 "gw": 11,
-                "points": 49.83,
+                "points": 49.84,
                 "xi": [
                   109,
                   115,
@@ -3907,7 +3907,7 @@
               },
               {
                 "gw": 12,
-                "points": 46.03,
+                "points": 45.99,
                 "xi": [
                   109,
                   115,
@@ -3925,7 +3925,7 @@
               },
               {
                 "gw": 13,
-                "points": 48.06,
+                "points": 48.05,
                 "xi": [
                   1,
                   8,
@@ -3961,7 +3961,7 @@
               },
               {
                 "gw": 15,
-                "points": 47.73,
+                "points": 47.72,
                 "xi": [
                   1,
                   8,
@@ -3978,7 +3978,7 @@
                 "captain": 411
               }
             ],
-            "points": 241.84
+            "points": 241.79
           },
           "gain_multiplier": 1.0,
           "minimum_hit_return_multiple": 2.0,
@@ -3995,23 +3995,23 @@
           "score_base": "fpl_starting_xi_points_with_captain",
           "point_calibration": {
             "GKP": {
-              "intercept": 2.7711,
+              "intercept": 2.7714,
               "slope": 0.01,
               "samples": 25
             },
             "DEF": {
-              "intercept": 2.3978,
-              "slope": 0.0132,
+              "intercept": 2.3953,
+              "slope": 0.0133,
               "samples": 134
             },
             "MID": {
-              "intercept": 1.5363,
+              "intercept": 1.536,
               "slope": 0.0369,
               "samples": 174
             },
             "FWD": {
-              "intercept": 0.9163,
-              "slope": 0.0664,
+              "intercept": 0.92,
+              "slope": 0.0663,
               "samples": 37
             }
           }
@@ -4157,17 +4157,17 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 433，Total Lineup Score 668.55（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 433，Total Lineup Score 668.54（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "De Cuyper",
-          "detail": "爆发视角 Captain Score 91.22（首发 11 人中最高；本轮 Lineup Score 82.88）"
+          "detail": "爆发视角 Captain Score 91.22（首发 11 人中最高；本轮 Lineup Score 82.86）"
         },
         {
           "topic": "chip",
           "chip": "bench_boost",
-          "detail": "建议本轮使用 Bench Boost：替补四人合计预期评分 160.2，达到开卡阈值 145.0"
+          "detail": "建议本轮使用 Bench Boost：替补四人合计预期评分 160.1，达到开卡阈值 145.0"
         },
         {
           "topic": "transfer_status",
@@ -4176,12 +4176,12 @@
         {
           "topic": "transfer_out",
           "player": "Rogers",
-          "detail": "未来 5 轮预计增加 1.64 分"
+          "detail": "未来 5 轮预计增加 1.63 分"
         },
         {
           "topic": "transfer_in",
           "player": "Ayari",
-          "detail": "未来 5 轮预估收益更高（Market Score 23.69），满足预算与同队约束"
+          "detail": "未来 5 轮预估收益更高（Market Score 23.60），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -4189,10 +4189,10 @@
         }
       ],
       "metrics": {
-        "team_market_score": 635.18,
-        "captain_market_score": 58.74,
-        "formation_market_score": 508.67,
-        "team_lineup_score": 668.55,
+        "team_market_score": 634.07,
+        "captain_market_score": 58.65,
+        "formation_market_score": 508.0,
+        "team_lineup_score": 668.54,
         "captain_score": 91.22
       },
       "budget_before": 0.1,
