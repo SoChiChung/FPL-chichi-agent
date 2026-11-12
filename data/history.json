@@ -3595,7 +3595,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-11-09T19:40:24Z",
-      "updated_at": "2026-11-11T23:25:51Z",
+      "updated_at": "2026-11-12T17:28:56Z",
       "decision": {
         "formation": "433",
         "captain": {
@@ -3684,7 +3684,7 @@
               "name": "Rogers",
               "pos": "MID",
               "price": 8.2,
-              "market_score": 55.12,
+              "market_score": 55.14,
               "five_gw_points": 16.23
             },
             "in": {
@@ -3692,12 +3692,12 @@
               "name": "Ayari",
               "pos": "MID",
               "price": 5.5,
-              "market_score": 23.33,
-              "five_gw_points": 17.87
+              "market_score": 23.35,
+              "five_gw_points": 17.94
             },
-            "market_gap": 1.64,
+            "market_gap": 1.71,
             "hit_cost": 0,
-            "reason": "未来 5 轮预计增加 1.64 分"
+            "reason": "未来 5 轮预计增加 1.71 分"
           }
         ],
         "chip_plan": {
@@ -3718,12 +3718,7 @@
             "message": ""
           },
           "chip_already_used_this_gw": false,
-          "current_recommendation": {
-            "chip": "bench_boost",
-            "score": 159.32,
-            "reason": "替补四人合计预期评分 159.3，达到开卡阈值 145.0",
-            "name": "Bench Boost"
-          },
+          "current_recommendation": null,
           "planning_horizon": 2,
           "plan": [
             {
@@ -3765,36 +3760,31 @@
             "blank_gameweeks": []
           },
           "signals": {
-            "bench_score": 159.32,
-            "captain_score": 91.0,
+            "bench_score": 143.97,
+            "captain_score": 91.12,
             "captain_fixture_count": 1,
             "captain_fixture_difficulty": 2.0,
-            "free_hit_net_gain": 3.74,
-            "free_hit_risk_adjusted_gain": 3.74,
+            "free_hit_net_gain": 4.33,
+            "free_hit_risk_adjusted_gain": 4.33,
             "free_hit_required_gain": 8.0,
             "free_hit_confidence": 1.0
           }
         },
-        "recommended_chip": {
-          "chip": "bench_boost",
-          "score": 159.32,
-          "reason": "替补四人合计预期评分 159.3，达到开卡阈值 145.0",
-          "name": "Bench Boost"
-        },
+        "recommended_chip": null,
         "transfer_package": {
-          "gain": 1.44,
-          "five_gw_before": 241.73,
-          "five_gw_after": 243.17,
-          "five_gw_net_gain": 1.44,
-          "per_gw_average_before": 48.35,
-          "per_gw_average_after": 48.63,
-          "per_gw_average_net_gain": 0.29,
+          "gain": 1.5,
+          "five_gw_before": 242.17,
+          "five_gw_after": 243.67,
+          "five_gw_net_gain": 1.5,
+          "per_gw_average_before": 48.43,
+          "per_gw_average_after": 48.73,
+          "per_gw_average_net_gain": 0.3,
           "hit_cost": 0.0,
           "projection_before": {
             "rounds": [
               {
                 "gw": 11,
-                "points": 49.64,
+                "points": 49.72,
                 "xi": [
                   109,
                   115,
@@ -3812,7 +3802,7 @@
               },
               {
                 "gw": 12,
-                "points": 45.66,
+                "points": 45.71,
                 "xi": [
                   109,
                   115,
@@ -3830,7 +3820,7 @@
               },
               {
                 "gw": 13,
-                "points": 48.96,
+                "points": 49.11,
                 "xi": [
                   1,
                   8,
@@ -3848,7 +3838,7 @@
               },
               {
                 "gw": 14,
-                "points": 50.26,
+                "points": 50.36,
                 "xi": [
                   1,
                   8,
@@ -3866,7 +3856,7 @@
               },
               {
                 "gw": 15,
-                "points": 47.21,
+                "points": 47.27,
                 "xi": [
                   1,
                   8,
@@ -3883,13 +3873,13 @@
                 "captain": 411
               }
             ],
-            "points": 241.73
+            "points": 242.17
           },
           "projection_after": {
             "rounds": [
               {
                 "gw": 11,
-                "points": 50.11,
+                "points": 50.2,
                 "xi": [
                   109,
                   115,
@@ -3907,7 +3897,7 @@
               },
               {
                 "gw": 12,
-                "points": 46.44,
+                "points": 46.51,
                 "xi": [
                   109,
                   115,
@@ -3925,7 +3915,7 @@
               },
               {
                 "gw": 13,
-                "points": 48.2,
+                "points": 48.35,
                 "xi": [
                   1,
                   8,
@@ -3943,7 +3933,7 @@
               },
               {
                 "gw": 14,
-                "points": 50.38,
+                "points": 50.5,
                 "xi": [
                   1,
                   8,
@@ -3961,7 +3951,7 @@
               },
               {
                 "gw": 15,
-                "points": 48.04,
+                "points": 48.11,
                 "xi": [
                   1,
                   8,
@@ -3978,7 +3968,7 @@
                 "captain": 411
               }
             ],
-            "points": 243.17
+            "points": 243.67
           },
           "gain_multiplier": 1.0,
           "minimum_hit_return_multiple": 2.0,
@@ -3995,23 +3985,23 @@
           "score_base": "fpl_starting_xi_points_with_captain",
           "point_calibration": {
             "GKP": {
-              "intercept": 2.7738,
+              "intercept": 2.7722,
               "slope": 0.01,
               "samples": 25
             },
             "DEF": {
-              "intercept": 2.382,
-              "slope": 0.0137,
+              "intercept": 2.3842,
+              "slope": 0.0136,
               "samples": 134
             },
             "MID": {
-              "intercept": 1.5611,
-              "slope": 0.0364,
+              "intercept": 1.5433,
+              "slope": 0.0369,
               "samples": 174
             },
             "FWD": {
-              "intercept": 0.8827,
-              "slope": 0.0676,
+              "intercept": 0.8724,
+              "slope": 0.0681,
               "samples": 37
             }
           }
@@ -4157,17 +4147,16 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 433，Total Lineup Score 667.45（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 433，Total Lineup Score 658.91（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "De Cuyper",
-          "detail": "爆发视角 Captain Score 91.00（首发 11 人中最高；本轮 Lineup Score 82.59）"
+          "detail": "爆发视角 Captain Score 91.12（首发 11 人中最高；本轮 Lineup Score 82.7）"
         },
         {
           "topic": "chip",
-          "chip": "bench_boost",
-          "detail": "建议本轮使用 Bench Boost：替补四人合计预期评分 159.3，达到开卡阈值 145.0"
+          "detail": "本轮暂不建议开卡；筹码计划已结合未来赛程保留更优窗口"
         },
         {
           "topic": "transfer_status",
@@ -4176,12 +4165,12 @@
         {
           "topic": "transfer_out",
           "player": "Rogers",
-          "detail": "未来 5 轮预计增加 1.64 分"
+          "detail": "未来 5 轮预计增加 1.71 分"
         },
         {
           "topic": "transfer_in",
           "player": "Ayari",
-          "detail": "未来 5 轮预估收益更高（Market Score 23.33），满足预算与同队约束"
+          "detail": "未来 5 轮预估收益更高（Market Score 23.35），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -4189,11 +4178,11 @@
         }
       ],
       "metrics": {
-        "team_market_score": 630.98,
-        "captain_market_score": 58.49,
-        "formation_market_score": 506.25,
-        "team_lineup_score": 667.45,
-        "captain_score": 91.0
+        "team_market_score": 630.62,
+        "captain_market_score": 58.52,
+        "formation_market_score": 506.09,
+        "team_lineup_score": 658.91,
+        "captain_score": 91.12
       },
       "budget_before": 0.1,
       "budget_after": 2.8,
