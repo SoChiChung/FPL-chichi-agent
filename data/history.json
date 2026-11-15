@@ -3595,7 +3595,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-11-09T19:40:24Z",
-      "updated_at": "2026-11-14T20:32:22Z",
+      "updated_at": "2026-11-15T16:12:01Z",
       "decision": {
         "formation": "433",
         "captain": {
@@ -3684,16 +3684,16 @@
               "name": "Rogers",
               "pos": "MID",
               "price": 8.2,
-              "market_score": 55.08,
-              "five_gw_points": 16.33
+              "market_score": 55.07,
+              "five_gw_points": 16.34
             },
             "in": {
               "id": 129,
               "name": "Ayari",
               "pos": "MID",
               "price": 5.5,
-              "market_score": 23.24,
-              "five_gw_points": 18.04
+              "market_score": 23.22,
+              "five_gw_points": 18.05
             },
             "market_gap": 1.71,
             "hit_cost": 0,
@@ -3760,12 +3760,12 @@
             "blank_gameweeks": []
           },
           "signals": {
-            "bench_score": 143.91,
-            "captain_score": 90.73,
+            "bench_score": 143.88,
+            "captain_score": 90.75,
             "captain_fixture_count": 1,
             "captain_fixture_difficulty": 2.0,
-            "free_hit_net_gain": 4.33,
-            "free_hit_risk_adjusted_gain": 4.33,
+            "free_hit_net_gain": 4.31,
+            "free_hit_risk_adjusted_gain": 4.31,
             "free_hit_required_gain": 8.0,
             "free_hit_confidence": 1.0
           }
@@ -3773,18 +3773,18 @@
         "recommended_chip": null,
         "transfer_package": {
           "gain": 1.52,
-          "five_gw_before": 243.7,
-          "five_gw_after": 245.22,
+          "five_gw_before": 243.56,
+          "five_gw_after": 245.08,
           "five_gw_net_gain": 1.52,
-          "per_gw_average_before": 48.74,
-          "per_gw_average_after": 49.04,
+          "per_gw_average_before": 48.71,
+          "per_gw_average_after": 49.02,
           "per_gw_average_net_gain": 0.3,
           "hit_cost": 0.0,
           "projection_before": {
             "rounds": [
               {
                 "gw": 11,
-                "points": 49.93,
+                "points": 49.91,
                 "xi": [
                   109,
                   115,
@@ -3802,7 +3802,7 @@
               },
               {
                 "gw": 12,
-                "points": 46.05,
+                "points": 45.99,
                 "xi": [
                   109,
                   115,
@@ -3820,7 +3820,7 @@
               },
               {
                 "gw": 13,
-                "points": 49.44,
+                "points": 49.43,
                 "xi": [
                   1,
                   8,
@@ -3856,7 +3856,7 @@
               },
               {
                 "gw": 15,
-                "points": 47.53,
+                "points": 47.48,
                 "xi": [
                   1,
                   8,
@@ -3873,13 +3873,13 @@
                 "captain": 411
               }
             ],
-            "points": 243.7
+            "points": 243.56
           },
           "projection_after": {
             "rounds": [
               {
                 "gw": 11,
-                "points": 50.42,
+                "points": 50.39,
                 "xi": [
                   109,
                   115,
@@ -3897,7 +3897,7 @@
               },
               {
                 "gw": 12,
-                "points": 46.85,
+                "points": 46.79,
                 "xi": [
                   109,
                   115,
@@ -3915,7 +3915,7 @@
               },
               {
                 "gw": 13,
-                "points": 48.66,
+                "points": 48.65,
                 "xi": [
                   1,
                   8,
@@ -3933,7 +3933,7 @@
               },
               {
                 "gw": 14,
-                "points": 50.88,
+                "points": 50.89,
                 "xi": [
                   1,
                   8,
@@ -3951,7 +3951,7 @@
               },
               {
                 "gw": 15,
-                "points": 48.41,
+                "points": 48.36,
                 "xi": [
                   1,
                   8,
@@ -3968,7 +3968,7 @@
                 "captain": 411
               }
             ],
-            "points": 245.22
+            "points": 245.08
           },
           "gain_multiplier": 1.0,
           "minimum_hit_return_multiple": 2.0,
@@ -3985,23 +3985,23 @@
           "score_base": "fpl_starting_xi_points_with_captain",
           "point_calibration": {
             "GKP": {
-              "intercept": 2.7678,
+              "intercept": 2.7689,
               "slope": 0.01,
               "samples": 25
             },
             "DEF": {
-              "intercept": 2.3804,
+              "intercept": 2.3773,
               "slope": 0.0136,
               "samples": 134
             },
             "MID": {
-              "intercept": 1.527,
+              "intercept": 1.5275,
               "slope": 0.0377,
               "samples": 174
             },
             "FWD": {
-              "intercept": 0.8583,
-              "slope": 0.0693,
+              "intercept": 0.8603,
+              "slope": 0.0692,
               "samples": 37
             }
           }
@@ -4147,12 +4147,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 433，Total Lineup Score 657.31（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 433，Total Lineup Score 657.39（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "De Cuyper",
-          "detail": "爆发视角 Captain Score 90.73（首发 11 人中最高；本轮 Lineup Score 82.53）"
+          "detail": "爆发视角 Captain Score 90.75（首发 11 人中最高；本轮 Lineup Score 82.53）"
         },
         {
           "topic": "chip",
@@ -4170,7 +4170,7 @@
         {
           "topic": "transfer_in",
           "player": "Ayari",
-          "detail": "未来 5 轮预估收益更高（Market Score 23.24），满足预算与同队约束"
+          "detail": "未来 5 轮预估收益更高（Market Score 23.22），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -4178,11 +4178,11 @@
         }
       ],
       "metrics": {
-        "team_market_score": 628.56,
-        "captain_market_score": 58.43,
-        "formation_market_score": 504.75,
-        "team_lineup_score": 657.31,
-        "captain_score": 90.73
+        "team_market_score": 628.31,
+        "captain_market_score": 58.4,
+        "formation_market_score": 504.6,
+        "team_lineup_score": 657.39,
+        "captain_score": 90.75
       },
       "budget_before": 0.1,
       "budget_after": 2.8,
