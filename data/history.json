@@ -3595,7 +3595,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-11-09T19:40:24Z",
-      "updated_at": "2026-11-22T22:26:12Z",
+      "updated_at": "2026-11-23T21:04:16Z",
       "decision": {
         "formation": "352",
         "captain": {
@@ -3636,12 +3636,12 @@
             "name": "Mbeumo"
           },
           {
-            "id": 53,
-            "name": "Manzambi"
-          },
-          {
             "id": 52,
             "name": "Alysson"
+          },
+          {
+            "id": 53,
+            "name": "Manzambi"
           },
           {
             "id": 166,
@@ -3654,12 +3654,12 @@
         ],
         "bench": [
           {
-            "id": 411,
-            "name": "Haaland"
-          },
-          {
             "id": 259,
             "name": "Diop"
+          },
+          {
+            "id": 411,
+            "name": "Haaland"
           },
           {
             "id": 391,
@@ -3684,20 +3684,20 @@
               "name": "Mbeumo",
               "pos": "MID",
               "price": 7.8,
-              "market_score": 27.18,
-              "five_gw_points": 14.93
+              "market_score": 23.59,
+              "five_gw_points": 14.95
             },
             "in": {
               "id": 366,
               "name": "Wirtz",
               "pos": "MID",
-              "price": 7.3,
-              "market_score": 44.8,
-              "five_gw_points": 21.19
+              "price": 7.4,
+              "market_score": 45.34,
+              "five_gw_points": 21.98
             },
-            "market_gap": 6.26,
+            "market_gap": 7.03,
             "hit_cost": 0,
-            "reason": "未来 5 轮预计增加 6.26 分"
+            "reason": "未来 5 轮预计增加 7.03 分"
           }
         ],
         "chip_plan": {
@@ -3720,8 +3720,8 @@
           "chip_already_used_this_gw": false,
           "current_recommendation": {
             "chip": "bench_boost",
-            "score": 157.32,
-            "reason": "替补四人合计预期评分 157.3，达到开卡阈值 145.0",
+            "score": 159.9,
+            "reason": "替补四人合计预期评分 159.9，达到开卡阈值 145.0",
             "name": "Bench Boost"
           },
           "planning_horizon": 2,
@@ -3767,7 +3767,7 @@
               {
                 "gw": 13,
                 "players": 7,
-                "strength": 364.58,
+                "strength": 347.39,
                 "reasons": {
                   "blank": 0,
                   "difficult": 7
@@ -3776,36 +3776,36 @@
             ]
           },
           "signals": {
-            "bench_score": 157.32,
-            "captain_score": 75.74,
+            "bench_score": 159.9,
+            "captain_score": 76.7,
             "captain_fixture_count": 1,
             "captain_fixture_difficulty": 3.0,
-            "free_hit_net_gain": 6.06,
-            "free_hit_risk_adjusted_gain": 6.06,
+            "free_hit_net_gain": 6.38,
+            "free_hit_risk_adjusted_gain": 6.38,
             "free_hit_required_gain": 8.0,
             "free_hit_confidence": 1.0
           }
         },
         "recommended_chip": {
           "chip": "bench_boost",
-          "score": 157.32,
-          "reason": "替补四人合计预期评分 157.3，达到开卡阈值 145.0",
+          "score": 159.9,
+          "reason": "替补四人合计预期评分 159.9，达到开卡阈值 145.0",
           "name": "Bench Boost"
         },
         "transfer_package": {
-          "gain": 4.93,
-          "five_gw_before": 233.33,
-          "five_gw_after": 238.26,
-          "five_gw_net_gain": 4.93,
-          "per_gw_average_before": 46.67,
-          "per_gw_average_after": 47.65,
-          "per_gw_average_net_gain": 0.99,
+          "gain": 5.55,
+          "five_gw_before": 232.36,
+          "five_gw_after": 237.91,
+          "five_gw_net_gain": 5.55,
+          "per_gw_average_before": 46.47,
+          "per_gw_average_after": 47.58,
+          "per_gw_average_net_gain": 1.11,
           "hit_cost": 0.0,
           "projection_before": {
             "rounds": [
               {
                 "gw": 12,
-                "points": 44.91,
+                "points": 44.77,
                 "xi": [
                   109,
                   115,
@@ -3830,18 +3830,18 @@
                   8,
                   4,
                   40,
-                  68,
                   52,
+                  68,
                   53,
                   166,
-                  411,
-                  79
+                  79,
+                  411
                 ],
                 "captain": 166
               },
               {
                 "gw": 14,
-                "points": 48.82,
+                "points": 48.62,
                 "xi": [
                   1,
                   8,
@@ -3859,16 +3859,16 @@
               },
               {
                 "gw": 15,
-                "points": 46.08,
+                "points": 45.59,
                 "xi": [
                   1,
                   8,
                   4,
                   115,
-                  391,
                   52,
                   53,
                   427,
+                  40,
                   166,
                   411,
                   79
@@ -3877,7 +3877,7 @@
               },
               {
                 "gw": 16,
-                "points": 46.57,
+                "points": 46.43,
                 "xi": [
                   109,
                   391,
@@ -3894,13 +3894,13 @@
                 "captain": 79
               }
             ],
-            "points": 233.33
+            "points": 232.36
           },
           "projection_after": {
             "rounds": [
               {
                 "gw": 12,
-                "points": 45.92,
+                "points": 45.95,
                 "xi": [
                   109,
                   115,
@@ -3918,7 +3918,7 @@
               },
               {
                 "gw": 13,
-                "points": 48.43,
+                "points": 48.82,
                 "xi": [
                   1,
                   391,
@@ -3926,17 +3926,17 @@
                   4,
                   366,
                   40,
-                  68,
                   52,
+                  68,
                   166,
-                  411,
-                  79
+                  79,
+                  411
                 ],
-                "captain": 166
+                "captain": 366
               },
               {
                 "gw": 14,
-                "points": 48.89,
+                "points": 48.74,
                 "xi": [
                   1,
                   8,
@@ -3954,16 +3954,16 @@
               },
               {
                 "gw": 15,
-                "points": 47.31,
+                "points": 46.96,
                 "xi": [
                   1,
                   8,
                   4,
                   115,
-                  391,
                   366,
                   52,
                   53,
+                  40,
                   166,
                   411,
                   79
@@ -3972,7 +3972,7 @@
               },
               {
                 "gw": 16,
-                "points": 47.71,
+                "points": 47.44,
                 "xi": [
                   109,
                   391,
@@ -3989,7 +3989,7 @@
                 "captain": 79
               }
             ],
-            "points": 238.26
+            "points": 237.91
           },
           "gain_multiplier": 1.0,
           "minimum_hit_return_multiple": 2.0,
@@ -3997,33 +3997,33 @@
           "projection_method": "由本模型逐轮评分映射至 FPL 积分单位；使用历史 points_per_game 作校准标签，不使用官方 ep_next 预测",
           "out_count": 1,
           "total_out_price": 7.8,
-          "total_in_price": 7.3,
+          "total_in_price": 7.4,
           "budget_before": 0.1,
-          "transfer_cost": -0.5,
-          "budget_after": 0.6,
+          "transfer_cost": -0.4,
+          "budget_after": 0.5,
           "feasible": true,
           "point_model_version": 1,
           "score_base": "fpl_starting_xi_points_with_captain",
           "point_calibration": {
             "GKP": {
-              "intercept": 2.5097,
-              "slope": 0.018,
+              "intercept": 2.4304,
+              "slope": 0.0196,
               "samples": 25
             },
             "DEF": {
-              "intercept": 2.4467,
-              "slope": 0.0126,
+              "intercept": 2.4045,
+              "slope": 0.0132,
               "samples": 137
             },
             "MID": {
-              "intercept": 1.3438,
-              "slope": 0.0436,
+              "intercept": 1.2635,
+              "slope": 0.0469,
               "samples": 174
             },
             "FWD": {
-              "intercept": 1.2077,
-              "slope": 0.0551,
-              "samples": 38
+              "intercept": 1.1769,
+              "slope": 0.056,
+              "samples": 39
             }
           }
         },
@@ -4168,17 +4168,17 @@
         },
         {
           "topic": "lineup",
-          "detail": "全局枚举首发：阵型 352，Total Lineup Score 541.69（替补 4 人按 Lineup Score 降序，门将恒最后）"
+          "detail": "全局枚举首发：阵型 352，Total Lineup Score 534.5（替补 4 人按 Lineup Score 降序，门将恒最后）"
         },
         {
           "topic": "captain",
           "player": "De Cuyper",
-          "detail": "爆发视角 Captain Score 75.74（首发 11 人中最高；本轮 Lineup Score 68.0）"
+          "detail": "爆发视角 Captain Score 76.70（首发 11 人中最高；本轮 Lineup Score 68.12）"
         },
         {
           "topic": "chip",
           "chip": "bench_boost",
-          "detail": "建议本轮使用 Bench Boost：替补四人合计预期评分 157.3，达到开卡阈值 145.0"
+          "detail": "建议本轮使用 Bench Boost：替补四人合计预期评分 159.9，达到开卡阈值 145.0"
         },
         {
           "topic": "transfer_status",
@@ -4187,17 +4187,17 @@
         {
           "topic": "no_transfer",
           "player": "Raya",
-          "detail": "状态 d 非 available，但未找到市场分更高的同位置替代者，暂不换出"
+          "detail": "出场概率不足（50% < 75%），但未找到市场分更高的同位置替代者，暂不换出"
         },
         {
           "topic": "transfer_out",
           "player": "Mbeumo",
-          "detail": "未来 5 轮预计增加 6.26 分"
+          "detail": "未来 5 轮预计增加 7.03 分"
         },
         {
           "topic": "transfer_in",
           "player": "Wirtz",
-          "detail": "未来 5 轮预估收益更高（Market Score 44.80），满足预算与同队约束"
+          "detail": "未来 5 轮预估收益更高（Market Score 45.34），满足预算与同队约束"
         },
         {
           "topic": "external_source",
@@ -4205,15 +4205,15 @@
         }
       ],
       "metrics": {
-        "team_market_score": 590.3,
-        "captain_market_score": 53.68,
-        "formation_market_score": 458.15,
-        "team_lineup_score": 541.69,
-        "captain_score": 75.74
+        "team_market_score": 541.28,
+        "captain_market_score": 50.02,
+        "formation_market_score": 415.49,
+        "team_lineup_score": 534.5,
+        "captain_score": 76.7
       },
       "budget_before": 0.1,
-      "budget_after": 0.6,
-      "transfer_cost": -0.5,
+      "budget_after": 0.5,
+      "transfer_cost": -0.4,
       "actual_transfers": [
         {
           "out": {
@@ -4231,12 +4231,12 @@
       "live": {
         "gw": 11,
         "status": "live",
-        "points": 31.0,
-        "rank": 1795572,
+        "points": 36.0,
+        "rank": 3898842,
         "points_source": "fpl_entry_history",
         "rank_source": "fpl_provisional",
         "rank_checked_at": null,
-        "updated_at": "2026-11-22T22:26:07Z"
+        "updated_at": "2026-11-23T21:04:09Z"
       }
     }
   ]
