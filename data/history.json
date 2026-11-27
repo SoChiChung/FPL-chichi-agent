@@ -4940,6 +4940,872 @@
       "budget_before": 0.1,
       "budget_after": 0.5,
       "transfer_cost": -0.4,
+      "actual_transfers": [
+        {
+          "out": {
+            "id": 411,
+            "name": "Haaland"
+          },
+          "in": {
+            "id": 379,
+            "name": "Isak"
+          },
+          "time": "2026-11-27T13:17:08.877477Z",
+          "cost": 94
+        },
+        {
+          "out": {
+            "id": 427,
+            "name": "Mbeumo"
+          },
+          "in": {
+            "id": 366,
+            "name": "Wirtz"
+          },
+          "time": "2026-11-27T13:17:08.877316Z",
+          "cost": 75
+        },
+        {
+          "out": {
+            "id": 53,
+            "name": "Manzambi"
+          },
+          "in": {
+            "id": 124,
+            "name": "Groß"
+          },
+          "time": "2026-11-27T13:17:08.877147Z",
+          "cost": 63
+        },
+        {
+          "out": {
+            "id": 52,
+            "name": "Alysson"
+          },
+          "in": {
+            "id": 15,
+            "name": "Ødegaard"
+          },
+          "time": "2026-11-27T13:17:08.876974Z",
+          "cost": 67
+        },
+        {
+          "out": {
+            "id": 391,
+            "name": "Gvardiol"
+          },
+          "in": {
+            "id": 504,
+            "name": "Vuskovic"
+          },
+          "time": "2026-11-27T13:17:08.876788Z",
+          "cost": 53
+        },
+        {
+          "out": {
+            "id": 259,
+            "name": "Diop"
+          },
+          "in": {
+            "id": 112,
+            "name": "Van Hecke"
+          },
+          "time": "2026-11-27T13:17:08.876625Z",
+          "cost": 52
+        },
+        {
+          "out": {
+            "id": 8,
+            "name": "Calafiori"
+          },
+          "in": {
+            "id": 60,
+            "name": "Hill"
+          },
+          "time": "2026-11-27T13:17:08.876459Z",
+          "cost": 57
+        },
+        {
+          "out": {
+            "id": 109,
+            "name": "Verbruggen"
+          },
+          "in": {
+            "id": 385,
+            "name": "Trafford"
+          },
+          "time": "2026-11-27T13:17:08.876280Z",
+          "cost": 51
+        },
+        {
+          "out": {
+            "id": 1,
+            "name": "Raya"
+          },
+          "in": {
+            "id": 572,
+            "name": "Tzolakis"
+          },
+          "time": "2026-11-27T13:17:08.876036Z",
+          "cost": 47
+        }
+      ],
+      "live": {
+        "gw": 12,
+        "status": "live",
+        "points": 0.0,
+        "net_points": 0.0,
+        "transfer_cost": 0,
+        "active_chip": "wildcard",
+        "rank": 8342947,
+        "points_source": "fpl_event_live",
+        "rank_source": "livefpl_estimate",
+        "rank_checked_at": "2026-11-27T22:28:24Z",
+        "updated_at": "2026-11-27T22:28:24Z",
+        "played_count": 0,
+        "total_active": 11,
+        "captain_promoted": false,
+        "fixtures_started": 1,
+        "fixtures_finished": 1,
+        "fixtures_total": 10,
+        "players": {
+          "385": {
+            "points": 0.0,
+            "effective_points": 0.0,
+            "minutes": 0,
+            "multiplier": 1.0,
+            "auto_sub": null,
+            "started": false,
+            "finished": false
+          },
+          "4": {
+            "points": 0.0,
+            "effective_points": 0.0,
+            "minutes": 0,
+            "multiplier": 1.0,
+            "auto_sub": null,
+            "started": false,
+            "finished": false
+          },
+          "112": {
+            "points": 0.0,
+            "effective_points": 0.0,
+            "minutes": 0,
+            "multiplier": 1.0,
+            "auto_sub": null,
+            "started": false,
+            "finished": false
+          },
+          "504": {
+            "points": 0.0,
+            "effective_points": 0.0,
+            "minutes": 0,
+            "multiplier": 1.0,
+            "auto_sub": null,
+            "started": false,
+            "finished": false
+          },
+          "115": {
+            "points": 0.0,
+            "effective_points": 0.0,
+            "minutes": 0,
+            "multiplier": 1.0,
+            "auto_sub": null,
+            "started": false,
+            "finished": false
+          },
+          "124": {
+            "points": 0.0,
+            "effective_points": 0.0,
+            "minutes": 0,
+            "multiplier": 2.0,
+            "auto_sub": null,
+            "started": false,
+            "finished": false
+          },
+          "68": {
+            "points": 0.0,
+            "effective_points": 0.0,
+            "minutes": 0,
+            "multiplier": 1.0,
+            "auto_sub": null,
+            "started": false,
+            "finished": false
+          },
+          "366": {
+            "points": 0.0,
+            "effective_points": 0.0,
+            "minutes": 0,
+            "multiplier": 1.0,
+            "auto_sub": null,
+            "started": false,
+            "finished": false
+          },
+          "166": {
+            "points": 0.0,
+            "effective_points": 0.0,
+            "minutes": 0,
+            "multiplier": 1.0,
+            "auto_sub": null,
+            "started": false,
+            "finished": false
+          },
+          "79": {
+            "points": 0.0,
+            "effective_points": 0.0,
+            "minutes": 0,
+            "multiplier": 1.0,
+            "auto_sub": null,
+            "started": false,
+            "finished": false
+          },
+          "379": {
+            "points": 0.0,
+            "effective_points": 0.0,
+            "minutes": 0,
+            "multiplier": 1.0,
+            "auto_sub": null,
+            "started": false,
+            "finished": false
+          },
+          "572": {
+            "points": 0.0,
+            "effective_points": 0.0,
+            "minutes": 0,
+            "multiplier": 0.0,
+            "auto_sub": null,
+            "started": false,
+            "finished": false
+          },
+          "60": {
+            "points": 0.0,
+            "effective_points": 0.0,
+            "minutes": 0,
+            "multiplier": 0.0,
+            "auto_sub": null,
+            "started": false,
+            "finished": false
+          },
+          "40": {
+            "points": 2.0,
+            "effective_points": 0.0,
+            "minutes": 90,
+            "multiplier": 0.0,
+            "auto_sub": null,
+            "started": true,
+            "finished": true
+          },
+          "15": {
+            "points": 0.0,
+            "effective_points": 0.0,
+            "minutes": 0,
+            "multiplier": 0.0,
+            "auto_sub": null,
+            "started": false,
+            "finished": false
+          }
+        }
+      },
+      "actual_chip": {
+        "chip": "wildcard",
+        "name": "Wildcard",
+        "time": "2026-11-27T13:15:03.327697Z"
+      }
+    },
+    {
+      "gw": 13,
+      "points": null,
+      "rank": null,
+      "overall_rank": null,
+      "decided_at": "2026-11-27T22:28:33Z",
+      "updated_at": "2026-11-27T22:28:33Z",
+      "decision": {
+        "formation": "343",
+        "captain": {
+          "id": 366,
+          "name": "Wirtz"
+        },
+        "vice": {
+          "id": 40,
+          "name": "Rogers"
+        },
+        "starting_xi": [
+          {
+            "id": 572,
+            "name": "Tzolakis"
+          },
+          {
+            "id": 112,
+            "name": "Van Hecke"
+          },
+          {
+            "id": 4,
+            "name": "Gabriel"
+          },
+          {
+            "id": 60,
+            "name": "Hill"
+          },
+          {
+            "id": 366,
+            "name": "Wirtz"
+          },
+          {
+            "id": 40,
+            "name": "Rogers"
+          },
+          {
+            "id": 68,
+            "name": "Tavernier"
+          },
+          {
+            "id": 15,
+            "name": "Ødegaard"
+          },
+          {
+            "id": 379,
+            "name": "Isak"
+          },
+          {
+            "id": 166,
+            "name": "N.Jackson"
+          },
+          {
+            "id": 79,
+            "name": "Evanilson"
+          }
+        ],
+        "bench": [
+          {
+            "id": 115,
+            "name": "De Cuyper"
+          },
+          {
+            "id": 124,
+            "name": "Groß"
+          },
+          {
+            "id": 504,
+            "name": "Vuskovic"
+          },
+          {
+            "id": 385,
+            "name": "Trafford"
+          }
+        ],
+        "squad": [],
+        "squad_source": {
+          "type": "auto_pick",
+          "gw": 12
+        },
+        "transfer_status": "limited",
+        "free_transfers": 1,
+        "recommended_transfers": [],
+        "chip_plan": {
+          "target_gw": 13,
+          "available": {
+            "wildcard": false,
+            "free_hit": true,
+            "bench_boost": false,
+            "triple_captain": true
+          },
+          "used_chips": {
+            "bench_boost": 11,
+            "wildcard": 12
+          },
+          "season_half": 1,
+          "guarantee": {
+            "active": false,
+            "mode": "normal",
+            "remaining_gws": 7,
+            "available_chip_count": 2,
+            "start_gw": 16,
+            "message": ""
+          },
+          "chip_already_used_this_gw": false,
+          "current_recommendation": null,
+          "planning_horizon": 8,
+          "plan": [
+            {
+              "chip": "wildcard",
+              "name": "Wildcard",
+              "status": "used",
+              "used_gw": 12,
+              "target_gw": null,
+              "reason": "GW12 已使用（GW1–19 每半程各一张）"
+            },
+            {
+              "chip": "free_hit",
+              "name": "Free Hit",
+              "status": "available",
+              "target_gw": 13,
+              "reason": "GW13 有 8 名核心球员赛程偏弱，适合临时换阵冲击单轮上限"
+            },
+            {
+              "chip": "bench_boost",
+              "name": "Bench Boost",
+              "status": "used",
+              "used_gw": 11,
+              "target_gw": null,
+              "reason": "GW11 已使用（GW1–19 每半程各一张）"
+            },
+            {
+              "chip": "triple_captain",
+              "name": "Triple Captain",
+              "status": "available",
+              "target_gw": 14,
+              "reason": "上半程暂无双赛，锁定 GW14 Tavernier 主场优势赛程（单轮预计 6.5 分）"
+            }
+          ],
+          "chip_sequence": [
+            "free_hit",
+            "triple_captain"
+          ],
+          "windows": {
+            "double_gameweeks": [],
+            "blank_gameweeks": [
+              {
+                "gw": 13,
+                "players": 8,
+                "strength": 395.92,
+                "reasons": {
+                  "blank": 0,
+                  "difficult": 8
+                }
+              }
+            ]
+          },
+          "signals": {
+            "bench_score": 219.92,
+            "bench_xp": 18.27,
+            "wildcard_five_gw_gain": null,
+            "captain_score": 87.43,
+            "captain_xp": 6.0,
+            "captain_fixture_count": 1,
+            "captain_fixture_difficulty": 2.0,
+            "free_hit_net_gain": 2.63,
+            "free_hit_risk_adjusted_gain": 2.63,
+            "free_hit_required_gain": 8.0,
+            "free_hit_confidence": 1.0
+          }
+        },
+        "recommended_chip": null,
+        "transfer_package": {
+          "gain": 0.0,
+          "five_gw_before": 320.83,
+          "five_gw_after": 320.83,
+          "five_gw_net_gain": 0.0,
+          "per_gw_average_before": 64.17,
+          "per_gw_average_after": 64.17,
+          "per_gw_average_net_gain": 0.0,
+          "hit_cost": 0,
+          "projection_before": {
+            "rounds": [
+              {
+                "gw": 13,
+                "points": 61.07,
+                "xi": [
+                  572,
+                  112,
+                  4,
+                  60,
+                  115,
+                  366,
+                  40,
+                  68,
+                  379,
+                  166,
+                  79
+                ],
+                "captain": 366
+              },
+              {
+                "gw": 14,
+                "points": 65.54,
+                "xi": [
+                  385,
+                  60,
+                  4,
+                  115,
+                  504,
+                  112,
+                  68,
+                  124,
+                  15,
+                  79,
+                  166
+                ],
+                "captain": 68
+              },
+              {
+                "gw": 15,
+                "points": 62.41,
+                "xi": [
+                  572,
+                  115,
+                  112,
+                  4,
+                  504,
+                  60,
+                  124,
+                  366,
+                  15,
+                  166,
+                  379
+                ],
+                "captain": 115
+              },
+              {
+                "gw": 16,
+                "points": 69.47,
+                "xi": [
+                  385,
+                  115,
+                  504,
+                  60,
+                  4,
+                  68,
+                  124,
+                  15,
+                  366,
+                  79,
+                  379
+                ],
+                "captain": 115
+              },
+              {
+                "gw": 17,
+                "points": 62.34,
+                "xi": [
+                  385,
+                  4,
+                  112,
+                  115,
+                  366,
+                  15,
+                  68,
+                  124,
+                  40,
+                  379,
+                  166
+                ],
+                "captain": 4
+              }
+            ],
+            "points": 320.83
+          },
+          "projection_after": {
+            "rounds": [
+              {
+                "gw": 13,
+                "points": 61.07,
+                "xi": [
+                  572,
+                  112,
+                  4,
+                  60,
+                  115,
+                  366,
+                  40,
+                  68,
+                  379,
+                  166,
+                  79
+                ],
+                "captain": 366
+              },
+              {
+                "gw": 14,
+                "points": 65.54,
+                "xi": [
+                  385,
+                  60,
+                  4,
+                  115,
+                  504,
+                  112,
+                  68,
+                  124,
+                  15,
+                  79,
+                  166
+                ],
+                "captain": 68
+              },
+              {
+                "gw": 15,
+                "points": 62.41,
+                "xi": [
+                  572,
+                  115,
+                  112,
+                  4,
+                  504,
+                  60,
+                  124,
+                  366,
+                  15,
+                  166,
+                  379
+                ],
+                "captain": 115
+              },
+              {
+                "gw": 16,
+                "points": 69.47,
+                "xi": [
+                  385,
+                  115,
+                  504,
+                  60,
+                  4,
+                  68,
+                  124,
+                  15,
+                  366,
+                  79,
+                  379
+                ],
+                "captain": 115
+              },
+              {
+                "gw": 17,
+                "points": 62.34,
+                "xi": [
+                  385,
+                  4,
+                  112,
+                  115,
+                  366,
+                  15,
+                  68,
+                  124,
+                  40,
+                  379,
+                  166
+                ],
+                "captain": 4
+              }
+            ],
+            "points": 320.83
+          },
+          "gain_multiplier": 1.0,
+          "minimum_hit_return_multiple": 2.0,
+          "calibration_samples": 0,
+          "projection_method": "个人级 xP v2 模型：融合球员 xG/xA 队内份额、点球/定位球角色、2026/27 防守贡献与出场概率曲线，不使用官方 ep_next",
+          "out_count": 0,
+          "total_out_price": 0,
+          "total_in_price": 0,
+          "budget_before": 4.5,
+          "transfer_cost": 0,
+          "budget_after": 4.5,
+          "feasible": true,
+          "point_model_version": 2,
+          "score_base": "fpl_starting_xi_points_with_captain",
+          "point_calibration": {
+            "GKP": {
+              "intercept": 2.1498,
+              "slope": 0.025,
+              "samples": 25
+            },
+            "DEF": {
+              "intercept": 1.9406,
+              "slope": 0.025,
+              "samples": 137
+            },
+            "MID": {
+              "intercept": 1.6447,
+              "slope": 0.033,
+              "samples": 174
+            },
+            "FWD": {
+              "intercept": 0.3226,
+              "slope": 0.082,
+              "samples": 40
+            }
+          }
+        },
+        "strategy_snapshot": {
+          "strategy": "market_consensus",
+          "tsb_weight": 0.6,
+          "trend_weight": 0.4,
+          "injury_threshold": 75,
+          "market_gap_threshold": 15,
+          "max_free_transfers": 5,
+          "allow_hits": true,
+          "max_hit_transfers": 2,
+          "minimum_hit_return_multiple": 2.0,
+          "chip_strategy": {
+            "planning_horizon": 8,
+            "season_half_horizon": 19,
+            "wildcard_weak_squad_threshold": 5,
+            "wildcard_min_five_gw_gain": 16.0,
+            "free_hit_weak_player_threshold": 6,
+            "free_hit_fixture_difficulty_threshold": 4,
+            "free_hit_min_net_gain": 8.0,
+            "free_hit_future_window_premium": 2.0,
+            "free_hit_uncertainty_margin": 3.0,
+            "free_hit_opponent_defender_penalty": 0.75,
+            "free_hit_fpljoe_reference_weight": 0.5,
+            "free_hit_beam_width": 512,
+            "bench_boost_score_threshold": 145,
+            "bench_boost_min_bench_xp": 16.0,
+            "bench_boost_min_start_prob": 0.75,
+            "triple_captain_score_threshold": 70,
+            "triple_captain_single_gw_xp_threshold": 7.2,
+            "triple_captain_single_gw_score_threshold": 76,
+            "wildcard_default_lead": 2,
+            "post_wildcard_bench_boost_gap": 1,
+            "post_wildcard_triple_captain_gap": 3,
+            "chip_guarantee_start_gw": 16,
+            "guarantee_priority": [
+              "wildcard",
+              "free_hit",
+              "triple_captain",
+              "bench_boost"
+            ],
+            "priority": [
+              "wildcard",
+              "free_hit",
+              "triple_captain",
+              "bench_boost"
+            ]
+          },
+          "lineup_engine": {
+            "streak_min_points": {
+              "GKP": 6,
+              "DEF": 6,
+              "MID": 5,
+              "FWD": 5
+            },
+            "streak_weights": [
+              4,
+              2,
+              1
+            ],
+            "streak_map": {
+              "000": 0,
+              "001": 14.29,
+              "010": 28.57,
+              "011": 42.86,
+              "100": 57.14,
+              "101": 71.43,
+              "110": 85.71,
+              "111": 100.0
+            },
+            "form_source": "bootstrap_static",
+            "attack_weights": {
+              "projection": 0.6,
+              "form": 0.25,
+              "streak": 0.15
+            },
+            "attack_potential_weights": {
+              "projection": 0.7,
+              "form": 0.2,
+              "streak": 0.1
+            },
+            "lineup_weights": {
+              "GKP": {
+                "clean_sheet": 0.5,
+                "fixture": 0.3,
+                "market": 0.2
+              },
+              "DEF": {
+                "clean_sheet": 0.45,
+                "fixture": 0.25,
+                "attack": 0.1,
+                "market": 0.2
+              },
+              "MID": {
+                "attack": 0.4,
+                "form": 0.2,
+                "fixture": 0.2,
+                "market": 0.2
+              },
+              "FWD": {
+                "attack": 0.5,
+                "form": 0.2,
+                "fixture": 0.1,
+                "market": 0.2
+              }
+            },
+            "captain_weights": {
+              "GKP": {
+                "clean_sheet": 0.5,
+                "market": 0.5
+              },
+              "DEF": {
+                "attack_potential": 0.2,
+                "clean_sheet": 0.5,
+                "fixture": 0.3
+              },
+              "MID": {
+                "attack_potential": 0.9,
+                "market": 0.1
+              },
+              "FWD": {
+                "attack_potential": 0.95,
+                "market": 0.05
+              }
+            },
+            "position_starters_exact": {
+              "GKP": 1
+            },
+            "position_min_starters": {
+              "DEF": 3,
+              "MID": 2,
+              "FWD": 1
+            },
+            "fallback_neutral_score": 50
+          }
+        }
+      },
+      "notes": [
+        {
+          "topic": "squad_source",
+          "detail": "基于最近已锁定 GW12 FPL 真实阵容推演 GW13 决策"
+        },
+        {
+          "topic": "score_source",
+          "detail": "FPL Joe 目标 GW13 选源：projection=odds_market clean_sheet=odds_market fixture=sort_rating"
+        },
+        {
+          "topic": "lineup",
+          "detail": "GW13 最优首发：阵型 343，预计单轮 60.6 分（Total Lineup Score 665.51；替补非门将按优先级排序，门将独立替补）"
+        },
+        {
+          "topic": "captain",
+          "player": "Wirtz",
+          "detail": "单轮预计 6.0 分 · Captain Score 87.43（首发 11 人中最高；Lineup Score 77.99）"
+        },
+        {
+          "topic": "chip",
+          "detail": "Free Hit 暂不建议：模型净增经数据可信度调整后为 2.63 分，低于 8.00 分门槛"
+        },
+        {
+          "topic": "transfer_status",
+          "detail": "已检测到历史轮次记录，GW13 可用免费转会 1 次"
+        },
+        {
+          "topic": "no_transfer",
+          "detail": "当前首发健康，最优转会未来 5 轮仅净增 1.99 分（低于攒卡门槛 3.5 分），建议保留免费转会滚存至下轮联动发力"
+        },
+        {
+          "topic": "external_source",
+          "detail": "FPL Joe 已刷新: 请求 GW13-17 实际 1-13 缺失 [14, 15, 16, 17] 新鲜度 fresh 写入 3 个文件"
+        }
+      ],
+      "metrics": {
+        "team_market_score": 515.2,
+        "captain_market_score": 50.2,
+        "formation_market_score": 376.45,
+        "team_lineup_score": 665.51,
+        "team_projected_points": 60.58,
+        "captain_score": 87.43
+      },
+      "budget_before": 4.5,
+      "budget_after": 4.5,
+      "transfer_cost": 0,
       "actual_transfers": []
     }
   ]

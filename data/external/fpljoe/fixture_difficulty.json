@@ -5,16 +5,17 @@
     "source": "fpljoe",
     "competition": "premier-league",
     "season": "2026-27",
-    "retrieved_at": "2026-11-27T02:05:23Z",
-    "source_updated_at": "2026-11-27T02:00:50Z",
-    "requested_gameweek_start": 12,
-    "requested_gameweek_end": 16,
+    "retrieved_at": "2026-11-27T22:28:23Z",
+    "source_updated_at": "2026-11-27T22:25:49Z",
+    "requested_gameweek_start": 13,
+    "requested_gameweek_end": 17,
     "actual_gameweek_min": 1,
     "actual_gameweek_max": 13,
     "missing_gameweeks": [
       14,
       15,
-      16
+      16,
+      17
     ],
     "freshness": "fresh",
     "data_sources": {
@@ -78,156 +79,6 @@
   },
   "fixtures": [
     {
-      "gameweek": 12,
-      "home_team": "Nottingham Forest",
-      "away_team": "Chelsea",
-      "kickoff_time": "2026-11-27T20:00:00.000Z",
-      "fpl_home_team_id": 18,
-      "fpl_home_team_name": "Nott'm Forest",
-      "fpl_away_team_id": 6,
-      "fpl_away_team_name": "Chelsea",
-      "home_difficulty": 3,
-      "away_difficulty": 3,
-      "home_difficulty_sort_rating": -0.07795993927042044,
-      "away_difficulty_sort_rating": 0.1843832770346181,
-      "difficulty_source": "odds_market"
-    },
-    {
-      "gameweek": 12,
-      "home_team": "Leeds United",
-      "away_team": "Coventry City",
-      "kickoff_time": "2026-11-28T15:00:00.000Z",
-      "fpl_home_team_id": 13,
-      "fpl_home_team_name": "Leeds",
-      "fpl_away_team_id": 7,
-      "fpl_away_team_name": "Coventry City",
-      "home_difficulty": 1,
-      "away_difficulty": 4,
-      "home_difficulty_sort_rating": -0.9788832868690263,
-      "away_difficulty_sort_rating": 0.2844627550708849,
-      "difficulty_source": "odds_market"
-    },
-    {
-      "gameweek": 12,
-      "home_team": "Manchester United",
-      "away_team": "Brentford",
-      "kickoff_time": "2026-11-28T15:00:00.000Z",
-      "fpl_home_team_id": 16,
-      "fpl_home_team_name": "Man Utd",
-      "fpl_away_team_id": 4,
-      "fpl_away_team_name": "Brentford",
-      "home_difficulty": 3,
-      "away_difficulty": 4,
-      "home_difficulty_sort_rating": -0.21996341777843242,
-      "away_difficulty_sort_rating": 0.4138960180814175,
-      "difficulty_source": "odds_market"
-    },
-    {
-      "gameweek": 12,
-      "home_team": "Ipswich Town",
-      "away_team": "Aston Villa",
-      "kickoff_time": "2026-11-28T17:30:00.000Z",
-      "fpl_home_team_id": 12,
-      "fpl_home_team_name": "Ipswich",
-      "fpl_away_team_id": 2,
-      "fpl_away_team_name": "Aston Villa",
-      "home_difficulty": 3,
-      "away_difficulty": 3,
-      "home_difficulty_sort_rating": -0.21736803779803093,
-      "away_difficulty_sort_rating": -0.3311175813644347,
-      "difficulty_source": "odds_market"
-    },
-    {
-      "gameweek": 12,
-      "home_team": "Everton",
-      "away_team": "Liverpool",
-      "kickoff_time": "2026-11-29T12:00:00.000Z",
-      "fpl_home_team_id": 9,
-      "fpl_home_team_name": "Everton",
-      "fpl_away_team_id": 14,
-      "fpl_away_team_name": "Liverpool",
-      "home_difficulty": 4,
-      "away_difficulty": 3,
-      "home_difficulty_sort_rating": 0.3766518529334246,
-      "away_difficulty_sort_rating": 0.046392504816328284,
-      "difficulty_source": "odds_market"
-    },
-    {
-      "gameweek": 12,
-      "home_team": "Brighton and Hove Albion",
-      "away_team": "Newcastle United",
-      "kickoff_time": "2026-11-29T14:05:00.000Z",
-      "fpl_home_team_id": 5,
-      "fpl_home_team_name": "Brighton",
-      "fpl_away_team_id": 17,
-      "fpl_away_team_name": "Newcastle",
-      "home_difficulty": 2,
-      "away_difficulty": 4,
-      "home_difficulty_sort_rating": -0.5504735255503741,
-      "away_difficulty_sort_rating": 0.6732048372303623,
-      "difficulty_source": "odds_market"
-    },
-    {
-      "gameweek": 12,
-      "home_team": "Crystal Palace",
-      "away_team": "Hull City",
-      "kickoff_time": "2026-11-29T14:05:00.000Z",
-      "fpl_home_team_id": 8,
-      "fpl_home_team_name": "Crystal Palace",
-      "fpl_away_team_id": 11,
-      "fpl_away_team_name": "Hull City",
-      "home_difficulty": 1,
-      "away_difficulty": 3,
-      "home_difficulty_sort_rating": -1.1364944385505482,
-      "away_difficulty_sort_rating": -0.2534494082841452,
-      "difficulty_source": "odds_market"
-    },
-    {
-      "gameweek": 12,
-      "home_team": "Fulham",
-      "away_team": "Bournemouth",
-      "kickoff_time": "2026-11-29T14:05:00.000Z",
-      "fpl_home_team_id": 10,
-      "fpl_home_team_name": "Fulham",
-      "fpl_away_team_id": 3,
-      "fpl_away_team_name": "Bournemouth",
-      "home_difficulty": 3,
-      "away_difficulty": 3,
-      "home_difficulty_sort_rating": -0.07820611733907934,
-      "away_difficulty_sort_rating": 0.09313437603816421,
-      "difficulty_source": "odds_market"
-    },
-    {
-      "gameweek": 12,
-      "home_team": "Sunderland",
-      "away_team": "Tottenham Hotspur",
-      "kickoff_time": "2026-11-29T14:05:00.000Z",
-      "fpl_home_team_id": 20,
-      "fpl_home_team_name": "Sunderland",
-      "fpl_away_team_id": 19,
-      "fpl_away_team_name": "Spurs",
-      "home_difficulty": 3,
-      "away_difficulty": 3,
-      "home_difficulty_sort_rating": 0.0173091278155717,
-      "away_difficulty_sort_rating": -0.11057251920247291,
-      "difficulty_source": "odds_market"
-    },
-    {
-      "gameweek": 12,
-      "home_team": "Arsenal",
-      "away_team": "Manchester City",
-      "kickoff_time": "2026-11-29T16:30:00.000Z",
-      "fpl_home_team_id": 1,
-      "fpl_home_team_name": "Arsenal",
-      "fpl_away_team_id": 15,
-      "fpl_away_team_name": "Man City",
-      "home_difficulty": 4,
-      "away_difficulty": 5,
-      "home_difficulty_sort_rating": 0.6264086352849565,
-      "away_difficulty_sort_rating": 1.2216850297243687,
-      "difficulty_source": "odds_market"
-    },
-    {
       "gameweek": 13,
       "home_team": "Coventry City",
       "away_team": "Ipswich Town",
@@ -238,8 +89,8 @@
       "fpl_away_team_name": "Ipswich",
       "home_difficulty": 1,
       "away_difficulty": 2,
-      "home_difficulty_sort_rating": -0.8605963520316642,
-      "away_difficulty_sort_rating": -0.45769193765779304,
+      "home_difficulty_sort_rating": -0.8612211454751311,
+      "away_difficulty_sort_rating": -0.45684256162385517,
       "difficulty_source": "odds_market"
     },
     {
@@ -253,8 +104,8 @@
       "fpl_away_team_name": "Crystal Palace",
       "home_difficulty": 1,
       "away_difficulty": 4,
-      "home_difficulty_sort_rating": -0.778679041225091,
-      "away_difficulty_sort_rating": 0.44567184534726767,
+      "home_difficulty_sort_rating": -0.7775947434226766,
+      "away_difficulty_sort_rating": 0.4439758266183249,
       "difficulty_source": "odds_market"
     },
     {
@@ -268,8 +119,8 @@
       "fpl_away_team_name": "Nott'm Forest",
       "home_difficulty": 3,
       "away_difficulty": 2,
-      "home_difficulty_sort_rating": -0.28858421860170336,
-      "away_difficulty_sort_rating": -0.6328428930673358,
+      "home_difficulty_sort_rating": -0.28778797438655945,
+      "away_difficulty_sort_rating": -0.6348277361468626,
       "difficulty_source": "odds_market"
     },
     {
@@ -283,8 +134,8 @@
       "fpl_away_team_name": "Sunderland",
       "home_difficulty": 2,
       "away_difficulty": 5,
-      "home_difficulty_sort_rating": -0.579888016912816,
-      "away_difficulty_sort_rating": 0.9256800971639605,
+      "home_difficulty_sort_rating": -0.5800843706517886,
+      "away_difficulty_sort_rating": 0.9268174971495475,
       "difficulty_source": "odds_market"
     },
     {
@@ -298,8 +149,8 @@
       "fpl_away_team_name": "Leeds",
       "home_difficulty": 3,
       "away_difficulty": 5,
-      "home_difficulty_sort_rating": -0.1890506869482267,
-      "away_difficulty_sort_rating": 1.1899689633151984,
+      "home_difficulty_sort_rating": -0.1899508512952064,
+      "away_difficulty_sort_rating": 1.1884479387237956,
       "difficulty_source": "odds_market"
     },
     {
@@ -313,8 +164,8 @@
       "fpl_away_team_name": "Everton",
       "home_difficulty": 2,
       "away_difficulty": 4,
-      "home_difficulty_sort_rating": -0.42982700703729737,
-      "away_difficulty_sort_rating": 0.3200405961569708,
+      "home_difficulty_sort_rating": -0.43041590123582596,
+      "away_difficulty_sort_rating": 0.32009866443478696,
       "difficulty_source": "odds_market"
     },
     {
@@ -328,8 +179,8 @@
       "fpl_away_team_name": "Brighton",
       "home_difficulty": 3,
       "away_difficulty": 4,
-      "home_difficulty_sort_rating": 0.15657594509504036,
-      "away_difficulty_sort_rating": 0.41844343259557637,
+      "home_difficulty_sort_rating": 0.15524012281560817,
+      "away_difficulty_sort_rating": 0.41924735620448006,
       "difficulty_source": "odds_market"
     },
     {
@@ -343,8 +194,8 @@
       "fpl_away_team_name": "Arsenal",
       "home_difficulty": 4,
       "away_difficulty": 4,
-      "home_difficulty_sort_rating": 0.7239025602393176,
-      "away_difficulty_sort_rating": 0.2891733244937642,
+      "home_difficulty_sort_rating": 0.7258930596889761,
+      "away_difficulty_sort_rating": 0.2897933116822271,
       "difficulty_source": "odds_market"
     },
     {
@@ -358,8 +209,8 @@
       "fpl_away_team_name": "Man Utd",
       "home_difficulty": 3,
       "away_difficulty": 3,
-      "home_difficulty_sort_rating": -0.1290889146993337,
-      "away_difficulty_sort_rating": -0.021271476281072177,
+      "home_difficulty_sort_rating": -0.12940755602643317,
+      "away_difficulty_sort_rating": -0.01990162954265773,
       "difficulty_source": "odds_market"
     },
     {
@@ -373,8 +224,8 @@
       "fpl_away_team_name": "Fulham",
       "home_difficulty": 2,
       "away_difficulty": 4,
-      "home_difficulty_sort_rating": -0.4052908835215525,
-      "away_difficulty_sort_rating": 0.5136994563810151,
+      "home_difficulty_sort_rating": -0.4063937481361317,
+      "away_difficulty_sort_rating": 0.5134007067219166,
       "difficulty_source": "odds_market"
     },
     {
@@ -388,8 +239,8 @@
       "fpl_away_team_name": "Liverpool",
       "home_difficulty": 4,
       "away_difficulty": 4,
-      "home_difficulty_sort_rating": 0.3766518529334246,
-      "away_difficulty_sort_rating": 0.44567184534726767,
+      "home_difficulty_sort_rating": 0.3770122668806173,
+      "away_difficulty_sort_rating": 0.4439758266183249,
       "difficulty_source": "odds_market"
     },
     {
@@ -403,8 +254,8 @@
       "fpl_away_team_name": "Crystal Palace",
       "home_difficulty": 1,
       "away_difficulty": 4,
-      "home_difficulty_sort_rating": -0.778679041225091,
-      "away_difficulty_sort_rating": 0.3200405961569708,
+      "home_difficulty_sort_rating": -0.7775947434226766,
+      "away_difficulty_sort_rating": 0.32009866443478696,
       "difficulty_source": "odds_market"
     },
     {
@@ -418,8 +269,8 @@
       "fpl_away_team_name": "Hull City",
       "home_difficulty": 1,
       "away_difficulty": 4,
-      "home_difficulty_sort_rating": -1.1364944385505482,
-      "away_difficulty_sort_rating": 0.41844343259557637,
+      "home_difficulty_sort_rating": -1.1398587539315614,
+      "away_difficulty_sort_rating": 0.41924735620448006,
       "difficulty_source": "odds_market"
     },
     {
@@ -433,8 +284,8 @@
       "fpl_away_team_name": "Ipswich",
       "home_difficulty": 1,
       "away_difficulty": 4,
-      "home_difficulty_sort_rating": -0.8605963520316642,
-      "away_difficulty_sort_rating": 0.2844627550708849,
+      "home_difficulty_sort_rating": -0.8612211454751311,
+      "away_difficulty_sort_rating": 0.2847694629802382,
       "difficulty_source": "odds_market"
     },
     {
@@ -448,8 +299,8 @@
       "fpl_away_team_name": "Coventry City",
       "home_difficulty": 1,
       "away_difficulty": 4,
-      "home_difficulty_sort_rating": -0.9788832868690263,
-      "away_difficulty_sort_rating": 0.4138960180814175,
+      "home_difficulty_sort_rating": -0.9784794320977528,
+      "away_difficulty_sort_rating": 0.4144353212869356,
       "difficulty_source": "odds_market"
     },
     {
@@ -463,8 +314,8 @@
       "fpl_away_team_name": "Brighton",
       "home_difficulty": 3,
       "away_difficulty": 3,
-      "home_difficulty_sort_rating": 0.15657594509504036,
-      "away_difficulty_sort_rating": 0.1843832770346181,
+      "home_difficulty_sort_rating": 0.15524012281560817,
+      "away_difficulty_sort_rating": 0.18341232818594366,
       "difficulty_source": "odds_market"
     },
     {
@@ -478,8 +329,8 @@
       "fpl_away_team_name": "Man City",
       "home_difficulty": 4,
       "away_difficulty": 4,
-      "home_difficulty_sort_rating": 0.6264086352849565,
-      "away_difficulty_sort_rating": 0.2891733244937642,
+      "home_difficulty_sort_rating": 0.6238463207311278,
+      "away_difficulty_sort_rating": 0.2897933116822271,
       "difficulty_source": "odds_market"
     },
     {
@@ -493,8 +344,8 @@
       "fpl_away_team_name": "Fulham",
       "home_difficulty": 2,
       "away_difficulty": 3,
-      "home_difficulty_sort_rating": -0.4052908835215525,
-      "away_difficulty_sort_rating": 0.046392504816328284,
+      "home_difficulty_sort_rating": -0.4063937481361317,
+      "away_difficulty_sort_rating": 0.04670783232401887,
       "difficulty_source": "odds_market"
     },
     {
@@ -508,8 +359,8 @@
       "fpl_away_team_name": "Sunderland",
       "home_difficulty": 2,
       "away_difficulty": 3,
-      "home_difficulty_sort_rating": -0.579888016912816,
-      "away_difficulty_sort_rating": -0.021271476281072177,
+      "home_difficulty_sort_rating": -0.5800843706517886,
+      "away_difficulty_sort_rating": -0.01990162954265773,
       "difficulty_source": "odds_market"
     },
     {
@@ -523,8 +374,8 @@
       "fpl_away_team_name": "Arsenal",
       "home_difficulty": 4,
       "away_difficulty": 4,
-      "home_difficulty_sort_rating": 0.7239025602393176,
-      "away_difficulty_sort_rating": 0.5136994563810151,
+      "home_difficulty_sort_rating": 0.7258930596889761,
+      "away_difficulty_sort_rating": 0.5134007067219166,
       "difficulty_source": "odds_market"
     },
     {
@@ -538,8 +389,8 @@
       "fpl_away_team_name": "Brentford",
       "home_difficulty": 3,
       "away_difficulty": 3,
-      "home_difficulty_sort_rating": -0.21996341777843242,
-      "away_difficulty_sort_rating": 0.09313437603816421,
+      "home_difficulty_sort_rating": -0.22028218478195516,
+      "away_difficulty_sort_rating": 0.09256991329319941,
       "difficulty_source": "odds_market"
     },
     {
@@ -553,8 +404,8 @@
       "fpl_away_team_name": "Newcastle",
       "home_difficulty": 2,
       "away_difficulty": 3,
-      "home_difficulty_sort_rating": -0.5504735255503741,
-      "away_difficulty_sort_rating": -0.3311175813644347,
+      "home_difficulty_sort_rating": -0.5499833216669932,
+      "away_difficulty_sort_rating": -0.3308395939445834,
       "difficulty_source": "odds_market"
     },
     {
@@ -568,8 +419,8 @@
       "fpl_away_team_name": "Leeds",
       "home_difficulty": 3,
       "away_difficulty": 5,
-      "home_difficulty_sort_rating": -0.1890506869482267,
-      "away_difficulty_sort_rating": 0.9256800971639605,
+      "home_difficulty_sort_rating": -0.1899508512952064,
+      "away_difficulty_sort_rating": 0.9268174971495475,
       "difficulty_source": "odds_market"
     },
     {
@@ -583,8 +434,8 @@
       "fpl_away_team_name": "Chelsea",
       "home_difficulty": 3,
       "away_difficulty": 5,
-      "home_difficulty_sort_rating": -0.07795993927042044,
-      "away_difficulty_sort_rating": 1.1899689633151984,
+      "home_difficulty_sort_rating": -0.0777560674801776,
+      "away_difficulty_sort_rating": 1.1884479387237956,
       "difficulty_source": "odds_market"
     },
     {
@@ -598,8 +449,8 @@
       "fpl_away_team_name": "Bournemouth",
       "home_difficulty": 3,
       "away_difficulty": 5,
-      "home_difficulty_sort_rating": -0.07820611733907934,
-      "away_difficulty_sort_rating": 1.2216850297243687,
+      "home_difficulty_sort_rating": -0.0788521940615543,
+      "away_difficulty_sort_rating": 1.2245341726017183,
       "difficulty_source": "odds_market"
     },
     {
@@ -613,8 +464,8 @@
       "fpl_away_team_name": "Everton",
       "home_difficulty": 2,
       "away_difficulty": 4,
-      "home_difficulty_sort_rating": -0.42982700703729737,
-      "away_difficulty_sort_rating": 0.6732048372303623,
+      "home_difficulty_sort_rating": -0.43041590123582596,
+      "away_difficulty_sort_rating": 0.6722700522621254,
       "difficulty_source": "odds_market"
     },
     {
@@ -628,8 +479,8 @@
       "fpl_away_team_name": "Nott'm Forest",
       "home_difficulty": 3,
       "away_difficulty": 3,
-      "home_difficulty_sort_rating": -0.28858421860170336,
-      "away_difficulty_sort_rating": -0.11057251920247291,
+      "home_difficulty_sort_rating": -0.28778797438655945,
+      "away_difficulty_sort_rating": -0.10977029163050278,
       "difficulty_source": "odds_market"
     },
     {
@@ -643,8 +494,8 @@
       "fpl_away_team_name": "Aston Villa",
       "home_difficulty": 3,
       "away_difficulty": 2,
-      "home_difficulty_sort_rating": -0.21736803779803093,
-      "away_difficulty_sort_rating": -0.45769193765779304,
+      "home_difficulty_sort_rating": -0.21793352725801451,
+      "away_difficulty_sort_rating": -0.45684256162385517,
       "difficulty_source": "odds_market"
     },
     {
@@ -658,8 +509,8 @@
       "fpl_away_team_name": "Man Utd",
       "home_difficulty": 3,
       "away_difficulty": 3,
-      "home_difficulty_sort_rating": -0.1290889146993337,
-      "away_difficulty_sort_rating": -0.2534494082841452,
+      "home_difficulty_sort_rating": -0.12940755602643317,
+      "away_difficulty_sort_rating": -0.25107781128936235,
       "difficulty_source": "odds_market"
     },
     {
@@ -673,8 +524,8 @@
       "fpl_away_team_name": "Spurs",
       "home_difficulty": 3,
       "away_difficulty": 2,
-      "home_difficulty_sort_rating": 0.0173091278155717,
-      "away_difficulty_sort_rating": -0.6328428930673358,
+      "home_difficulty_sort_rating": 0.01639147353646897,
+      "away_difficulty_sort_rating": -0.6348277361468626,
       "difficulty_source": "odds_market"
     },
     {
@@ -688,8 +539,8 @@
       "fpl_away_team_name": "Newcastle",
       "home_difficulty": 2,
       "away_difficulty": 4,
-      "home_difficulty_sort_rating": -0.5504735255503741,
-      "away_difficulty_sort_rating": 0.2891733244937642,
+      "home_difficulty_sort_rating": -0.5499833216669932,
+      "away_difficulty_sort_rating": 0.2897933116822271,
       "difficulty_source": "odds_market"
     },
     {
@@ -703,8 +554,8 @@
       "fpl_away_team_name": "Coventry City",
       "home_difficulty": 1,
       "away_difficulty": 4,
-      "home_difficulty_sort_rating": -0.9788832868690263,
-      "away_difficulty_sort_rating": 0.41844343259557637,
+      "home_difficulty_sort_rating": -0.9784794320977528,
+      "away_difficulty_sort_rating": 0.41924735620448006,
       "difficulty_source": "odds_market"
     },
     {
@@ -718,8 +569,8 @@
       "fpl_away_team_name": "Fulham",
       "home_difficulty": 2,
       "away_difficulty": 4,
-      "home_difficulty_sort_rating": -0.4052908835215525,
-      "away_difficulty_sort_rating": 0.2844627550708849,
+      "home_difficulty_sort_rating": -0.4063937481361317,
+      "away_difficulty_sort_rating": 0.2847694629802382,
       "difficulty_source": "odds_market"
     },
     {
@@ -733,8 +584,8 @@
       "fpl_away_team_name": "Hull City",
       "home_difficulty": 1,
       "away_difficulty": 5,
-      "home_difficulty_sort_rating": -1.1364944385505482,
-      "away_difficulty_sort_rating": 1.1899689633151984,
+      "home_difficulty_sort_rating": -1.1398587539315614,
+      "away_difficulty_sort_rating": 1.1884479387237956,
       "difficulty_source": "odds_market"
     },
     {
@@ -748,8 +599,8 @@
       "fpl_away_team_name": "Spurs",
       "home_difficulty": 3,
       "away_difficulty": 5,
-      "home_difficulty_sort_rating": 0.0173091278155717,
-      "away_difficulty_sort_rating": 0.9256800971639605,
+      "home_difficulty_sort_rating": 0.01639147353646897,
+      "away_difficulty_sort_rating": 0.9268174971495475,
       "difficulty_source": "odds_market"
     },
     {
@@ -763,8 +614,8 @@
       "fpl_away_team_name": "Ipswich",
       "home_difficulty": 1,
       "away_difficulty": 4,
-      "home_difficulty_sort_rating": -0.8605963520316642,
-      "away_difficulty_sort_rating": 0.6732048372303623,
+      "home_difficulty_sort_rating": -0.8612211454751311,
+      "away_difficulty_sort_rating": 0.6722700522621254,
       "difficulty_source": "odds_market"
     },
     {
@@ -778,8 +629,8 @@
       "fpl_away_team_name": "Everton",
       "home_difficulty": 2,
       "away_difficulty": 3,
-      "home_difficulty_sort_rating": -0.42982700703729737,
-      "away_difficulty_sort_rating": 0.1843832770346181,
+      "home_difficulty_sort_rating": -0.43041590123582596,
+      "away_difficulty_sort_rating": 0.18341232818594366,
       "difficulty_source": "odds_market"
     },
     {
@@ -793,8 +644,8 @@
       "fpl_away_team_name": "Crystal Palace",
       "home_difficulty": 1,
       "away_difficulty": 3,
-      "home_difficulty_sort_rating": -0.778679041225091,
-      "away_difficulty_sort_rating": -0.11057251920247291,
+      "home_difficulty_sort_rating": -0.7775947434226766,
+      "away_difficulty_sort_rating": -0.10977029163050278,
       "difficulty_source": "odds_market"
     },
     {
@@ -808,8 +659,8 @@
       "fpl_away_team_name": "Man Utd",
       "home_difficulty": 3,
       "away_difficulty": 5,
-      "home_difficulty_sort_rating": -0.1290889146993337,
-      "away_difficulty_sort_rating": 1.2216850297243687,
+      "home_difficulty_sort_rating": -0.12940755602643317,
+      "away_difficulty_sort_rating": 1.2245341726017183,
       "difficulty_source": "odds_market"
     },
     {
@@ -823,233 +674,163 @@
       "fpl_away_team_name": "Aston Villa",
       "home_difficulty": 3,
       "away_difficulty": 4,
-      "home_difficulty_sort_rating": -0.21736803779803093,
-      "away_difficulty_sort_rating": 0.44567184534726767,
+      "home_difficulty_sort_rating": -0.21793352725801451,
+      "away_difficulty_sort_rating": 0.4439758266183249,
+      "difficulty_source": "odds_market"
+    },
+    {
+      "gameweek": 17,
+      "home_team": "Aston Villa",
+      "away_team": "Leeds United",
+      "kickoff_time": "2026-12-26T12:30:00.000Z",
+      "fpl_home_team_id": 2,
+      "fpl_home_team_name": "Aston Villa",
+      "fpl_away_team_id": 13,
+      "fpl_away_team_name": "Leeds",
+      "home_difficulty": 3,
+      "away_difficulty": 4,
+      "home_difficulty_sort_rating": -0.1899508512952064,
+      "away_difficulty_sort_rating": 0.32009866443478696,
+      "difficulty_source": "odds_market"
+    },
+    {
+      "gameweek": 17,
+      "home_team": "Everton",
+      "away_team": "Sunderland",
+      "kickoff_time": "2026-12-26T15:00:00.000Z",
+      "fpl_home_team_id": 9,
+      "fpl_home_team_name": "Everton",
+      "fpl_away_team_id": 20,
+      "fpl_away_team_name": "Sunderland",
+      "home_difficulty": 2,
+      "away_difficulty": 3,
+      "home_difficulty_sort_rating": -0.5800843706517886,
+      "away_difficulty_sort_rating": 0.04670783232401887,
+      "difficulty_source": "odds_market"
+    },
+    {
+      "gameweek": 17,
+      "home_team": "Fulham",
+      "away_team": "Brighton and Hove Albion",
+      "kickoff_time": "2026-12-26T15:00:00.000Z",
+      "fpl_home_team_id": 10,
+      "fpl_home_team_name": "Fulham",
+      "fpl_away_team_id": 5,
+      "fpl_away_team_name": "Brighton",
+      "home_difficulty": 3,
+      "away_difficulty": 3,
+      "home_difficulty_sort_rating": 0.15524012281560817,
+      "away_difficulty_sort_rating": 0.09256991329319941,
+      "difficulty_source": "odds_market"
+    },
+    {
+      "gameweek": 17,
+      "home_team": "Ipswich Town",
+      "away_team": "Brentford",
+      "kickoff_time": "2026-12-26T15:00:00.000Z",
+      "fpl_home_team_id": 12,
+      "fpl_home_team_name": "Ipswich",
+      "fpl_away_team_id": 4,
+      "fpl_away_team_name": "Brentford",
+      "home_difficulty": 3,
+      "away_difficulty": 3,
+      "home_difficulty_sort_rating": -0.22028218478195516,
+      "away_difficulty_sort_rating": -0.3308395939445834,
+      "difficulty_source": "odds_market"
+    },
+    {
+      "gameweek": 17,
+      "home_team": "Tottenham Hotspur",
+      "away_team": "Bournemouth",
+      "kickoff_time": "2026-12-26T15:00:00.000Z",
+      "fpl_home_team_id": 19,
+      "fpl_home_team_name": "Spurs",
+      "fpl_away_team_id": 3,
+      "fpl_away_team_name": "Bournemouth",
+      "home_difficulty": 3,
+      "away_difficulty": 4,
+      "home_difficulty_sort_rating": -0.0788521940615543,
+      "away_difficulty_sort_rating": 0.5134007067219166,
+      "difficulty_source": "odds_market"
+    },
+    {
+      "gameweek": 17,
+      "home_team": "Hull City",
+      "away_team": "Liverpool",
+      "kickoff_time": "2026-12-26T17:30:00.000Z",
+      "fpl_home_team_id": 11,
+      "fpl_home_team_name": "Hull City",
+      "fpl_away_team_id": 14,
+      "fpl_away_team_name": "Liverpool",
+      "home_difficulty": 4,
+      "away_difficulty": 2,
+      "home_difficulty_sort_rating": 0.3770122668806173,
+      "away_difficulty_sort_rating": -0.6348277361468626,
+      "difficulty_source": "odds_market"
+    },
+    {
+      "gameweek": 17,
+      "home_team": "Newcastle United",
+      "away_team": "Manchester City",
+      "kickoff_time": "2026-12-26T20:00:00.000Z",
+      "fpl_home_team_id": 17,
+      "fpl_home_team_name": "Newcastle",
+      "fpl_away_team_id": 15,
+      "fpl_away_team_name": "Man City",
+      "home_difficulty": 4,
+      "away_difficulty": 3,
+      "home_difficulty_sort_rating": 0.6238463207311278,
+      "away_difficulty_sort_rating": -0.01990162954265773,
+      "difficulty_source": "odds_market"
+    },
+    {
+      "gameweek": 17,
+      "home_team": "Coventry City",
+      "away_team": "Chelsea",
+      "kickoff_time": "2026-12-27T14:00:00.000Z",
+      "fpl_home_team_id": 7,
+      "fpl_home_team_name": "Coventry City",
+      "fpl_away_team_id": 6,
+      "fpl_away_team_name": "Chelsea",
+      "home_difficulty": 3,
+      "away_difficulty": 2,
+      "home_difficulty_sort_rating": -0.0777560674801776,
+      "away_difficulty_sort_rating": -0.45684256162385517,
+      "difficulty_source": "odds_market"
+    },
+    {
+      "gameweek": 17,
+      "home_team": "Manchester United",
+      "away_team": "Nottingham Forest",
+      "kickoff_time": "2026-12-27T16:30:00.000Z",
+      "fpl_home_team_id": 16,
+      "fpl_home_team_name": "Man Utd",
+      "fpl_away_team_id": 18,
+      "fpl_away_team_name": "Nott'm Forest",
+      "home_difficulty": 3,
+      "away_difficulty": 4,
+      "home_difficulty_sort_rating": -0.28778797438655945,
+      "away_difficulty_sort_rating": 0.4144353212869356,
+      "difficulty_source": "odds_market"
+    },
+    {
+      "gameweek": 17,
+      "home_team": "Crystal Palace",
+      "away_team": "Arsenal",
+      "kickoff_time": "2026-12-27T19:00:00.000Z",
+      "fpl_home_team_id": 8,
+      "fpl_home_team_name": "Crystal Palace",
+      "fpl_away_team_id": 1,
+      "fpl_away_team_name": "Arsenal",
+      "home_difficulty": 4,
+      "away_difficulty": 3,
+      "home_difficulty_sort_rating": 0.7258930596889761,
+      "away_difficulty_sort_rating": -0.25107781128936235,
       "difficulty_source": "odds_market"
     }
   ],
   "teams": [
     {
-      "team": "Nottingham Forest",
-      "gameweek": 12,
-      "opponent": "Chelsea",
-      "venue": "home",
-      "fpl_team_id": 18,
-      "fpl_team_name": "Nott'm Forest",
-      "difficulty": 3,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Chelsea",
-      "gameweek": 12,
-      "opponent": "Nottingham Forest",
-      "venue": "away",
-      "fpl_team_id": 6,
-      "fpl_team_name": "Chelsea",
-      "difficulty": 3,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Leeds United",
-      "gameweek": 12,
-      "opponent": "Coventry City",
-      "venue": "home",
-      "fpl_team_id": 13,
-      "fpl_team_name": "Leeds",
-      "difficulty": 1,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Coventry City",
-      "gameweek": 12,
-      "opponent": "Leeds United",
-      "venue": "away",
-      "fpl_team_id": 7,
-      "fpl_team_name": "Coventry City",
-      "difficulty": 4,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Manchester United",
-      "gameweek": 12,
-      "opponent": "Brentford",
-      "venue": "home",
-      "fpl_team_id": 16,
-      "fpl_team_name": "Man Utd",
-      "difficulty": 3,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Brentford",
-      "gameweek": 12,
-      "opponent": "Manchester United",
-      "venue": "away",
-      "fpl_team_id": 4,
-      "fpl_team_name": "Brentford",
-      "difficulty": 4,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Ipswich Town",
-      "gameweek": 12,
-      "opponent": "Aston Villa",
-      "venue": "home",
-      "fpl_team_id": 12,
-      "fpl_team_name": "Ipswich",
-      "difficulty": 3,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Aston Villa",
-      "gameweek": 12,
-      "opponent": "Ipswich Town",
-      "venue": "away",
-      "fpl_team_id": 2,
-      "fpl_team_name": "Aston Villa",
-      "difficulty": 3,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Everton",
-      "gameweek": 12,
-      "opponent": "Liverpool",
-      "venue": "home",
-      "fpl_team_id": 9,
-      "fpl_team_name": "Everton",
-      "difficulty": 4,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Liverpool",
-      "gameweek": 12,
-      "opponent": "Everton",
-      "venue": "away",
-      "fpl_team_id": 14,
-      "fpl_team_name": "Liverpool",
-      "difficulty": 3,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Brighton and Hove Albion",
-      "gameweek": 12,
-      "opponent": "Newcastle United",
-      "venue": "home",
-      "fpl_team_id": 5,
-      "fpl_team_name": "Brighton",
-      "difficulty": 2,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Newcastle United",
-      "gameweek": 12,
-      "opponent": "Brighton and Hove Albion",
-      "venue": "away",
-      "fpl_team_id": 17,
-      "fpl_team_name": "Newcastle",
-      "difficulty": 4,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Crystal Palace",
-      "gameweek": 12,
-      "opponent": "Hull City",
-      "venue": "home",
-      "fpl_team_id": 8,
-      "fpl_team_name": "Crystal Palace",
-      "difficulty": 1,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Hull City",
-      "gameweek": 12,
-      "opponent": "Crystal Palace",
-      "venue": "away",
-      "fpl_team_id": 11,
-      "fpl_team_name": "Hull City",
-      "difficulty": 3,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Fulham",
-      "gameweek": 12,
-      "opponent": "Bournemouth",
-      "venue": "home",
-      "fpl_team_id": 10,
-      "fpl_team_name": "Fulham",
-      "difficulty": 3,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Bournemouth",
-      "gameweek": 12,
-      "opponent": "Fulham",
-      "venue": "away",
-      "fpl_team_id": 3,
-      "fpl_team_name": "Bournemouth",
-      "difficulty": 3,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Sunderland",
-      "gameweek": 12,
-      "opponent": "Tottenham Hotspur",
-      "venue": "home",
-      "fpl_team_id": 20,
-      "fpl_team_name": "Sunderland",
-      "difficulty": 3,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Tottenham Hotspur",
-      "gameweek": 12,
-      "opponent": "Sunderland",
-      "venue": "away",
-      "fpl_team_id": 19,
-      "fpl_team_name": "Spurs",
-      "difficulty": 3,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Arsenal",
-      "gameweek": 12,
-      "opponent": "Manchester City",
-      "venue": "home",
-      "fpl_team_id": 1,
-      "fpl_team_name": "Arsenal",
-      "difficulty": 4,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
-      "team": "Manchester City",
-      "gameweek": 12,
-      "opponent": "Arsenal",
-      "venue": "away",
-      "fpl_team_id": 15,
-      "fpl_team_name": "Man City",
-      "difficulty": 5,
-      "difficulty_label": null,
-      "source": "odds_market"
-    },
-    {
       "team": "Coventry City",
       "gameweek": 13,
       "opponent": "Ipswich Town",
@@ -1926,6 +1707,226 @@
       "fpl_team_id": 2,
       "fpl_team_name": "Aston Villa",
       "difficulty": 4,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Aston Villa",
+      "gameweek": 17,
+      "opponent": "Leeds United",
+      "venue": "home",
+      "fpl_team_id": 2,
+      "fpl_team_name": "Aston Villa",
+      "difficulty": 3,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Leeds United",
+      "gameweek": 17,
+      "opponent": "Aston Villa",
+      "venue": "away",
+      "fpl_team_id": 13,
+      "fpl_team_name": "Leeds",
+      "difficulty": 4,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Everton",
+      "gameweek": 17,
+      "opponent": "Sunderland",
+      "venue": "home",
+      "fpl_team_id": 9,
+      "fpl_team_name": "Everton",
+      "difficulty": 2,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Sunderland",
+      "gameweek": 17,
+      "opponent": "Everton",
+      "venue": "away",
+      "fpl_team_id": 20,
+      "fpl_team_name": "Sunderland",
+      "difficulty": 3,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Fulham",
+      "gameweek": 17,
+      "opponent": "Brighton and Hove Albion",
+      "venue": "home",
+      "fpl_team_id": 10,
+      "fpl_team_name": "Fulham",
+      "difficulty": 3,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Brighton and Hove Albion",
+      "gameweek": 17,
+      "opponent": "Fulham",
+      "venue": "away",
+      "fpl_team_id": 5,
+      "fpl_team_name": "Brighton",
+      "difficulty": 3,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Ipswich Town",
+      "gameweek": 17,
+      "opponent": "Brentford",
+      "venue": "home",
+      "fpl_team_id": 12,
+      "fpl_team_name": "Ipswich",
+      "difficulty": 3,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Brentford",
+      "gameweek": 17,
+      "opponent": "Ipswich Town",
+      "venue": "away",
+      "fpl_team_id": 4,
+      "fpl_team_name": "Brentford",
+      "difficulty": 3,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Tottenham Hotspur",
+      "gameweek": 17,
+      "opponent": "Bournemouth",
+      "venue": "home",
+      "fpl_team_id": 19,
+      "fpl_team_name": "Spurs",
+      "difficulty": 3,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Bournemouth",
+      "gameweek": 17,
+      "opponent": "Tottenham Hotspur",
+      "venue": "away",
+      "fpl_team_id": 3,
+      "fpl_team_name": "Bournemouth",
+      "difficulty": 4,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Hull City",
+      "gameweek": 17,
+      "opponent": "Liverpool",
+      "venue": "home",
+      "fpl_team_id": 11,
+      "fpl_team_name": "Hull City",
+      "difficulty": 4,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Liverpool",
+      "gameweek": 17,
+      "opponent": "Hull City",
+      "venue": "away",
+      "fpl_team_id": 14,
+      "fpl_team_name": "Liverpool",
+      "difficulty": 2,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Newcastle United",
+      "gameweek": 17,
+      "opponent": "Manchester City",
+      "venue": "home",
+      "fpl_team_id": 17,
+      "fpl_team_name": "Newcastle",
+      "difficulty": 4,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Manchester City",
+      "gameweek": 17,
+      "opponent": "Newcastle United",
+      "venue": "away",
+      "fpl_team_id": 15,
+      "fpl_team_name": "Man City",
+      "difficulty": 3,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Coventry City",
+      "gameweek": 17,
+      "opponent": "Chelsea",
+      "venue": "home",
+      "fpl_team_id": 7,
+      "fpl_team_name": "Coventry City",
+      "difficulty": 3,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Chelsea",
+      "gameweek": 17,
+      "opponent": "Coventry City",
+      "venue": "away",
+      "fpl_team_id": 6,
+      "fpl_team_name": "Chelsea",
+      "difficulty": 2,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Manchester United",
+      "gameweek": 17,
+      "opponent": "Nottingham Forest",
+      "venue": "home",
+      "fpl_team_id": 16,
+      "fpl_team_name": "Man Utd",
+      "difficulty": 3,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Nottingham Forest",
+      "gameweek": 17,
+      "opponent": "Manchester United",
+      "venue": "away",
+      "fpl_team_id": 18,
+      "fpl_team_name": "Nott'm Forest",
+      "difficulty": 4,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Crystal Palace",
+      "gameweek": 17,
+      "opponent": "Arsenal",
+      "venue": "home",
+      "fpl_team_id": 8,
+      "fpl_team_name": "Crystal Palace",
+      "difficulty": 4,
+      "difficulty_label": null,
+      "source": "odds_market"
+    },
+    {
+      "team": "Arsenal",
+      "gameweek": 17,
+      "opponent": "Crystal Palace",
+      "venue": "away",
+      "fpl_team_id": 1,
+      "fpl_team_name": "Arsenal",
+      "difficulty": 3,
       "difficulty_label": null,
       "source": "odds_market"
     }
