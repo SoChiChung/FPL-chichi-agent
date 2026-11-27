@@ -88,6 +88,38 @@ class TestChipStrategy(unittest.TestCase):
                                 [], [], 19, {"chip_strategy": {"chip_guarantee_start_gw": 16}})
         self.assertEqual(result["guarantee"]["mode"], "must_schedule")
 
+    def test_fpl_api_chip_names_and_bootstrap_rules_do_not_shadow_used_bboost(self):
+        """Regression for GW12 bug: bboost/freehit/3xc must map properly even when _api_chips is passed."""
+        api_chips = [
+            {"id": 1, "name": "wildcard", "start_event": 2, "stop_event": 19},
+            {"id": 3, "name": "freehit", "start_event": 2, "stop_event": 19},
+            {"id": 4, "name": "bboost", "start_event": 1, "stop_event": 19},
+            {"id": 5, "name": "3xc", "start_event": 1, "stop_event": 19},
+        ]
+        history = {"chips": [{"name": "bboost", "event": 11}]}
+        squad = [{"id": i, "team": f"T{i}", "starting": i <= 11,
+                  "lineup_score": 50.0, "status": "a"} for i in range(1, 16)]
+        events = [{"id": g, "finished": False} for g in range(12, 20)]
+        result = chips.evaluate(squad, {"team": "T1", "captain_score": 60},
+                                history, events, [], [], 12, {"_api_chips": api_chips})
+        self.assertFalse(result["available"]["bench_boost"])
+        self.assertIsNone(result["current_recommendation"])
+        bb_plan = next(p for p in result["plan"] if p["chip"] == "bench_boost")
+        self.assertEqual(bb_plan["status"], "used")
+        self.assertEqual(bb_plan["used_gw"], 11)
+
+    def test_wildcard_recommended_on_high_five_gw_gain(self):
+        events = [{"id": g, "finished": False} for g in range(12, 20)]
+        squad = [{"id": i, "team": f"T{i}", "starting": i <= 11,
+                  "lineup_score": 40.0, "projected_points": 3.5, "status": "a"} for i in range(1, 16)]
+        result = chips.evaluate(squad, {"team": "T1", "captain_score": 65, "projected_points": 5.5},
+                                {"chips": [{"name": "bboost", "event": 11}]},
+                                events, [], [], 12, {}, wildcard_five_gw_gain=18.5)
+        self.assertEqual(result["current_recommendation"]["chip"], "wildcard")
+        # Used bench_boost must NOT be scheduled in follow_up_plan
+        self.assertIsNone(result["current_recommendation"]["follow_up_plan"]["bench_boost_gw"])
+        self.assertEqual(result["current_recommendation"]["follow_up_plan"]["bench_boost_status"], "used")
+
 
 if __name__ == "__main__":
     unittest.main()

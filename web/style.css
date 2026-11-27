@@ -33,6 +33,8 @@
   --rust: #a4492c;
   --cap: #f2b23c;
   --vice: #6bb7e8;
+  --success: #3f7c3a;
+  --danger: #a4492c;
 
   --shadow-card: 0 3px 0 rgba(138, 90, 43, 0.16), 0 8px 18px rgba(84, 56, 26, 0.1);
   --radius-card: 20px;
@@ -272,7 +274,8 @@ b, strong { font-weight: 700; }
 }
 .chip-guarantee span { color: #986341; }
 .chip-plan { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 5px 12px; margin: 4px 0 10px; color: var(--muted); font-size: 0.76rem; }
-.chip-plan-item { display: flex; flex-direction: column; }
+.chip-plan-item { display: flex; flex-direction: column; gap: 2px; }
+.chip-plan-head { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .chip-plan-item b { color: var(--ink-soft); }
 .xfer {
   background: var(--paper);
@@ -566,6 +569,23 @@ b, strong { font-weight: 700; }
 }
 .badge-in { background: #e1f0d4; border: 1px solid #a6cd7c; color: #2f6b2c; }
 .badge-out { background: #fbe4da; border: 1px solid #e5b59c; color: #96452a; }
+.badge-live { background: #e0f5d9; border: 1px solid #7fc269; color: #235c1e; }
+.badge-wait { background: #f2ead8; border: 1px solid #dccaa6; color: #7a684e; }
+.card-live {
+  border-color: #78b25e;
+  background: linear-gradient(180deg, #f6fff1 0%, #fffdf4 100%);
+}
+.card-live .card-value { color: #2d6e28 !important; }
+.chip-used-pill {
+  display: inline-block;
+  background: #ece3d3;
+  color: #6b563f;
+  border: 1px solid #d5c4a4;
+  border-radius: 999px;
+  padding: 0 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
 
 /* 指标进度条（叶绿填充） */
 .mb { display: grid; grid-template-columns: 76px 1fr; align-items: center; gap: 8px; }

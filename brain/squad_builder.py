@@ -115,7 +115,7 @@ def starting_probability(info: dict, team_matches_played: int = 0):
 
 
 def apply_start_probability(squad: list) -> None:
-    """Discount lineup scores for likely non-starters and unavailable players."""
+    """Align lineup scores with individual expected points & availability."""
     for player in squad:
         probability = player.get("starting_probability")
         factor = 1.0 if probability is None else 0.2 + 0.8 * probability
@@ -127,11 +127,25 @@ def apply_start_probability(squad: list) -> None:
             factor *= 0.5
         if status in ("i", "s", "u", "n"):
             factor = 0.0
+
+        original = to_float(player.get("lineup_score"))
+        adjusted = original * factor
+        # Anchor lineup_score to individual single-GW expected points (projected_points)
+        # when available so high-xGI superstars (e.g. Haaland) are never benched behind
+        # low-share benchwarmers merely because of team-level min-max compression.
+        proj = player.get("projected_points")
+        if proj is not None:
+            xp_scaled = max(0.0, min(100.0, to_float(proj) * 12.5))
+            blended = 0.35 * adjusted + 0.65 * xp_scaled
+            if factor < 1.0 or abs(blended - original) > 1e-6:
+                player["lineup_score_before_availability_adjustment"] = round(original, 2)
+            player["lineup_score"] = round(blended, 2)
+            continue
+
         if factor >= 1.0:
             continue
-        original = to_float(player.get("lineup_score"))
         player["lineup_score_before_availability_adjustment"] = round(original, 2)
-        player["lineup_score"] = round(original * factor, 2)
+        player["lineup_score"] = round(adjusted, 2)
 
 
 def _fpljoe_role_reference(info: dict, team_data: dict,
@@ -166,19 +180,19 @@ def _fpljoe_role_reference(info: dict, team_data: dict,
 
 def expected_points(info: dict, target_score: float, calibration: dict,
                     team_matches_played: int = 0) -> float:
-    """Return the model's one-GW point estimate, adjusted for availability."""
+    """Return the model's one-GW point estimate, already adjusted for availability."""
     horizon = info.get("horizon_points") or []
     if horizon and horizon[0] is not None:
-        points = max(0.0, to_float(horizon[0]))
-    else:
-        fit = calibration.get(info.get("pos"), {})
-        points = max(0.0, to_float(fit.get("intercept")) +
-                     to_float(fit.get("slope")) * target_score)
+        # project_five_gw_points (xP v2) already incorporates availability & start probability
+        return round(max(0.0, to_float(horizon[0])), 4)
+
+    fit = calibration.get(info.get("pos"), {})
+    points = max(0.0, to_float(fit.get("intercept")) +
+                 to_float(fit.get("slope")) * target_score)
 
     status = str(info.get("status") or "").lower()
     start_chance = starting_probability(info, team_matches_played)
     if start_chance is not None:
-        # Leave a small allowance for substitute appearances.
         points *= 0.2 + 0.8 * start_chance
     chance = info.get("chance_of_playing_next_round")
     if chance is not None:
@@ -267,19 +281,45 @@ def build_free_hit_squad(players_map: dict, target_scores: dict, market_scores: 
     if warnings:
         return [], warnings, {}
 
-    slots = [pos for pos, count in quota.items() for _ in range(int(count))]
+    # Expand high-impact attackers FIRST (FWD -> MID -> DEF -> GKP) and guide beam pruning
+    # with an optimistic remaining-utility upper bound so budget is never wasted on bench
+    # keepers/defenders before evaluating premium/mid-priced forward combinations (e.g. Isak)!
+    search_order = [p for p in ("FWD", "MID", "DEF", "GKP") if p in quota]
+    for p in quota:
+        if p not in search_order:
+            search_order.append(p)
+    slots = [pos for pos in search_order for _ in range(int(quota[pos]))]
     if len(slots) != int(cfg.get("squad_size", 15)):
         return [], ["Free Hit 位置配额与 15 人阵容人数不一致"], {}
 
-    # A safe lower bound for the remaining budget (the bound may reuse a
-    # candidate, which only makes it more permissive).
+    def _slot_weight(pos_name: str, seen_in_pos: int) -> float:
+        if pos_name == "GKP" and seen_in_pos >= 1:
+            return 0.05
+        if pos_name == "DEF" and seen_in_pos >= 4:
+            return 0.25
+        if pos_name == "MID" and seen_in_pos >= 4:
+            return 0.40
+        return 1.0
+
     min_remaining = [0.0] * (len(slots) + 1)
+    max_remaining_util = [0.0] * (len(slots) + 1)
+    pos_occurrence = [0] * len(slots)
+    seen_counter = {}
+    for idx, pos_name in enumerate(slots):
+        pos_occurrence[idx] = seen_counter.get(pos_name, 0)
+        seen_counter[pos_name] = pos_occurrence[idx] + 1
+
     for i in range(len(slots) - 1, -1, -1):
         options = candidates_by_pos.get(slots[i], [])
         if not options:
             return [], [f"{slots[i]} 没有可用球员"], {}
         min_remaining[i] = min_remaining[i + 1] + min(
             to_float(player.get("price")) for player in options)
+        best_opt_u = max(
+            to_float(player["projected_points"]) + to_float(player.get("_reference_adjustment"))
+            for player in options
+        )
+        max_remaining_util[i] = max_remaining_util[i + 1] + _slot_weight(slots[i], pos_occurrence[i]) * max(0.0, best_opt_u)
 
     # State: utility, target-score tie breaker, cost, selected players,
     # per-team counts, last candidate index for the current position.
@@ -288,6 +328,8 @@ def build_free_hit_squad(players_map: dict, target_scores: dict, market_scores: 
     for slot_index, pos in enumerate(slots):
         candidates = candidates_by_pos[pos]
         same_position = pos == previous_pos
+        slot_w = _slot_weight(pos, pos_occurrence[slot_index])
+        rem_u = max_remaining_util[slot_index + 1]
         expanded = []
         for utility, score_sum, spent, selected, team_counts, last_index in states:
             first_index = last_index + 1 if same_position else 0
@@ -308,8 +350,9 @@ def build_free_hit_squad(players_map: dict, target_scores: dict, market_scores: 
                         if other.get("pos") == "DEF" and
                         (team in (other.get("_opponents") or set()) or
                          other.get("team") in opponents))
-                next_utility = utility + player["projected_points"] + player["_reference_adjustment"] - (
-                    max(0.0, to_float(conflict_penalty)) * clash_count)
+                next_utility = utility + slot_w * (
+                    player["projected_points"] + player["_reference_adjustment"]
+                ) - (max(0.0, to_float(conflict_penalty)) * clash_count)
                 next_counts = dict(team_counts)
                 next_counts[team] = next_counts.get(team, 0) + 1
                 expanded.append((next_utility,
@@ -319,14 +362,15 @@ def build_free_hit_squad(players_map: dict, target_scores: dict, market_scores: 
 
         if not expanded:
             return [], [f"预算 £{budget:.1f}m 下找不到合法 Free Hit 阵容"], {}
-        expanded.sort(key=lambda row: (-row[0], -row[1], row[2],
+        expanded.sort(key=lambda row: (-(row[0] + rem_u), -row[1], row[2],
                                        tuple(p["id"] for p in row[3])))
         states = expanded[:max(1, int(beam_width))]
         previous_pos = pos
 
     best = states[0]
+    pos_display_rank = {"GKP": 0, "DEF": 1, "MID": 2, "FWD": 3}
     squad = []
-    for player in best[3]:
+    for player in sorted(best[3], key=lambda p: (pos_display_rank.get(p.get("pos"), 9), -to_float(p.get("projected_points")), p.get("id", 0))):
         player.pop("_opponents", None)
         player.pop("_reference_adjustment", None)
         squad.append(player)

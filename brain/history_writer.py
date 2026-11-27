@@ -71,13 +71,33 @@ def upsert_decision(history: dict, gw: int, decision: dict, notes: list, metrics
     entry["metrics"] = metrics
     if live_result and live_result.get("gw") == gw:
         entry["live"] = live_result
-    else:
+    elif entry.get("points") is not None and entry.get("rank") is not None:
         entry.pop("live", None)
     pkg = decision.get("transfer_package")
     if isinstance(pkg, dict):
         for key in ("budget_before", "budget_after", "transfer_cost"):
             if key in pkg and pkg[key] is not None:
                 entry[key] = pkg[key]
+
+
+def update_live_result(history: dict, gw: int, live_result: dict) -> None:
+    """仅更新进行中轮次的实时赛况快照，绝不覆盖该轮赛前已冻结的 decision / notes。"""
+    if not live_result or live_result.get("gw") != gw:
+        return
+    entry = next((h for h in history.get("history", []) if h.get("gw") == gw), None)
+    if entry is None:
+        entry = {
+            "gw": gw,
+            "points": None,
+            "rank": None,
+            "overall_rank": None,
+            "decision": None,
+            "notes": [],
+            "metrics": {},
+        }
+        history.setdefault("history", []).append(entry)
+        history["history"].sort(key=lambda h: h.get("gw", 0))
+    entry["live"] = live_result
 
 
 def backfill_settlement(history: dict, entry_history_current: list, events: list) -> int:
@@ -95,6 +115,7 @@ def backfill_settlement(history: dict, entry_history_current: list, events: list
     返回本次补写的字段数（便于日志）。
     """
     finished_ids = {e["id"] for e in events if e.get("finished")}
+    checked_ids = {e["id"] for e in events if e.get("finished") and e.get("data_checked", True)}
     by_event = {r.get("event"): r for r in (entry_history_current or [])}
     filled = 0
     for gw in finished_ids:
@@ -109,6 +130,10 @@ def backfill_settlement(history: dict, entry_history_current: list, events: list
             if val is not None and entry.get(key) is None:
                 entry[key] = val
                 filled += 1
+        if row.get("event_transfers_cost") is not None:
+            entry["event_transfers_cost"] = row.get("event_transfers_cost")
+        if gw in checked_ids and entry.get("points") is not None and entry.get("rank") is not None:
+            entry.pop("live", None)
     return filled
 
 
@@ -243,11 +268,38 @@ def backfill_recommended_transfer_outcomes(history: dict, points_by_id: dict, ev
     return updated
 
 
+def backfill_actual_chips(history: dict, chips_used: list) -> int:
+    """将 FPL 官方已使用筹码记录（entry_history.chips）按轮次回填到历史条目。"""
+    from brain import chips as chips_mod
+    by_event = {}
+    for row in chips_used or []:
+        ev = row.get("event")
+        norm = chips_mod.normalize_chip_name(row.get("name"))
+        if ev is not None and norm in chips_mod.CHIP_NAMES:
+            by_event[int(ev)] = {
+                "chip": norm,
+                "name": chips_mod.CHIP_NAMES[norm],
+                "time": row.get("time"),
+            }
+    updated = 0
+    for entry in history.get("history", []):
+        gw = entry.get("gw")
+        actual = by_event.get(gw)
+        if entry.get("actual_chip") != actual:
+            if actual is not None:
+                entry["actual_chip"] = actual
+                updated += 1
+            elif "actual_chip" in entry:
+                entry.pop("actual_chip", None)
+                updated += 1
+    return updated
+
+
 def learned_transfer_calibration(history: dict) -> dict:
     """Conservative online calibration from settled final recommendations (>=3 samples)."""
     ratios = []
     for _, package in _transfer_packages(history):
-        if package.get("point_model_version") != 1:
+        if package.get("point_model_version") not in (1, 2):
             continue
         outcome = package.get("recommended_outcome") or {}
         predicted = package.get("five_gw_after", 0) - package.get("five_gw_before", 0)

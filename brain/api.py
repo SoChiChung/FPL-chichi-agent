@@ -58,18 +58,22 @@ def get_element_summary(element_id: int) -> dict:
 
 
 def points_by_round(summary: dict) -> dict:
-    """从 element-summary 响应提取 {round: points}（只留决策需要的字段）。
+    """从 element-summary 响应提取 {round: total_points}（双赛轮同 round 自动累加）。
 
-    round/points 缺失或非数值的行忽略；points 可能为负数（红牌扣分），照存。
+    FPL 官方 /api/element-summary/{id}/ 的 history[] 字段名为 total_points；
+    同时兼容单元测试合成数据的 points 字段。round/分值缺失或非数值的行忽略；
+    分值可能为负数（红牌/乌龙扣分），照常累加。
     """
     result = {}
     for row in summary.get("history") or []:
         rnd = row.get("round")
-        pts = row.get("points")
+        pts = row.get("total_points") if row.get("total_points") is not None else row.get("points")
         try:
-            result[int(rnd)] = int(pts)
+            r = int(rnd)
+            p = int(pts)
         except (TypeError, ValueError):
             continue
+        result[r] = result.get(r, 0) + p
     return result
 
 

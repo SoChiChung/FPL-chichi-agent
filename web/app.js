@@ -157,11 +157,24 @@ function fmtFormation(f) {
   return /^\d{3,4}$/.test(s) ? s.split("").join("-") : s;
 }
 
-/** GW 三态标签：已结算 = points/rank/overall_rank 任一已回填；否则按有无决策区分 */
-function gwStateLabel(entry) {
+/** GW 三态标签：区分「已结算」「赛中实时进行中」「备战中（未截止/未开赛）」 */
+function gwStateLabel(entry, state, gwNum) {
+  if (entry && (entry.points != null || entry.rank != null || entry.overall_rank != null)) {
+    return { label: "已结算", cls: "st-settled" };
+  }
+  const live = liveResult(entry, state);
+  if (live && live.gw === gwNum) {
+    return {
+      label: live.status === "provisional_finished" ? "完赛待官方核定" : "赛中实时",
+      cls: "st-live",
+    };
+  }
+  const ddl = state && state.next_deadline ? new Date(state.next_deadline).getTime() : NaN;
+  if (state && gwNum === (state.target_gw || state.current_gw) && !Number.isNaN(ddl) && ddl > Date.now()) {
+    return { label: "备战中 · 未截止", cls: "st-pending" };
+  }
   if (!entry) return { label: "未开始", cls: "st-pending" };
-  const settled = entry.points != null || entry.rank != null || entry.overall_rank != null;
-  return settled ? { label: "已结算", cls: "st-settled" } : { label: "进行中", cls: "st-live" };
+  return { label: "待开赛", cls: "st-pending" };
 }
 
 /** 最近一笔已结算数据（用于「本轮待结算」卡上的参照小字） */
@@ -223,15 +236,44 @@ function historyRowsAsc(json) {
   return rows.sort((a, b) => (a.gw ?? 0) - (b.gw ?? 0));
 }
 
-/** 当前轮条目：优先 gw === state.current_gw，其次取最新 */
+/** 备战决策轮条目（优先 target_gw，兼容旧 current_gw） */
 function curEntry(state, rows) {
   if (!rows.length) return null;
-  return rows.find((r) => r.gw === state.current_gw) || rows[rows.length - 1];
+  const targetGw = state.target_gw ?? state.current_gw;
+  return rows.find((r) => r.gw === targetGw) || rows.find((r) => r.gw === state.current_gw) || rows[rows.length - 1];
 }
 
-function liveResult(entry) {
-  const live = entry && entry.live;
-  return live && live.status === "live" && live.gw === entry.gw ? live : null;
+/** 成绩展示轮条目：赛中优先展示实时进行轮，周中休赛展示刚完赛的 active_gw（彻底消除长达 5 天的假「待结算」） */
+function scoreEntry(state, rows) {
+  const stateLive = state && state.live_gameweek;
+  if (stateLive && stateLive.gw != null) {
+    const found = rows.find((r) => r.gw === stateLive.gw);
+    if (found) return found;
+    return { gw: stateLive.gw, points: null, rank: null, overall_rank: null, live: stateLive };
+  }
+  const activeGw = state && state.active_gw;
+  if (activeGw != null) {
+    const found = rows.find((r) => r.gw === activeGw);
+    if (found) return found;
+  }
+  return lastSettledRow(rows) || curEntry(state, rows);
+}
+
+function lastSettledRow(rows) {
+  for (let i = rows.length - 1; i >= 0; i--) {
+    const r = rows[i];
+    if (r.points != null || r.rank != null || r.overall_rank != null) return r;
+  }
+  return null;
+}
+
+function liveResult(entry, state) {
+  if (!entry) return null;
+  const live = (entry.live && entry.live.gw === entry.gw)
+    ? entry.live
+    : (state && state.live_gameweek && state.live_gameweek.gw === entry.gw ? state.live_gameweek : null);
+  if (!live) return null;
+  return (live.status === "live" || live.status === "provisional_finished") ? live : null;
 }
 
 function liveRankLabel(live) {
@@ -401,20 +443,23 @@ function renderProfile(state, rows) {
 /* ---------------- Sidebar：当前战绩 ---------------- */
 
 function statItems(state, rows) {
-  const current = curEntry(state, rows);
-  const live = liveResult(current);
-  const gwRank = current && current.rank != null
-    ? { gw: current.gw, rank: current.rank, dynamic: false }
+  const scEntry = scoreEntry(state, rows);
+  const live = liveResult(scEntry, state);
+  const gwRank = scEntry && scEntry.rank != null
+    ? { gw: scEntry.gw, rank: scEntry.rank, dynamic: false }
     : (live && live.rank != null
-      ? { gw: current.gw, rank: live.rank, dynamic: true }
+      ? { gw: scEntry.gw, rank: live.rank, dynamic: true }
       : lastSettledGwRank(rows));
+  const liveNetGain = live && scEntry && scEntry.points == null && live.net_points != null
+    ? Number(live.net_points)
+    : null;
   const league = state.gameweek3_league;
   const items = [];
   if (league && league.rank != null) {
     items.push({
       label: "Gameweek 3 联赛排名",
       value: fmtNumber(league.rank, "rank"),
-      note: "",
+      note: league.rank_count ? `同轮建号 ${fmtAxis(league.rank_count)} 人` : "",
     });
   }
   items.push(
@@ -426,7 +471,11 @@ function statItems(state, rows) {
         ? (gwRank.dynamic ? `动态估算 GW${gwRank.gw}` : `GW${gwRank.gw}`)
         : "暂无已结算轮次",
     },
-    { label: "Total Points", value: fmtNumber(state.points, "points"), note: "" },
+    {
+      label: "Total Points",
+      value: fmtNumber(state.points, "points"),
+      note: liveNetGain != null ? `含 GW${live.gw} 实时约 ${fmtNumber((Number(state.points) || 0) + liveNetGain, "points")}` : "",
+    },
   );
   return items;
 }
@@ -478,38 +527,58 @@ function renderRecentThought(entry) {
 /* ---------------- Main ② 本轮成绩摘要卡 ---------------- */
 
 function renderSummaryCards(state, rows) {
-  const entry = curEntry(state, rows);
-  const live = liveResult(entry);
+  const entry = scoreEntry(state, rows);
+  const live = liveResult(entry, state);
+  const scoreGw = (entry && entry.gw) || state.active_gw || state.current_gw;
+  const isLiveMode = Boolean(live && entry && entry.points == null && live.points != null);
   const curPoints = entry && entry.points != null
     ? entry.points
-    : (live ? live.points : null);
+    : (live ? (live.net_points != null ? live.net_points : live.points) : null);
   const curRank = entry && entry.rank != null
     ? entry.rank
     : (live ? live.rank : null);
   const settled = lastSettledInfo(rows);
-  const refNote = settled
-    ? `最近已结算 GW${settled.gw}`
-    : "";
-  const refDetail = settled
-    ? `${settled.points != null ? `${settled.points} 分` : ""}${settled.rank != null ? ` · 单轮 ${fmtAxis(settled.rank)}` : ""}`.replace(/^ · /, "")
-    : "";
+
+  let ptsNote = "";
+  if (isLiveMode) {
+    const playedInfo = live.played_count != null && live.total_active != null
+      ? ` · 已赛 ${live.played_count}/${live.total_active} 人`
+      : "";
+    const hitInfo = Number(live.transfer_cost) > 0
+      ? `（毛分 ${fmtNum(live.points)} − 扣 ${live.transfer_cost}）`
+      : "";
+    ptsNote = `🟢 实时计分${playedInfo}${hitInfo}`;
+  } else if (entry && entry.points != null) {
+    const chipBadge = entry.actual_chip && entry.actual_chip.name ? ` · ${entry.actual_chip.name}` : "";
+    const hitCost = Number(entry.event_transfers_cost) || 0;
+    ptsNote = `已结算${chipBadge}${hitCost > 0 ? `（扣 ${hitCost} 分前毛分）` : ""}`;
+  } else if (scoreGw != null) {
+    ptsNote = `GW${scoreGw} 尚未开球`;
+  }
+
+  let rankNote = "";
+  if (live && (!entry || entry.rank == null)) {
+    rankNote = curRank != null
+      ? `${liveRankLabel(live)} · ${liveRankUpdatedAt(live)}`
+      : "赛中官方暂未出榜 · 完赛后回填";
+  } else if (curRank != null) {
+    rankNote = `GW${scoreGw} 单轮排名`;
+  } else if (settled) {
+    rankNote = `上轮 GW${settled.gw}：${fmtAxis(settled.rank)}`;
+  }
 
   const cards = [
     {
-      label: "GW Points",
-      value: accText(curPoints, "points"),
-      cls: "",
-      note: live && entry.points == null && live.points != null
-        ? `动态积分 · 更新 ${fmtTime(live.updated_at)}`
-        : (curPoints == null && refNote ? `${refNote}：${refDetail || "—"}` : refNote),
+      label: scoreGw ? `GW${scoreGw} Points` : "GW Points",
+      value: curPoints != null ? fmtNumber(curPoints, "points") : "待开赛",
+      cls: isLiveMode ? "card-live" : "",
+      note: ptsNote,
     },
     {
-      label: "GW Rank",
-      value: accText(curRank, "rank"),
+      label: scoreGw ? `GW${scoreGw} Rank` : "GW Rank",
+      value: curRank != null ? fmtNumber(curRank, "rank") : (isLiveMode ? "赛后结算" : nullText("rank")),
       cls: "",
-      note: live && entry.rank == null
-        ? `${liveRankLabel(live)} · 查询 ${liveRankUpdatedAt(live)}`
-        : (curRank == null && refNote ? `参照 GW${settled.gw} 单轮排名` : (curRank != null ? `GW${entry && entry.gw}` : "")),
+      note: rankNote,
     },
     { label: "Total Points", value: fmtNumber(state.points, "points"), cls: "", note: "赛季累计" },
     { label: "Bank", value: fmtBank(state.bank), cls: "", note: "可用资金" },
@@ -546,18 +615,18 @@ function renderThisWeek(state, entry) {
         ? `可用免费转会额度 ${d.free_transfers} 次`
         : "";
 
-  // GW 徽章 + 三态标签（design-ia-ux.md §2.3 / §3.2）
-  const st = gwStateLabel(entry);
+  const planGw = d.target_gw ?? state.target_gw ?? state.current_gw ?? "?";
+  const st = gwStateLabel(entry, state, planGw);
   const gwLine = `<div class="tw-gwline">
-      <span class="gw-pill">GW${state.current_gw ?? "?"}</span>
+      <span class="gw-pill">GW${planGw} 决策</span>
       <span class="gw-state ${st.cls}">${st.label}</span>
     </div>`;
 
-  // DDL 截止行：时间点 + 实时倒计时（主人 09-09 反馈；见 startCountdown）
+  // DDL 截止行：严格绑定 target_gw 的截止时间，杜绝赛中张冠李戴
   const dlIso = state.next_deadline;
   const ddlHtml = dlIso
     ? `<div class="tw-ddl">
-        <span class="tw-dl-label">🕒 GW${state.current_gw ?? "?"} 截止 ${fmtDateCN(dlIso)}（北京时间）</span>
+        <span class="tw-dl-label">🕒 GW${planGw} 截止 ${fmtDateCN(dlIso)}（北京时间）</span>
         <span class="tw-cd"><i class="tw-cd-pre">距截止</i><b id="tw-countdown" data-iso="${esc(dlIso)}">${countdownText(dlIso)}</b></span>
       </div>`
     : "";
@@ -579,18 +648,26 @@ function renderThisWeek(state, entry) {
     if (chipRec.chip === "free_hit" && Array.isArray(d.free_hit_squad) && d.free_hit_squad.length === 15) {
       html += `<div class="tw-cta-row"><button type="button" class="leaf-btn" data-goto-fh>查看 Free Hit 推荐阵容</button></div>`;
     }
+    if (chipRec.chip === "wildcard" && Array.isArray(d.wildcard_squad) && d.wildcard_squad.length === 15) {
+      html += `<div class="tw-cta-row"><button type="button" class="leaf-btn" data-goto-wc>查看 Wildcard 重建阵容</button></div>`;
+    }
     if (chipRec.follow_up_plan) {
       const fp = chipRec.follow_up_plan;
-      html += `<div class="chip-followup"><b>Wildcard 后续排期</b><span>Free Hit：${fp.free_hit_gw ? `GW${fp.free_hit_gw}` : "等空赛/弱赛程"}</span><span>Triple Captain：${fp.triple_captain_gw ? `GW${fp.triple_captain_gw}` : "等双赛队长"}</span><span>Bench Boost：${fp.bench_boost_gw ? `GW${fp.bench_boost_gw}` : "Wildcard 后评估替补席"}</span><small>${esc(fp.note || "")}</small></div>`;
+      html += `<div class="chip-followup"><b>Wildcard 后续排期</b><span>Free Hit：${fp.free_hit_status === "used" ? "已使用" : (fp.free_hit_gw ? `GW${fp.free_hit_gw}` : "等空赛/弱赛程")}</span><span>Triple Captain：${fp.triple_captain_status === "used" ? "已使用" : (fp.triple_captain_gw ? `GW${fp.triple_captain_gw}` : "等双赛队长")}</span><span>Bench Boost：${fp.bench_boost_status === "used" ? "已使用" : (fp.bench_boost_gw ? `GW${fp.bench_boost_gw}` : "Wildcard 后评估替补席")}</span><small>${esc(fp.note || "")}</small></div>`;
     }
   } else {
-    html += `<div class="chip-recommendation muted"><strong>🎟️ 本轮建议保留筹码</strong><span>当前阵容与赛程尚未达到开卡条件</span></div>`;
+    html += `<div class="chip-recommendation muted"><strong>🎟️ 本轮建议保留筹码</strong><span>当前阵容与赛程尚未达到开卡门槛，保留给更高收益窗口</span></div>`;
   }
   if (chipPlan.guarantee && chipPlan.guarantee.active) {
     html += `<div class="chip-guarantee"><b>⏳ 半程用卡保底已启动</b><span>${esc(chipPlan.guarantee.message || "")}</span></div>`;
   }
   if (Array.isArray(chipPlan.plan) && chipPlan.plan.length) {
-    const planRows = chipPlan.plan.map((p) => `<span class="chip-plan-item"><b>${esc(p.name || chipLabels[p.chip] || p.chip)}</b>：${p.status === "used" ? "已使用" : (p.target_gw ? `关注 GW${p.target_gw}` : "继续观察")}<small>${esc(p.reason || "")}</small></span>`).join("");
+    const planRows = chipPlan.plan.map((p) => {
+      const stText = p.status === "used"
+        ? `<span class="chip-used-pill">${p.used_gw ? `GW${p.used_gw} 已使用` : "已使用"}</span>`
+        : (p.target_gw ? `关注 GW${p.target_gw}` : "继续观察");
+      return `<span class="chip-plan-item"><span class="chip-plan-head"><b>${esc(p.name || chipLabels[p.chip] || p.chip)}</b>${stText}</span><small>${esc(p.reason || "")}</small></span>`;
+    }).join("");
     html += `<div class="chip-plan">${planRows}</div>`;
   }
   if (transfers.length) {
@@ -636,11 +713,44 @@ function renderThisWeek(state, entry) {
 
 const POS_LABEL = { GKP: "门将", DEF: "后卫", MID: "中场", FWD: "前锋" };
 
+function fplActualPlan(state) {
+  // 严格读取 FPL 官网真实已锁定阵容（state.team 的 starting / is_captain / is_vice_captain）
+  const team = Array.isArray(state && state.team) ? state.team : [];
+  const xi = team.filter((p) => p.starting);
+  const bench = team.filter((p) => !p.starting);
+  if (xi.length === 11) {
+    const cap = xi.find((p) => p.is_captain) || team.find((p) => p.is_captain) || {};
+    const vice = xi.find((p) => p.is_vice_captain) || team.find((p) => p.is_vice_captain) || {};
+    const counts = { DEF: 0, MID: 0, FWD: 0 };
+    xi.forEach((p) => { if (counts[p.pos] != null) counts[p.pos] += 1; });
+    return {
+      xi,
+      bench,
+      capId: cap.id,
+      viceId: vice.id,
+      formation: `${counts.DEF}${counts.MID}${counts.FWD}`,
+    };
+  }
+  const byId = new Map(team.map((p) => [p.id, p]));
+  const r = playerResolve(state, { d: state.decision || {}, team, byId });
+  return { ...r, formation: (state.decision && state.decision.formation) || state.formation };
+}
+
+function aiLineupDiffersFromActual(state) {
+  const team = Array.isArray(state && state.team) ? state.team : [];
+  const d = (state && state.decision) || {};
+  const actualXi = new Set(team.filter((p) => p.starting).map((p) => p.id));
+  const aiXi = (Array.isArray(d.starting_xi) ? d.starting_xi : []).map((o) => o.id);
+  if (actualXi.size !== 11 || aiXi.length !== 11) return false;
+  if (aiXi.some((id) => !actualXi.has(id))) return true;
+  const actualCap = (team.find((p) => p.is_captain) || {}).id;
+  const aiCap = d.captain && d.captain.id;
+  return actualCap != null && aiCap != null && actualCap !== aiCap;
+}
+
 function playerResolve(state, ctx) {
   const d = ctx.d;
   const byId = ctx.byId;
-  // 当前阵容视图：XI/替补与 C/V 直接读 AI 决策（decision.starting_xi/bench/captain/vice）
-  // 注：「转会后阵容」不再走这里，由 buildSuggestedPlan 前端推导（v1.4）。
   const xiIds = (Array.isArray(d.starting_xi) ? d.starting_xi : []).map((o) => o.id);
   const benchIds = (Array.isArray(d.bench) ? d.bench : []).map((o) => o.id);
   const pick = (ids) => ids.map((id) => byId.get(id)).filter(Boolean);
@@ -671,9 +781,24 @@ function playerCard(p, capId, viceId, benchNo, flags) {
   if (flags) {
     if (flags.sug && flags.inIds && flags.inIds.has(p.id)) badges.push('<span class="badge badge-in">新入</span>');
     if (!flags.sug && flags.outIds && flags.outIds.has(p.id)) badges.push('<span class="badge badge-out">拟转出</span>');
+    const liveInfo = flags.livePlayers && flags.livePlayers[String(p.id)];
+    if (liveInfo) {
+      if (liveInfo.started) {
+        const ptsTxt = liveInfo.multiplier > 1
+          ? `${fmtNum(liveInfo.points)}×${liveInfo.multiplier}=${fmtNum(liveInfo.effective_points)}分`
+          : `${fmtNum(liveInfo.points)}分`;
+        const subTag = liveInfo.auto_sub === "in" ? "↑替" : (liveInfo.auto_sub === "out" ? "↓休" : "");
+        badges.push(`<span class="badge badge-live">${esc(subTag)}${esc(ptsTxt)}</span>`);
+      } else {
+        badges.push('<span class="badge badge-wait">待赛</span>');
+      }
+    }
   }
   const bd = p.score_breakdown || {};
-  const no = benchNo != null ? `<span class="bench-no">${benchNo}</span>` : "";
+  const no = benchNo != null ? `<span class="bench-no">${esc(benchNo)}</span>` : "";
+  const xpTag = typeof p.projected_points === "number"
+    ? ` · 预计 ${fmtNum(p.projected_points)}分`
+    : "";
   const startBar = metricBar(
     "本赛季首发率参考",
     typeof p.starting_probability === "number" ? p.starting_probability * 100 : null,
@@ -704,21 +829,21 @@ function playerCard(p, capId, viceId, benchNo, flags) {
       <div class="player-head">
         <span class="player-name">${no}${esc(p.name)}</span><span class="badge-group">${badges.join("")}</span>
       </div>
-      <div class="player-sub">${esc(p.pos || "·")} · ${esc(p.team || "—")} · £${p.price ?? "?"}m</div>
-      <div class="player-fixtures">本轮：${esc(fixtureText)}</div>
+      <div class="player-sub">${esc(p.pos || "·")} · ${esc(p.team || "—")} · £${p.price ?? "?"}m${esc(xpTag)}</div>
+      <div class="player-fixtures">下轮：${esc(fixtureText)}</div>
       <div class="player-bars">${bars}</div>
     </div>`;
 }
 
-/** 阵容视图：cur = 当前阵容；sug = 转会后阵容；fh = Free Hit 临时阵容 */
+/** 阵容视图：cur = FPL 当前阵容；ai = AI 不换人最优排阵；sug = 转会后阵容；fh = Free Hit；wc = Wildcard */
 let squadView = "cur";
 let squadViewTouched = false;
 
-/** URL 参数可指定初始视图（?view=sug 用于直达/分享转会后阵容） */
+/** URL 参数可指定初始视图（?view=sug|cur|ai|fh|wc） */
 function _resolveInitialView() {
   try {
     const v = new URLSearchParams(location.search).get("view");
-    if (v === "sug" || v === "cur" || v === "fh") {
+    if (v === "sug" || v === "cur" || v === "ai" || v === "fh" || v === "wc") {
       squadView = v;
       squadViewTouched = true;
     }
@@ -746,12 +871,15 @@ function squadViewEnabled(state) {
   const { rec } = transferMaps(state);
   const d = state.decision || {};
   const hasTransfers = rec.length > 0;
+  const hasAiLineup = aiLineupDiffersFromActual(state);
   const hasFreeHit = d.recommended_chip && d.recommended_chip.chip === "free_hit" &&
     Array.isArray(d.free_hit_squad) && d.free_hit_squad.length === 15;
-  if (!hasTransfers && !hasFreeHit) return false;
+  const hasWildcard = d.recommended_chip && d.recommended_chip.chip === "wildcard" &&
+    Array.isArray(d.wildcard_squad) && d.wildcard_squad.length === 15;
+  if (!hasTransfers && !hasAiLineup && !hasFreeHit && !hasWildcard) return false;
   const teamOk = Array.isArray(state.team) && state.team.length > 0;
   const snapOk = Array.isArray(state.suggested_squad) && state.suggested_squad.length > 0;
-  return hasFreeHit || teamOk || snapOk;
+  return hasFreeHit || hasWildcard || teamOk || snapOk;
 }
 
 /** AI 决策 C/V 仍首发 → 沿用（与 ① 本周动态同口径）；否则按 captain_scores 在首发里顶替 */
@@ -854,19 +982,38 @@ function renderSquadToggle(state) {
   const toggle = $("#squad-toggle");
   if (!toggle) return;
   toggle.hidden = !squadViewEnabled(state);
-  const d = state && state.decision || {};
+  const d = (state && state.decision) || {};
+  const aiButton = toggle.querySelector('[data-v="ai"]');
   const transferButton = toggle.querySelector('[data-v="sug"]');
   const freeHitButton = toggle.querySelector('[data-v="fh"]');
+  const wildcardButton = toggle.querySelector('[data-v="wc"]');
+
   const hasTransfers = transferMaps(state).rec.length > 0;
+  const hasAiLineup = aiLineupDiffersFromActual(state);
+  const hasFreeHit = Boolean(
+    d.recommended_chip && d.recommended_chip.chip === "free_hit" &&
+    Array.isArray(d.free_hit_squad) && d.free_hit_squad.length === 15,
+  );
+  const hasWildcard = Boolean(
+    d.recommended_chip && d.recommended_chip.chip === "wildcard" &&
+    Array.isArray(d.wildcard_squad) && d.wildcard_squad.length === 15,
+  );
+
+  if (aiButton) aiButton.hidden = !hasAiLineup;
   if (transferButton) transferButton.hidden = !hasTransfers;
-  if (!hasTransfers && squadView === "sug") squadView = "cur";
-  if (freeHitButton) {
-    const hasFreeHit = d.recommended_chip && d.recommended_chip.chip === "free_hit" &&
-      Array.isArray(d.free_hit_squad) && d.free_hit_squad.length === 15;
-    freeHitButton.hidden = !hasFreeHit;
-    if (!hasFreeHit && squadView === "fh") squadView = "cur";
-    if (hasFreeHit && !squadViewTouched) squadView = "fh";
+  if (freeHitButton) freeHitButton.hidden = !hasFreeHit;
+  if (wildcardButton) wildcardButton.hidden = !hasWildcard;
+
+  if (!hasAiLineup && squadView === "ai") squadView = "cur";
+  if (!hasTransfers && squadView === "sug") squadView = hasAiLineup ? "ai" : "cur";
+  if (!hasFreeHit && squadView === "fh") squadView = "cur";
+  if (!hasWildcard && squadView === "wc") squadView = "cur";
+
+  if (!squadViewTouched) {
+    if (hasFreeHit) squadView = "fh";
+    else if (hasWildcard) squadView = "wc";
   }
+
   toggle.querySelectorAll(".seg-btn").forEach((b) => {
     b.classList.toggle("active", b.dataset.v === squadView);
   });
@@ -874,50 +1021,92 @@ function renderSquadToggle(state) {
 
 function renderTeam(state) {
   const { rec, outIds, inIds } = transferMaps(state);
-  const isSug = squadView === "sug" && rec.length > 0 && squadViewEnabled(state);
   const d = state.decision || {};
+  const isSug = squadView === "sug" && rec.length > 0 && squadViewEnabled(state);
+  const isAI = squadView === "ai" && aiLineupDiffersFromActual(state);
   const isFH = squadView === "fh" && squadViewEnabled(state) &&
     Array.isArray(d.free_hit_squad) && d.free_hit_squad.length === 15;
+  const isWC = squadView === "wc" && squadViewEnabled(state) &&
+    Array.isArray(d.wildcard_squad) && d.wildcard_squad.length === 15;
 
-  // Free Hit view: use the complete temporary squad generated by the model.
-  let xi, bench, capId, viceId;
+  let xi, bench, capId, viceId, activeFormation;
   if (isFH) {
     const pool = d.free_hit_squad;
     xi = pool.filter((p) => p.starting);
     bench = pool.filter((p) => !p.starting);
     capId = (pool.find((p) => p.is_captain) || {}).id;
     viceId = (pool.find((p) => p.is_vice_captain) || {}).id;
+    activeFormation = d.free_hit_formation || d.formation;
+  } else if (isWC) {
+    const pool = d.wildcard_squad;
+    xi = pool.filter((p) => p.starting);
+    bench = pool.filter((p) => !p.starting);
+    capId = (pool.find((p) => p.is_captain) || {}).id;
+    viceId = (pool.find((p) => p.is_vice_captain) || {}).id;
+    activeFormation = d.wildcard_formation || d.formation;
   } else if (isSug) {
     const plan = buildSuggestedPlan(state);
-    if (plan) { xi = plan.xi; bench = plan.bench; capId = plan.capId; viceId = plan.viceId; }
-  }
-  // 当前阵容视图（或推导失败兜底）：直接读 decision 布局
-  if (!xi) {
+    if (plan) {
+      xi = plan.xi; bench = plan.bench; capId = plan.capId; viceId = plan.viceId;
+      const c = { DEF: 0, MID: 0, FWD: 0 };
+      xi.forEach((p) => { if (c[p.pos] != null) c[p.pos] += 1; });
+      activeFormation = `${c.DEF}${c.MID}${c.FWD}`;
+    }
+  } else if (isAI) {
     const team = Array.isArray(state.team) ? state.team : [];
     const byId = new Map(team.map((p) => [p.id, p]));
-    const r = playerResolve(state, { d: state.decision || {}, team, byId, suggested: false });
+    const r = playerResolve(state, { d, team, byId });
     xi = r.xi; bench = r.bench; capId = r.capId; viceId = r.viceId;
+    activeFormation = d.formation;
   }
 
-  // diff 角标数据：cur 视图高亮「拟转出」，sug 视图高亮「新入」
-  const flags = { sug: isSug || isFH, inIds, outIds };
+  // 默认「FPL 当前阵容」严格展示 FPL 官网真实已锁定的首发/替补/C/V
+  if (!xi) {
+    const actual = fplActualPlan(state);
+    xi = actual.xi; bench = actual.bench; capId = actual.capId; viceId = actual.viceId;
+    activeFormation = actual.formation;
+  }
 
-  const formation = fmtFormation((isFH ? d.free_hit_formation : d.formation) || state.formation);
+  const liveSnap = state.live_gameweek;
+  const showLiveOnCards = !isSug && !isAI && !isFH && !isWC && liveSnap &&
+    liveSnap.players && liveSnap.gw === (state.picks_gw || state.active_gw);
+
+  const flags = {
+    sug: isSug || isFH || isWC,
+    inIds: isWC ? new Set(xi.concat(bench).map((p) => p.id).filter((id) => !(state.team || []).some((t) => t.id === id))) : inIds,
+    outIds,
+    livePlayers: showLiveOnCards ? liveSnap.players : null,
+  };
+
+  const planGw = d.target_gw || state.target_gw || state.current_gw || "?";
+  const picksGw = state.picks_gw || state.active_gw || state.current_gw || "?";
+  const formation = fmtFormation(activeFormation || state.formation);
   $("#formation-line").textContent = isFH
-    ? `阵型 ${formation} · Free Hit 临时阵容：首发 ${xi.length} 人 / 替补 ${bench.length} 人`
-    : isSug
-      ? `阵型 ${formation} · 转会后首发 ${xi.length} 人 / 替补 ${bench.length} 人`
-      : `阵型 ${formation} · 首发 ${xi.length} 人 / 替补 ${bench.length} 人`;
+    ? `阵型 ${formation} · GW${planGw} Free Hit 临时阵容：首发 ${xi.length} 人 / 替补 ${bench.length} 人`
+    : isWC
+      ? `阵型 ${formation} · GW${planGw} Wildcard 重建阵容：首发 ${xi.length} 人 / 替补 ${bench.length} 人`
+      : isSug
+        ? `阵型 ${formation} · GW${planGw} 转会后推荐首发 ${xi.length} 人 / 替补 ${bench.length} 人`
+        : isAI
+          ? `阵型 ${formation} · GW${planGw} AI 推荐首发（零转会排兵）：首发 ${xi.length} 人 / 替补 ${bench.length} 人`
+          : `阵型 ${formation} · FPL 当前真实阵容（GW${picksGw} 锁定）：首发 ${xi.length} 人 / 替补 ${bench.length} 人`;
 
-  // 转会后摘要（视图注记，非转会时不显示）
   const noteEl = $("#squad-note");
   if (noteEl) {
-    const parts = isFH
-      ? "Free Hit 临时阵容，本轮结束后恢复原阵容"
-      : rec
-      .map((t) => `${esc((t.out || {}).name || "?")} → ${esc((t.in || {}).name || "?")}`)
-      .join("；");
-    noteEl.textContent = parts ? `按 AI 建议（${rec.length} 笔）：${parts}` : "";
+    if (isFH) {
+      noteEl.textContent = "Free Hit 临时阵容，本轮结束后恢复原阵容";
+    } else if (isWC) {
+      noteEl.textContent = "Wildcard 全池最优重建方案（永久替换，零扣分）";
+    } else if (isSug && rec.length) {
+      const parts = rec
+        .map((t) => `${(t.out || {}).name || "?"} → ${(t.in || {}).name || "?"}`)
+        .join("；");
+      noteEl.textContent = `按 AI 建议（${rec.length} 笔）：${parts}`;
+    } else if (isAI) {
+      noteEl.textContent = `在不做转会的前提下，AI 针对 GW${planGw} 重新优化的首发 11 人与队长`;
+    } else {
+      noteEl.textContent = "";
+    }
   }
 
   const rows = ["GKP", "DEF", "MID", "FWD"]
@@ -935,15 +1124,17 @@ function renderTeam(state) {
     .join("");
   $("#team-xi").innerHTML = rows;
 
-  const benchOrder = isFH
-    ? bench.slice().sort((a, b) => (a.bench_priority ?? 99) - (b.bench_priority ?? 99))
-    : [
-      ...bench.filter((p) => p.pos === "GKP"),
-      ...bench.filter((p) => p.pos !== "GKP"),
-    ];
-  $("#team-bench").innerHTML = benchOrder
-    .map((p, idx) => playerCard(p, capId, viceId, idx + 1, flags))
-    .join("");
+  // 替补展示：门将标为 GK，外场三名替补按真实自动替补优先级标为 1 / 2 / 3（消除与后端日志的顺位冲突）
+  const gkBench = bench.filter((p) => p.pos === "GKP");
+  const outfieldBench = (isFH
+    ? bench.filter((p) => p.pos !== "GKP").sort((a, b) => (a.bench_priority ?? 99) - (b.bench_priority ?? 99))
+    : bench.filter((p) => p.pos !== "GKP")
+  );
+  const benchHtml = [
+    ...gkBench.map((p) => playerCard(p, capId, viceId, "GK", flags)),
+    ...outfieldBench.map((p, idx) => playerCard(p, capId, viceId, String(idx + 1), flags)),
+  ].join("");
+  $("#team-bench").innerHTML = benchHtml;
 }
 
 /* ---------------- Main ④ AI 思考日志（本轮） ---------------- */
@@ -1010,9 +1201,10 @@ function renderHistoryAccordion(state, rows) {
   }
   const html = [...vis].reverse().map((r) => {
     const settled = historySettled(r);
-    const live = liveResult(r);
+    const live = liveResult(r, state);
     const d = r.decision || {};
     const dt = decisionTimes(r);
+    const actualChip = r.actual_chip && r.actual_chip.name ? r.actual_chip.name : null;
     const transfers = Array.isArray(d.recommended_transfers) ? d.recommended_transfers : [];
     const actualTransfers = Array.isArray(r.actual_transfers) ? r.actual_transfers : null;
     const shownTransfers = actualTransfers === null ? transfers : actualTransfers;
@@ -1046,31 +1238,35 @@ function renderHistoryAccordion(state, rows) {
       return box.innerHTML;
     })();
 
-    // 摘要：已结算 → 结果三列；进行中 → 状态徽章（不写占位）
+    // 摘要：已结算 → 结果三列；赛中实时 → 实时分；备战未开赛 → 备战中徽章
     const summaryKv = settled
       ? `<span class="acc-kv">积分 <b>${accText(r.points, "points")}</b></span>
          <span class="acc-kv">当轮排名 <b>${accText(r.rank, "rank")}</b></span>
-         <span class="acc-kv">总排名 <b>${accText(r.overall_rank, "rank")}</b></span>`
+         <span class="acc-kv">总排名 <b>${accText(r.overall_rank, "rank")}</b></span>
+         ${actualChip ? `<span class="acc-kv">筹码 <b>${esc(actualChip)}</b></span>` : ""}`
       : live
-        ? `<span class="acc-kv">动态积分 <b>${accText(live.points, "points")}</b></span>
-           <span class="acc-kv">${liveRankLabel(live)} <b>${accText(live.rank, "rank")}</b></span>
-           <span class="acc-state gw-state st-live">本轮进行中</span>`
-        : `<span class="acc-state gw-state st-live">本轮进行中</span>`;
+        ? `<span class="acc-kv">🟢 实时积分 <b>${accText(live.net_points != null ? live.net_points : live.points, "points")}</b></span>
+           ${live.played_count != null ? `<span class="acc-kv">已赛 <b>${live.played_count}/${live.total_active || 11}</b></span>` : ""}
+           ${live.rank != null ? `<span class="acc-kv">${liveRankLabel(live)} <b>${accText(live.rank, "rank")}</b></span>` : ""}
+           <span class="acc-state gw-state st-live">赛中实时</span>`
+        : `<span class="acc-state gw-state st-pending">备战中 · 未开赛</span>`;
 
-    // 展开区「比赛结果」：已结算 → 数值；进行中 → 说明行（不写「待结算」占位）
+    // 展开区「比赛结果」
     const resultHtml = settled
       ? `<dl class="kv-list">
           <div><dt>积分</dt><dd>${accText(r.points, "points")}</dd></div>
           <div><dt>Gameweek Rank</dt><dd>${accText(r.rank, "rank")}</dd></div>
           <div><dt>Overall Rank</dt><dd>${accText(r.overall_rank, "rank")}</dd></div>
+          ${actualChip ? `<div><dt>实际使用筹码</dt><dd>${esc(actualChip)}</dd></div>` : ""}
         </dl>`
       : live
         ? `<dl class="kv-list">
-            <div><dt>动态积分</dt><dd>${accText(live.points, "points")}</dd></div>
-            <div><dt>${liveRankLabel(live)}</dt><dd>${accText(live.rank, "rank")}</dd></div>
+            <div><dt>实时净积分</dt><dd>${accText(live.net_points != null ? live.net_points : live.points, "points")}${Number(live.transfer_cost) > 0 ? `（毛分 ${fmtNum(live.points)} − 扣 ${live.transfer_cost}）` : ""}</dd></div>
+            ${live.played_count != null ? `<div><dt>登场进度</dt><dd>${live.played_count} / ${live.total_active || 11} 人</dd></div>` : ""}
+            <div><dt>${liveRankLabel(live)}</dt><dd>${live.rank != null ? accText(live.rank, "rank") : "待赛后批处理"}</dd></div>
             <div><dt>最近更新</dt><dd>${fmtTime(live.updated_at)}</dd></div>
           </dl>`
-      : `<p class="muted">本轮比赛进行中 / 尚未开赛，结束并结算后自动回填积分与排名。</p>`;
+      : `<p class="muted">本轮尚未开赛，比赛开始后自动切换为实时积分并在完赛后回填排名。</p>`;
 
     return `<details class="acc">
         <summary>
@@ -1311,10 +1507,11 @@ function bindThisWeekCta(state) {
   sec.dataset.ctaBound = "1";
   sec.addEventListener("click", (e) => {
     const fhBtn = e.target.closest("[data-goto-fh]");
+    const wcBtn = e.target.closest("[data-goto-wc]");
     const transferBtn = e.target.closest("[data-goto-sug]");
-    if (!fhBtn && !transferBtn) return;
+    if (!fhBtn && !wcBtn && !transferBtn) return;
     if (!squadViewEnabled(state)) return;
-    squadView = fhBtn ? "fh" : "sug";
+    squadView = fhBtn ? "fh" : (wcBtn ? "wc" : "sug");
     squadViewTouched = true;
     renderSquadToggle(state);
     renderTeam(state);

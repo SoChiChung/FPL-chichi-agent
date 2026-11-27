@@ -18,9 +18,12 @@ def run():
     transfer_rows = history_writer.backfill_actual_transfers(
         history, actual_transfers, bootstrap.get("elements") or [],
         entry_history.get("current") or [])
+    chip_rows = history_writer.backfill_actual_chips(
+        history, entry_history.get("chips") or [])
     data_store.validate_history(history)
     data_store.save_json(config.HISTORY_FILE, history)
-    print(f"[backfill] 完成：补入结算字段 {updated} 项，新增已完赛轮次 {added} 轮，更新实际转会轮次 {transfer_rows} 轮")
+    print(f"[backfill] 完成：补入结算字段 {updated} 项，新增已完赛轮次 {added} 轮，"
+          f"更新实际转会轮次 {transfer_rows} 轮，更新实际用卡 {chip_rows} 轮")
 
 
 if __name__ == "__main__":

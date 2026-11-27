@@ -28,13 +28,42 @@ def captain_scores(starting_xi: list, cfg: dict):
     """计算首发 11 的 captain_score 并挂回球员行（含 score_breakdown 依据）。
 
     cfg: strategy_config.get_lineup_engine() 结果。
+    当球员具备真实单轮个人预测分（projected_points）时，将团队特征分与个人真实
+    xP + 爆发上限（xGI 份额 / 点球权 / EO 保护）+ 出场率安全阀融合，避免纯球队级
+    CleanSheet+Fixture 极值让后卫长期垄断队长袖标，同时对纯合成单测保持 100% 兼容。
     """
     captain_w = cfg.get("captain_weights") or {}
     for p in starting_xi:
         breakdown = p.setdefault("score_breakdown", {})
         extra = {"market": to_float(p.get("market_score"))}
-        score = _weighted(breakdown, captain_w.get(p.get("pos")) or {}, extra)
-        p["captain_score"] = score
+        raw_score = _weighted(breakdown, captain_w.get(p.get("pos")) or {}, extra)
+        if p.get("projected_points") is None:
+            p["captain_score"] = raw_score
+            continue
+
+        pos = p.get("pos")
+        xp = max(0.0, to_float(p.get("projected_points")))
+        xgi_share = max(0.0, to_float(p.get("xgi_share")))
+        pen_bonus = 4.0 if p.get("penalties_order") == 1 else 0.0
+        tsb_eo = min(8.0, 0.08 * to_float(p.get("selected_by_percent", p.get("selected_by"))))
+        # Positional explosive ceiling: attackers have multi-goal + bonus ceiling;
+        # defenders mostly cap out at 1 CS unless they also carry elite xGI.
+        pos_ceiling = {"FWD": 1.08, "MID": 1.05, "DEF": 0.80, "GKP": 0.65}.get(pos, 1.0)
+        xp_component = min(100.0, xp * 12.0 * pos_ceiling + 22.0 * xgi_share + pen_bonus + tsb_eo)
+
+        blended = (0.30 * raw_score * pos_ceiling) + (0.70 * xp_component)
+
+        # Penalize rotation/injury risk heavily for captaincy (1-pt cameo is disastrous)
+        start_prob = p.get("starting_probability")
+        if start_prob is not None and to_float(start_prob) < 0.80:
+            blended *= max(0.25, to_float(start_prob))
+        chance = p.get("chance_of_playing_next_round")
+        if chance is not None and to_float(chance) < 100:
+            blended *= max(0.0, to_float(chance) / 100.0)
+        if str(p.get("status") or "").lower() in ("i", "s", "u", "n"):
+            blended = 0.0
+
+        p["captain_score"] = round(min(100.0, max(0.0, blended)), 2)
     return starting_xi
 
 
