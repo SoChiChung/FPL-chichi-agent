@@ -5057,11 +5057,11 @@
         "net_points": 0.0,
         "transfer_cost": 0,
         "active_chip": "wildcard",
-        "rank": 8342947,
+        "rank": 8458238,
         "points_source": "fpl_event_live",
-        "rank_source": "livefpl_estimate",
-        "rank_checked_at": "2026-11-27T22:28:24Z",
-        "updated_at": "2026-11-27T22:28:24Z",
+        "rank_source": "fpl_provisional",
+        "rank_checked_at": null,
+        "updated_at": "2026-11-28T04:29:58Z",
         "played_count": 0,
         "total_active": 11,
         "captain_promoted": false,
@@ -5218,7 +5218,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-11-27T22:28:33Z",
-      "updated_at": "2026-11-27T22:28:33Z",
+      "updated_at": "2026-11-28T04:30:03Z",
       "decision": {
         "formation": "343",
         "captain": {
@@ -5367,7 +5367,7 @@
               {
                 "gw": 13,
                 "players": 8,
-                "strength": 395.92,
+                "strength": 395.97,
                 "reasons": {
                   "blank": 0,
                   "difficult": 8
@@ -5376,15 +5376,15 @@
             ]
           },
           "signals": {
-            "bench_score": 219.92,
-            "bench_xp": 18.27,
+            "bench_score": 220.21,
+            "bench_xp": 18.29,
             "wildcard_five_gw_gain": null,
-            "captain_score": 87.43,
+            "captain_score": 87.44,
             "captain_xp": 6.0,
             "captain_fixture_count": 1,
             "captain_fixture_difficulty": 2.0,
-            "free_hit_net_gain": 2.63,
-            "free_hit_risk_adjusted_gain": 2.63,
+            "free_hit_net_gain": 1.99,
+            "free_hit_risk_adjusted_gain": 1.99,
             "free_hit_required_gain": 8.0,
             "free_hit_confidence": 1.0
           }
@@ -5392,8 +5392,8 @@
         "recommended_chip": null,
         "transfer_package": {
           "gain": 0.0,
-          "five_gw_before": 320.83,
-          "five_gw_after": 320.83,
+          "five_gw_before": 320.84,
+          "five_gw_after": 320.84,
           "five_gw_net_gain": 0.0,
           "per_gw_average_before": 64.17,
           "per_gw_average_after": 64.17,
@@ -5403,7 +5403,7 @@
             "rounds": [
               {
                 "gw": 13,
-                "points": 61.07,
+                "points": 61.08,
                 "xi": [
                   572,
                   112,
@@ -5492,13 +5492,13 @@
                 "captain": 4
               }
             ],
-            "points": 320.83
+            "points": 320.84
           },
           "projection_after": {
             "rounds": [
               {
                 "gw": 13,
-                "points": 61.07,
+                "points": 61.08,
                 "xi": [
                   572,
                   112,
@@ -5587,7 +5587,7 @@
                 "captain": 4
               }
             ],
-            "points": 320.83
+            "points": 320.84
           },
           "gain_multiplier": 1.0,
           "minimum_hit_return_multiple": 2.0,
@@ -5604,22 +5604,22 @@
           "score_base": "fpl_starting_xi_points_with_captain",
           "point_calibration": {
             "GKP": {
-              "intercept": 2.1498,
+              "intercept": 2.1433,
               "slope": 0.025,
               "samples": 25
             },
             "DEF": {
-              "intercept": 1.9406,
+              "intercept": 1.935,
               "slope": 0.025,
               "samples": 137
             },
             "MID": {
-              "intercept": 1.6447,
-              "slope": 0.033,
+              "intercept": 1.6546,
+              "slope": 0.0326,
               "samples": 174
             },
             "FWD": {
-              "intercept": 0.3226,
+              "intercept": 0.3091,
               "slope": 0.082,
               "samples": 40
             }
@@ -5771,16 +5771,16 @@
         },
         {
           "topic": "lineup",
-          "detail": "GW13 最优首发：阵型 343，预计单轮 60.6 分（Total Lineup Score 665.51；替补非门将按优先级排序，门将独立替补）"
+          "detail": "GW13 最优首发：阵型 343，预计单轮 60.6 分（Total Lineup Score 665.83；替补非门将按优先级排序，门将独立替补）"
         },
         {
           "topic": "captain",
           "player": "Wirtz",
-          "detail": "单轮预计 6.0 分 · Captain Score 87.43（首发 11 人中最高；Lineup Score 77.99）"
+          "detail": "单轮预计 6.0 分 · Captain Score 87.44（首发 11 人中最高；Lineup Score 78.12）"
         },
         {
           "topic": "chip",
-          "detail": "Free Hit 暂不建议：模型净增经数据可信度调整后为 2.63 分，低于 8.00 分门槛"
+          "detail": "Free Hit 暂不建议：模型净增经数据可信度调整后为 1.99 分，低于 8.00 分门槛"
         },
         {
           "topic": "transfer_status",
@@ -5796,12 +5796,12 @@
         }
       ],
       "metrics": {
-        "team_market_score": 515.2,
-        "captain_market_score": 50.2,
-        "formation_market_score": 376.45,
-        "team_lineup_score": 665.51,
-        "team_projected_points": 60.58,
-        "captain_score": 87.43
+        "team_market_score": 522.95,
+        "captain_market_score": 50.26,
+        "formation_market_score": 381.73,
+        "team_lineup_score": 665.83,
+        "team_projected_points": 60.59,
+        "captain_score": 87.44
       },
       "budget_before": 4.5,
       "budget_after": 4.5,
