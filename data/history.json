@@ -5053,30 +5053,30 @@
       "live": {
         "gw": 12,
         "status": "live",
-        "points": 0.0,
-        "net_points": 0.0,
+        "points": 7.0,
+        "net_points": 7.0,
         "transfer_cost": 0,
         "active_chip": "wildcard",
         "rank": 8458238,
         "points_source": "fpl_event_live",
         "rank_source": "fpl_provisional",
         "rank_checked_at": null,
-        "updated_at": "2026-11-28T13:49:41Z",
-        "played_count": 0,
+        "updated_at": "2026-11-28T17:21:28Z",
+        "played_count": 1,
         "total_active": 11,
         "captain_promoted": false,
-        "fixtures_started": 1,
-        "fixtures_finished": 1,
+        "fixtures_started": 3,
+        "fixtures_finished": 3,
         "fixtures_total": 10,
         "players": {
           "385": {
-            "points": 0.0,
-            "effective_points": 0.0,
-            "minutes": 0,
+            "points": 7.0,
+            "effective_points": 7.0,
+            "minutes": 90,
             "multiplier": 1.0,
             "auto_sub": null,
-            "started": false,
-            "finished": false
+            "started": true,
+            "finished": true
           },
           "4": {
             "points": 0.0,
@@ -5218,7 +5218,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-11-27T22:28:33Z",
-      "updated_at": "2026-11-28T13:49:45Z",
+      "updated_at": "2026-11-28T17:21:34Z",
       "decision": {
         "formation": "343",
         "captain": {
@@ -5367,7 +5367,7 @@
               {
                 "gw": 13,
                 "players": 8,
-                "strength": 395.88,
+                "strength": 395.92,
                 "reasons": {
                   "blank": 0,
                   "difficult": 8
@@ -5376,15 +5376,15 @@
             ]
           },
           "signals": {
-            "bench_score": 219.95,
+            "bench_score": 219.8,
             "bench_xp": 18.28,
             "wildcard_five_gw_gain": null,
-            "captain_score": 87.44,
+            "captain_score": 87.46,
             "captain_xp": 6.0,
             "captain_fixture_count": 1,
             "captain_fixture_difficulty": 2.0,
-            "free_hit_net_gain": 2.36,
-            "free_hit_risk_adjusted_gain": 2.36,
+            "free_hit_net_gain": 2.77,
+            "free_hit_risk_adjusted_gain": 2.77,
             "free_hit_required_gain": 8.0,
             "free_hit_confidence": 1.0
           }
@@ -5392,18 +5392,18 @@
         "recommended_chip": null,
         "transfer_package": {
           "gain": 0.0,
-          "five_gw_before": 320.83,
-          "five_gw_after": 320.83,
+          "five_gw_before": 321.02,
+          "five_gw_after": 321.02,
           "five_gw_net_gain": 0.0,
-          "per_gw_average_before": 64.17,
-          "per_gw_average_after": 64.17,
+          "per_gw_average_before": 64.2,
+          "per_gw_average_after": 64.2,
           "per_gw_average_net_gain": 0.0,
           "hit_cost": 0,
           "projection_before": {
             "rounds": [
               {
                 "gw": 13,
-                "points": 61.07,
+                "points": 61.08,
                 "xi": [
                   572,
                   112,
@@ -5421,7 +5421,7 @@
               },
               {
                 "gw": 14,
-                "points": 65.54,
+                "points": 65.61,
                 "xi": [
                   385,
                   60,
@@ -5457,7 +5457,7 @@
               },
               {
                 "gw": 16,
-                "points": 69.47,
+                "points": 69.54,
                 "xi": [
                   385,
                   115,
@@ -5475,7 +5475,7 @@
               },
               {
                 "gw": 17,
-                "points": 62.34,
+                "points": 62.38,
                 "xi": [
                   385,
                   4,
@@ -5492,13 +5492,13 @@
                 "captain": 4
               }
             ],
-            "points": 320.83
+            "points": 321.02
           },
           "projection_after": {
             "rounds": [
               {
                 "gw": 13,
-                "points": 61.07,
+                "points": 61.08,
                 "xi": [
                   572,
                   112,
@@ -5516,7 +5516,7 @@
               },
               {
                 "gw": 14,
-                "points": 65.54,
+                "points": 65.61,
                 "xi": [
                   385,
                   60,
@@ -5552,7 +5552,7 @@
               },
               {
                 "gw": 16,
-                "points": 69.47,
+                "points": 69.54,
                 "xi": [
                   385,
                   115,
@@ -5570,7 +5570,7 @@
               },
               {
                 "gw": 17,
-                "points": 62.34,
+                "points": 62.38,
                 "xi": [
                   385,
                   4,
@@ -5587,7 +5587,7 @@
                 "captain": 4
               }
             ],
-            "points": 320.83
+            "points": 321.02
           },
           "gain_multiplier": 1.0,
           "minimum_hit_return_multiple": 2.0,
@@ -5604,23 +5604,23 @@
           "score_base": "fpl_starting_xi_points_with_captain",
           "point_calibration": {
             "GKP": {
-              "intercept": 2.1459,
+              "intercept": 2.1603,
               "slope": 0.025,
               "samples": 25
             },
             "DEF": {
-              "intercept": 1.9376,
+              "intercept": 1.9518,
               "slope": 0.025,
               "samples": 137
             },
             "MID": {
-              "intercept": 1.6553,
-              "slope": 0.0326,
-              "samples": 174
+              "intercept": 1.623,
+              "slope": 0.0323,
+              "samples": 175
             },
             "FWD": {
-              "intercept": 0.3186,
-              "slope": 0.0819,
+              "intercept": 0.201,
+              "slope": 0.0828,
               "samples": 40
             }
           }
@@ -5771,16 +5771,16 @@
         },
         {
           "topic": "lineup",
-          "detail": "GW13 最优首发：阵型 343，预计单轮 60.6 分（Total Lineup Score 665.7；替补非门将按优先级排序，门将独立替补）"
+          "detail": "GW13 最优首发：阵型 343，预计单轮 60.6 分（Total Lineup Score 665.76；替补非门将按优先级排序，门将独立替补）"
         },
         {
           "topic": "captain",
           "player": "Wirtz",
-          "detail": "单轮预计 6.0 分 · Captain Score 87.44（首发 11 人中最高；Lineup Score 78.13）"
+          "detail": "单轮预计 6.0 分 · Captain Score 87.46（首发 11 人中最高；Lineup Score 78.13）"
         },
         {
           "topic": "chip",
-          "detail": "Free Hit 暂不建议：模型净增经数据可信度调整后为 2.36 分，低于 8.00 分门槛"
+          "detail": "Free Hit 暂不建议：模型净增经数据可信度调整后为 2.77 分，低于 8.00 分门槛"
         },
         {
           "topic": "transfer_status",
@@ -5788,7 +5788,7 @@
         },
         {
           "topic": "no_transfer",
-          "detail": "当前首发健康，最优转会未来 5 轮仅净增 1.99 分（低于攒卡门槛 3.5 分），建议保留免费转会滚存至下轮联动发力"
+          "detail": "当前首发健康，最优转会未来 5 轮仅净增 1.97 分（低于攒卡门槛 3.5 分），建议保留免费转会滚存至下轮联动发力"
         },
         {
           "topic": "external_source",
@@ -5796,12 +5796,12 @@
         }
       ],
       "metrics": {
-        "team_market_score": 521.1,
-        "captain_market_score": 50.32,
-        "formation_market_score": 380.45,
-        "team_lineup_score": 665.7,
-        "team_projected_points": 60.58,
-        "captain_score": 87.44
+        "team_market_score": 507.63,
+        "captain_market_score": 50.44,
+        "formation_market_score": 370.77,
+        "team_lineup_score": 665.76,
+        "team_projected_points": 60.59,
+        "captain_score": 87.46
       },
       "budget_before": 4.5,
       "budget_after": 4.5,
