@@ -5061,7 +5061,7 @@
         "points_source": "fpl_event_live",
         "rank_source": "fpl_provisional",
         "rank_checked_at": null,
-        "updated_at": "2026-11-28T04:29:58Z",
+        "updated_at": "2026-11-28T08:54:29Z",
         "played_count": 0,
         "total_active": 11,
         "captain_promoted": false,
@@ -5218,7 +5218,7 @@
       "rank": null,
       "overall_rank": null,
       "decided_at": "2026-11-27T22:28:33Z",
-      "updated_at": "2026-11-28T04:30:03Z",
+      "updated_at": "2026-11-28T08:54:33Z",
       "decision": {
         "formation": "343",
         "captain": {
@@ -5367,7 +5367,7 @@
               {
                 "gw": 13,
                 "players": 8,
-                "strength": 395.97,
+                "strength": 395.93,
                 "reasons": {
                   "blank": 0,
                   "difficult": 8
@@ -5376,7 +5376,7 @@
             ]
           },
           "signals": {
-            "bench_score": 220.21,
+            "bench_score": 220.2,
             "bench_xp": 18.29,
             "wildcard_five_gw_gain": null,
             "captain_score": 87.44,
@@ -5604,12 +5604,12 @@
           "score_base": "fpl_starting_xi_points_with_captain",
           "point_calibration": {
             "GKP": {
-              "intercept": 2.1433,
+              "intercept": 2.1437,
               "slope": 0.025,
               "samples": 25
             },
             "DEF": {
-              "intercept": 1.935,
+              "intercept": 1.9354,
               "slope": 0.025,
               "samples": 137
             },
@@ -5619,8 +5619,8 @@
               "samples": 174
             },
             "FWD": {
-              "intercept": 0.3091,
-              "slope": 0.082,
+              "intercept": 0.3107,
+              "slope": 0.0821,
               "samples": 40
             }
           }
@@ -5771,12 +5771,12 @@
         },
         {
           "topic": "lineup",
-          "detail": "GW13 最优首发：阵型 343，预计单轮 60.6 分（Total Lineup Score 665.83；替补非门将按优先级排序，门将独立替补）"
+          "detail": "GW13 最优首发：阵型 343，预计单轮 60.6 分（Total Lineup Score 665.85；替补非门将按优先级排序，门将独立替补）"
         },
         {
           "topic": "captain",
           "player": "Wirtz",
-          "detail": "单轮预计 6.0 分 · Captain Score 87.44（首发 11 人中最高；Lineup Score 78.12）"
+          "detail": "单轮预计 6.0 分 · Captain Score 87.44（首发 11 人中最高；Lineup Score 78.13）"
         },
         {
           "topic": "chip",
@@ -5796,10 +5796,10 @@
         }
       ],
       "metrics": {
-        "team_market_score": 522.95,
-        "captain_market_score": 50.26,
-        "formation_market_score": 381.73,
-        "team_lineup_score": 665.83,
+        "team_market_score": 522.22,
+        "captain_market_score": 50.32,
+        "formation_market_score": 381.19,
+        "team_lineup_score": 665.85,
         "team_projected_points": 60.59,
         "captain_score": 87.44
       },
